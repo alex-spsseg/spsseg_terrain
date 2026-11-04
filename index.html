@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>SPSSEG terrain viewers</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh; color: #e8eef7;
+      font-family: -apple-system, Segoe UI, Roboto, sans-serif;
+      padding: 32px 24px 60px;
+      /* Drop a photo named terrain-background.jpg next to this file to use it behind the cards.
+         Without one, the plain dark background is used. */
+      background:
+          linear-gradient(180deg, rgba(9, 17, 36, 0.88) 0%, rgba(9, 17, 36, 0.72) 40%, rgba(9, 17, 36, 0.92) 100%),
+          url('terrain-background.jpg') center center / cover no-repeat fixed,
+          #0e1b33;
+    }
+    header { max-width: 1100px; margin: 0 auto 24px; }
+    h1 { font-size: 24px; font-weight: 700; color: #ffffff; }
+    header p { margin-top: 6px; color: #9fb2cc; font-size: 14px; }
+    #search {
+      display: none; margin: 18px 0 0; width: 100%; max-width: 360px; padding: 9px 12px; font-size: 14px;
+      background: #132447; color: #fff; border: 1px solid #1b3f95; border-radius: 8px;
+    }
+    #search:focus { outline: none; border-color: #019fc4; }
+    .grid {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px;
+    }
+    .card {
+      display: flex; flex-direction: column; text-decoration: none; color: inherit; overflow: hidden;
+      background: #132447; border: 1px solid #1b3f95; border-radius: 10px;
+      transition: border-color 0.15s, transform 0.15s;
+    }
+    .card:hover { border-color: #019fc4; transform: translateY(-2px); }
+    .thumb { aspect-ratio: 16 / 9; background: #0e1b33; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .thumb .none { color: #3c5282; font-size: 13px; }
+    .body { padding: 14px 16px 16px; }
+    .card h2 { font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 4px; }
+    .card .desc { font-size: 12px; color: #cbd8ec; line-height: 1.45; margin-bottom: 6px; }
+    .card .meta { font-size: 12px; color: #9fb2cc; }
+    #empty, #error { max-width: 1100px; margin: 40px auto 0; color: #9fb2cc; font-size: 14px; text-align: center; display: none; }
+    #error { color: #e0a5a5; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SPSSEG terrain viewers</h1>
+    <p>Site terrain in 3D with imagery draped over it. Open a site, then tilt, orbit and tap the 360 stops.</p>
+    <input id="search" type="search" placeholder="Search sites" aria-label="Search sites">
+  </header>
+  <div id="grid" class="grid"></div>
+  <div id="empty">Nothing published yet.</div>
+  <div id="error">Could not load the site list.</div>
+
+  <script>
+    function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
+    var sites = [];
+
+    function draw() {
+      var q = document.getElementById('search').value.trim().toLowerCase();
+      var grid = document.getElementById('grid');
+      grid.innerHTML = '';
+      sites.filter(function (s) {
+        return !q || (s.title || s.site).toLowerCase().indexOf(q) >= 0 || (s.description || '').toLowerCase().indexOf(q) >= 0;
+      }).forEach(function (s) {
+        var a = document.createElement('a');
+        a.className = 'card';
+        a.href = 'terrain_viewer.html?site=' + encodeURIComponent(s.site);
+        var when = '';
+        if (s.updated) when = ' &middot; updated ' + new Date(s.updated + 'T00:00:00').toLocaleDateString();
+        a.innerHTML =
+          '<div class="thumb">' + (s.thumb ? '<img loading="lazy" alt="" src="' + esc(s.thumb) + '" onerror="this.parentNode.innerHTML=\'<span class=none>No preview</span>\'">' : '<span class="none">No preview</span>') + '</div>' +
+          '<div class="body"><h2>' + esc(s.title || s.site) + '</h2>' +
+          (s.description ? '<div class="desc">' + esc(s.description) + '</div>' : '') +
+          '<div class="meta">' + (when ? when.replace(' &middot; ', '') : '3D terrain') + '</div></div>';
+        grid.appendChild(a);
+      });
+    }
+
+    fetch('sites/_index.json', { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error('missing'); return r.json(); })
+      .then(function (list) {
+        sites = Array.isArray(list) ? list : [];
+        sites.sort(function (a, b) { return (a.title || a.site).toLowerCase() < (b.title || b.site).toLowerCase() ? -1 : 1; });
+        if (!sites.length) { document.getElementById('empty').style.display = 'block'; return; }
+        if (sites.length > 8) document.getElementById('search').style.display = 'block';
+        draw();
+        document.getElementById('search').addEventListener('input', draw);
+      })
+      .catch(function () { document.getElementById('error').style.display = 'block'; });
+  </script>
+</body>
+</html>

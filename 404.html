@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting...</title>
+  <script>
+    // GitHub Pages serves this page for any address that is not a real file. It turns a short link such as
+    // /spsseg_terrain/greenwater into the viewer opened on that site. Any other broken link lands on the site list.
+    var REPO = "spsseg_terrain";
+    var RESERVED = ["sites", "vendor"];
+    var parts = location.pathname.split('/').filter(Boolean);
+    var i = parts.indexOf(REPO);
+    var slug = i >= 0 ? parts[i + 1] : parts[0];
+    var base = i >= 0 ? '/' + parts.slice(0, i + 1).join('/') : '/' + REPO;
+    if (slug && RESERVED.indexOf(slug) === -1 && slug.indexOf('.') === -1) {
+      var extra = location.search ? '&' + location.search.replace(/^\?/, '') : '';
+      location.replace(base + '/terrain_viewer.html?site=' + encodeURIComponent(slug) + extra);
+    } else {
+      location.replace(base + '/');
+    }
+  </script>
+</head>
+<body><p style="font-family: sans-serif; color: #9fb2cc; background: #0e1b33; padding: 24px;">Redirecting...</p></body>
+</html>

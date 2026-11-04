@@ -1,0 +1,59 @@
+{
+ "views": [
+  {
+   "name": "Meadow?",
+   "center": [
+    -123.091751,
+    47.091481
+   ],
+   "zoom": 18.81,
+   "pitch": 56.0,
+   "bearing": 35.0,
+   "start": true
+  },
+  {
+   "name": "Creek",
+   "center": [
+    -123.093794,
+    47.093569
+   ],
+   "zoom": 19.55,
+   "pitch": 4.0,
+   "bearing": 46.0,
+   "start": false
+  },
+  {
+   "name": "more creek",
+   "center": [
+    -123.087633,
+    47.095892
+   ],
+   "zoom": 18.94,
+   "pitch": 68.0,
+   "bearing": -140.0,
+   "start": false
+  },
+  {
+   "name": "Current Kennedy Creek Salmon Trail Circle",
+   "center": [
+    -123.095465,
+    47.090518
+   ],
+   "zoom": 19.8,
+   "pitch": 48.0,
+   "bearing": 0.0,
+   "start": false
+  },
+  {
+   "name": "Gate",
+   "center": [
+    -123.084636,
+    47.092078
+   ],
+   "zoom": 19.83,
+   "pitch": 60.0,
+   "bearing": -130.0,
+   "start": false
+  }
+ ]
+}

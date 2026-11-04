@@ -1,0 +1,86 @@
+{
+ "site": "kennedy_creek",
+ "title": "Kennedy Creek meadow",
+ "description": "Terrain from the drone ground points, 1.5 ft cells.",
+ "bounds4326": [
+  -123.10045331725424,
+  47.08902269805475,
+  -123.08311327727516,
+  47.10001378189019
+ ],
+ "minzoom": 12,
+ "maxzoom": 17,
+ "tile_size": 256,
+ "encoding": "terrarium",
+ "elev_min_m": -22.373764038085938,
+ "elev_max_m": 54.60363006591797,
+ "relief": false,
+ "elevation_mode": "absolute",
+ "elev_base_m": -24.467078749831327,
+ "exaggeration": 1.25,
+ "footprint": "footprint.geojson",
+ "tour": {
+  "base": "https://alex-spsseg.github.io/wria14_kennedycreek/",
+  "id": "20261016"
+ },
+ "flow": null,
+ "pointcloud": {
+  "format": 2,
+  "chunks": [
+   {
+    "file": "cloud_00.bin",
+    "count": 7000000
+   },
+   {
+    "file": "cloud_01.bin",
+    "count": 2995340
+   }
+  ],
+  "count": 9995340,
+  "stride": 12,
+  "has_rgb": true,
+  "has_class": true,
+  "origin": [
+   -123.0917832972647,
+   47.09451823997247
+  ],
+  "box": [
+   -629.3004150390625,
+   647.7340087890625,
+   -591.1619873046875,
+   601.2186279296875,
+   -23.31407356262207,
+   80.52356719970703
+  ],
+  "h_step": 0.25,
+  "h_p98": 34.2,
+  "ground_removed": true,
+  "source": "KCST_20261016_point_cloud.copc.laz"
+ },
+ "ortho": {
+  "tiles": "ortho/{z}/{x}/{y}.webp",
+  "minzoom": 11,
+  "maxzoom": 19,
+  "bounds": [
+   -123.10045331725424,
+   47.08902269805475,
+   -123.08311327727516,
+   47.10001378189019
+  ],
+  "label": "Ortho (10/14/2026)",
+  "count": 876,
+  "mb": 10.1,
+  "source": "https://tiles.arcgis.com/tiles/buuvDFFARQiOEbVZ/arcgis/rest/services/KCST_20261016_ortho/MapServer",
+  "tile_size": 256
+ },
+ "basemap": {
+  "type": "xyz_tile",
+  "url": "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+  "attribution": "Imagery: Google"
+ },
+ "source": {
+  "file": "kcna_groundexport.tif",
+  "cell_size": 1.5,
+  "units": "ft"
+ }
+}
