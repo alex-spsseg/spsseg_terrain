@@ -58,9 +58,20 @@
     border: 1px solid #1b3f95; border-radius: 22px; padding: 4px 6px; font-size: 13px; }
   #viewbar button { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #1b3f95; background: #132447; color: #fff; cursor: pointer; font-size: 12px; padding: 0; }
   #viewbar button:hover { border-color: #019fc4; }
-  #viewlabel { min-width: 120px; max-width: 240px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #viewbar { width: 300px; box-sizing: border-box; }
+  #viewbar button { flex: 0 0 32px; }
+  #viewlabel { flex: 1 1 0; min-width: 0; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   #viewlabel small { color: #9fb2cc; margin-right: 6px; }
-  @media (max-width: 700px) { #viewbar { top: auto; bottom: 16px; left: 50%; transform: translateX(-50%); } }
+  @media (max-width: 700px) {
+    #viewbar { top: auto; bottom: calc(46px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); width: min(calc(100vw - 24px), 360px); }
+    #viewbar button { flex: 0 0 40px; width: 40px; height: 40px; }
+    #viewlabel { font-size: 14px; }
+    body.panelopen #viewbar { display: none !important; }                 /* never sits on top of the open panel */
+    #status { top: auto; bottom: calc(100px + env(safe-area-inset-bottom, 0px)); }
+    #panel.collapsed .sub { display: none; }
+    #toggle { padding: 8px 14px !important; }
+    #panel { max-height: calc(100% - 24px - env(safe-area-inset-bottom, 0px)); }
+  }
   #cloudleg { margin-top: 8px; }
   .dimtxt { color: #9fb2cc; font-size: 12px; }
   #panel .sec .check:first-of-type { margin-top: 8px; }
@@ -150,7 +161,7 @@
     <details class="sec" id="ovwrap" open>
       <summary id="ovhead">Layers</summary>
       <label class="check" id="stoprow"><input type="checkbox" id="stops" checked> 360 stops</label>
-      <label class="check" id="cloudrow" style="display:none"><input type="checkbox" id="cloudon" checked> Point cloud <span id="cloudcount" class="dimtxt"></span></label>
+      <label class="check" id="cloudrow" style="display:none"><input type="checkbox" id="cloudon" checked> <span>Point cloud <span id="cloudcount" class="dimtxt"></span></span></label>
       <div id="cmpwrap" style="display:none">
         <label class="check"><input type="checkbox" id="cmpon"> Compare two layers (drag the divider)</label>
         <div id="cmpsel" style="display:none">
@@ -243,6 +254,7 @@
     var key = 'terrainSections2', saved = null;
     try { saved = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
     var secs = document.querySelectorAll('details.sec');
+    if (!saved && (window.matchMedia && window.matchMedia('(max-width: 700px)').matches)) { var ms = document.getElementById('mapsec'); if (ms) ms.open = false; }
     Array.prototype.forEach.call(secs, function (d) {
       if (saved && Object.prototype.hasOwnProperty.call(saved, d.id)) d.open = !!saved[d.id];
       d.addEventListener('toggle', function () {
@@ -441,6 +453,7 @@
     map.on('click', function (e) {
       if (markerClicked) { markerClicked = false; return; }
       if (tool) { toolClick(e.lngLat); return; }
+      if (cloud.meta && $('t3d').checked) { var hit = cloudPick(e.point); if (hit) { showCloudHit(hit); return; } }
       if (!map.getTerrain()) return;
       elevationAt(e.lngLat.lng, e.lngLat.lat).then(function (m) {
         var d = document.createElement('div');
@@ -1201,6 +1214,63 @@
     $('toolclear').addEventListener('click', function () { clearMeas(); if (tool) $('toolout').textContent = 'Click the first point.'; });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && tool) setTool(tool); });
 
+    // ---- click a tree: the tallest point of the cloud near the click, as feet above the ground ----
+    // The cloud is drawn by the graphics card, so the click is matched on the screen: every point is projected with the
+    // same matrix the last frame used, and the nearest one to the camera within a few pixels of the click is the one you see.
+    function cloudPick(pt) {
+      var c = cloud, dec = c.dec, mm = c.mm;
+      if (!c.on || !dec || !mm || !c.data || !c.data.length) return null;
+      var cv = map.getCanvas(); if (!cv.clientWidth || !cv.clientHeight) return null;
+      var kx = cv.width / cv.clientWidth, ky = cv.height / cv.clientHeight, W = cv.width, H = cv.height;
+      var phone = window.matchMedia && window.matchMedia('(max-width: 700px)').matches;
+      var R = (phone ? 24 : 12) * kx, R2 = R * R, px = pt.x * kx, py = pt.y * ky;
+      var bx = dec.bx, qx = (bx[1] - bx[0]) / 65535, qy = (bx[3] - bx[2]) / 65535, qz = (bx[5] - bx[4]) / 65535;
+      var m0 = mm[0], m1 = mm[1], m3 = mm[3], m4 = mm[4], m5 = mm[5], m7 = mm[7], m8 = mm[8], m9 = mm[9], m11 = mm[11], m12 = mm[12], m13 = mm[13], m15 = mm[15];
+      var minSteps = c.minH / c.hstep, hideG = c.hide, best = null, bestW = Infinity;
+      c.data.forEach(function (d) {
+        var u16 = new Uint16Array(d.ab), u8 = new Uint8Array(d.ab);
+        for (var i = 0, n = d.count; i < n; i++) {
+          var h = u8[i * 12 + 10];
+          if (h < minSteps || (hideG && u8[i * 12 + 9] === 2)) continue;
+          var x = bx[0] + u16[i * 6] * qx, y = bx[2] + u16[i * 6 + 1] * qy, z = bx[4] + u16[i * 6 + 2] * qz;
+          var w = m3 * x + m7 * y + m11 * z + m15; if (w <= 0 || w >= bestW) continue;
+          var dx = ((m0 * x + m4 * y + m8 * z + m12) / w * 0.5 + 0.5) * W - px; if (dx * dx > R2) continue;
+          var dy = (0.5 - (m1 * x + m5 * y + m9 * z + m13) / w * 0.5) * H - py; if (dx * dx + dy * dy > R2) continue;
+          bestW = w; best = { x: x, y: y };
+        }
+      });
+      if (!best) return null;
+      // the tallest point within about 10 feet of the one you hit
+      var RN = 3.05, RN2 = RN * RN, top = null, count = 0;
+      c.data.forEach(function (d) {
+        var u16 = new Uint16Array(d.ab), u8 = new Uint8Array(d.ab);
+        for (var i = 0, n = d.count; i < n; i++) {
+          var h = u8[i * 12 + 10];
+          if (h < minSteps || (hideG && u8[i * 12 + 9] === 2)) continue;
+          var x = bx[0] + u16[i * 6] * qx - best.x; if (x * x > RN2) continue;
+          var y = bx[2] + u16[i * 6 + 1] * qy - best.y; if (x * x + y * y > RN2) continue;
+          count++;
+          if (!top || h > top.h) top = { h: h, x: bx[0] + u16[i * 6] * qx, y: bx[2] + u16[i * 6 + 1] * qy, z: bx[4] + u16[i * 6 + 2] * qz };
+        }
+      });
+      if (top) top.count = count;
+      return top;
+    }
+    function showCloudHit(t) {
+      var dec = cloud.dec, ll = new maplibregl.MercatorCoordinate(dec.o.x + t.x * dec.sxy, dec.o.y - t.y * dec.sxy, 0).toLngLat();
+      var hag = t.h * cloud.hstep * M_TO_FT, topFt = toFt(t.z), d = document.createElement('div');
+      var b1 = document.createElement('b'); b1.textContent = fmt1(hag) + ' ft'; d.appendChild(b1);
+      d.appendChild(document.createTextNode(' above the ground'));
+      d.appendChild(document.createElement('br'));
+      var sm = document.createElement('span'); sm.style.color = '#9fb2cc';
+      sm.textContent = 'The tallest point within 10 ft of your click. It sits at ' + fmt1(topFt) + ' ft' + (relative ? ' above the low point' : ' elevation') + ', and the ground under it is at ' + fmt1(topFt - hag) + ' ft.';
+      d.appendChild(sm);
+      d.appendChild(document.createElement('br'));
+      var sm2 = document.createElement('span'); sm2.style.color = '#7f93b0'; sm2.style.fontSize = '11px';
+      sm2.textContent = 'This is not one measured tree. A taller neighbor\u2019s branch within 10 ft can raise it, and thin treetops can read low.'; d.appendChild(sm2);
+      showPopup([ll.lng, ll.lat], d);
+    }
+
     // ---- point cloud: one WebGL layer drawn in the map's own 3D scene ----
     var cloudComp = new URLSearchParams(location.search).get('cloudcomp') !== '0';   // ?cloudcomp=0 turns the height correction off, to compare
     var cloud = { on: true, mode: 0, size: 2, hide: true, minH: 0.6096, meta: null, hstep: 0.1, maxH: 15, dz: 0 };
@@ -1231,7 +1301,7 @@
       // flat distances follow the same sphere the builder used, heights follow the map's own scale
       var sxy = 1 / (2 * Math.PI * 6378137 * Math.cos(lat0 * Math.PI / 180)), sz = o.meterInMercatorCoordinateUnits();
       var prog, loc = {}, stride = pcm.stride || 12, bufs = [];
-      cloud.pending = [];
+      cloud.pending = []; cloud.data = []; cloud.dec = { bx: bx, o: o, sxy: sxy, sz: sz };
       var layer = {
         id: 'cloud', type: 'custom', renderingMode: '3d',
         onAdd: function (m, gl) {
@@ -1254,6 +1324,7 @@
           var mpuC = maplibregl.MercatorCoordinate.fromLngLat({ lng: cc.lng, lat: cc.lat }, 0).meterInMercatorCoordinateUnits();
           var model = [sxy, 0, 0, 0, 0, -sxy, 0, 0, 0, 0, sz * exag, 0, o.x, o.y, -elev * mpuC + cloud.dz * sz * exag, 1];
           var mm = mat4mul(Array.prototype.slice.call(matrix), model);
+          cloud.mm = mm;
           gl.useProgram(prog);
           gl.uniformMatrix4fv(loc.u_matrix, false, new Float32Array(mm));
           gl.uniform3f(loc.u_min, bx[0], bx[2], bx[4]); gl.uniform3f(loc.u_range, bx[1] - bx[0], bx[3] - bx[2], bx[5] - bx[4]);
@@ -1287,14 +1358,14 @@
       $('cloudwrap').style.display = 'block'; $('cloudrow').style.display = 'flex';
       $('cloudlegmax').textContent = Math.round(cloud.maxH / 0.3048) + ' ft or taller'; showLegend();
       var done = 0, shown = 0, n = pcm.chunks.length;
-      function head() { $('cloudcount').textContent = '(' + (shown / 1e6).toFixed(1) + (shown < pcm.count ? ' of ' + (pcm.count / 1e6).toFixed(1) : '') + ' million points)'; }
+      function head() { $('cloudcount').textContent = '(' + (shown < pcm.count ? (shown / 1e6).toFixed(1) + ' of ' + (pcm.count / 1e6).toFixed(1) : (pcm.count / 1e6).toFixed(1)) + 'M points)'; }
       head();
       // one file at a time: each is an even sample of the whole site, so the picture fills in as they arrive
       pcm.chunks.reduce(function (chain, c) {
         return chain.then(function () {
           status(n > 1 ? 'Loading point cloud (' + (done + 1) + ' of ' + n + ') ...' : 'Loading point cloud ...');
           return fetch(siteBase + c.file).then(function (r) { if (!r.ok) throw new Error('cloud'); return r.arrayBuffer(); }).then(function (ab) {
-            cloud.pending.push({ ab: ab, count: c.count }); done++; shown += c.count; head(); map.triggerRepaint();
+            cloud.pending.push({ ab: ab, count: c.count }); cloud.data.push({ ab: ab, count: c.count }); done++; shown += c.count; head(); map.triggerRepaint();
           });
         });
       }, Promise.resolve()).then(function () { status(''); }).catch(function () { status(''); note('Could not load all of the point cloud.'); });
@@ -1362,7 +1433,18 @@
     $('orbit').addEventListener('click', function () { setOrbit(!orbiting); });
     ['mousedown', 'touchstart', 'wheel'].forEach(function (ev) { map.getCanvas().addEventListener(ev, function () { userMoved = true; if (orbiting) setOrbit(false); }, { passive: true }); });
     $('reset').addEventListener('click', function () { setOrbit(false); goHome(800); });
-    $('toggle').addEventListener('click', function () { $('panel').classList.toggle('collapsed'); });
+    var narrow = (window.matchMedia && window.matchMedia('(max-width: 700px)').matches);
+    function syncPanelClass() { document.body.classList.toggle('panelopen', !$('panel').classList.contains('collapsed')); }
+    $('toggle').addEventListener('click', function () {
+      $('panel').classList.toggle('collapsed');
+      if (narrow) { try { localStorage.setItem('terrainPanelOpen', $('panel').classList.contains('collapsed') ? '0' : '1'); } catch (e) {} }
+      syncPanelClass();
+    });
+    if (narrow) {                                   // a phone starts with just the title, and the map
+      var wasOpen = null; try { wasOpen = localStorage.getItem('terrainPanelOpen'); } catch (e) {}
+      if (wasOpen !== '1') $('panel').classList.add('collapsed');
+    }
+    syncPanelClass();
 
     // if the primary imagery will not load (a server that blocks other sites, say), fall back to Esri
     map.on('error', function (e) {
