@@ -54,7 +54,22 @@
   .quick { display: flex; gap: 6px; margin-top: 8px; }
   .quick > * { flex: 1 1 0; margin-top: 0 !important; padding: 6px 4px !important; font-size: 12px !important; }
   #toolclear { color: #5cc8dc; cursor: pointer; display: none; font-size: 12px; margin-top: 6px; }
-  #viewbar { position: absolute; z-index: 1000; top: 12px; left: 344px; align-items: center; gap: 8px; background: rgba(14,27,51,0.94); color: #fff;
+  #toolbar { display: flex; gap: 6px; align-items: center; background: rgba(14,27,51,0.94); border: 1px solid #1b3f95; border-radius: 22px; padding: 4px 6px; }
+  #toolbar button { padding: 7px 13px; border-radius: 16px; border: 1px solid #1b3f95; background: #132447; color: #fff; font-size: 13px; cursor: pointer; font-family: inherit; }
+  #toolbar button:hover { border-color: #019fc4; }
+  #toolbar button.on { background: #1b3f95; border-color: #019fc4; }
+  #cards { position: absolute; z-index: 1000; top: 62px; left: 344px; width: 320px; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+  #cards > * { pointer-events: auto; }
+  #toolcard, #infocard { background: rgba(14,27,51,0.95); border: 1px solid #1b3f95; border-radius: 10px; padding: 8px 12px; color: #e8eef7; font-size: 13px; }
+  #infocard { position: relative; padding-right: 30px; }
+  #infocard b { color: #fff; }
+  #infocard a { color: #5cc8dc; }
+  #infocard summary { cursor: pointer; color: #5cc8dc; font-size: 12px; }
+  #infocard .infox { position: absolute; top: 2px; right: 8px; background: none; border: 0; color: #9fb2cc; font-size: 20px; cursor: pointer; padding: 2px 4px; line-height: 1; }
+  #toolcard #toolout { margin-top: 0; }
+  #hit { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 850; pointer-events: none; overflow: visible; }
+  #mapbar { position: absolute; z-index: 1000; top: 12px; left: 344px; display: flex; gap: 8px; align-items: flex-start; }
+  #viewbar { position: relative; align-items: center; gap: 8px; background: rgba(14,27,51,0.94); color: #fff;
     border: 1px solid #1b3f95; border-radius: 22px; padding: 4px 6px; font-size: 13px; }
   #viewbar button { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #1b3f95; background: #132447; color: #fff; cursor: pointer; font-size: 12px; padding: 0; }
   #viewbar button:hover { border-color: #019fc4; }
@@ -63,16 +78,33 @@
   #viewlabel { flex: 1 1 0; min-width: 0; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   #viewlabel small { color: #9fb2cc; margin-right: 6px; }
   @media (max-width: 700px) {
-    #viewbar { top: auto; bottom: calc(46px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); width: min(calc(100vw - 24px), 360px); }
+    #mapbar { top: auto; bottom: calc(46px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); width: min(calc(100vw - 24px), 360px); flex-direction: column-reverse; align-items: stretch; }
+    #viewbar { width: auto; }
+    #toolbar { justify-content: center; }
+    #cards { top: auto; bottom: calc(150px + env(safe-area-inset-bottom, 0px)); left: 12px; right: 12px; width: auto; }
     #viewbar button { flex: 0 0 40px; width: 40px; height: 40px; }
     #viewlabel { font-size: 14px; }
-    body.panelopen #viewbar { display: none !important; }                 /* never sits on top of the open panel */
-    #status { top: auto; bottom: calc(100px + env(safe-area-inset-bottom, 0px)); }
+    body.panelopen #mapbar, body.panelopen #cards { display: none !important; }                 /* never sits on top of the open panel */
     #panel.collapsed .sub { display: none; }
     #toggle { padding: 8px 14px !important; }
     #panel { max-height: calc(100% - 24px - env(safe-area-inset-bottom, 0px)); }
   }
   #cloudleg { margin-top: 8px; }
+  .notewrap { width: 26px; height: 26px; cursor: pointer; }
+  .notepin { display: block; width: 20px; height: 20px; margin: 3px; border-radius: 50% 50% 50% 0; background: #ffb347; border: 2px solid #fff;
+    transform: rotate(-45deg); box-shadow: 0 1px 5px rgba(0,0,0,.65); }
+  .notepin.photo { background: #c77dff; }
+  .notelabel { background: rgba(14,27,51,0.9); color: #fff; border: 1px solid #ffb347; border-radius: 6px; padding: 2px 8px; font-size: 12px; white-space: nowrap; cursor: pointer; }
+  .noteacts { display: flex; gap: 14px; margin-top: 8px; font-size: 12px; }
+  .noteacts a, .noteacts button { color: #5cc8dc; background: none; border: 0; padding: 0; cursor: pointer; font: inherit; text-decoration: underline; }
+  .noteform label { display: block; font-size: 12px; color: #9fb2cc; margin-top: 8px; }
+  .noteform input[type=text], .noteform textarea, .noteform select { width: 100%; box-sizing: border-box; background: #0a1428; color: #fff; border: 1px solid #1b3f95;
+    border-radius: 6px; padding: 6px 8px; font-size: 13px; font-family: inherit; margin-top: 3px; }
+  .noteform input[type=file] { margin-top: 3px; font-size: 12px; color: #e8eef7; max-width: 100%; }
+  .noteform .btns { display: flex; gap: 8px; margin-top: 10px; }
+  .noteform .btns button { flex: 1; padding: 6px; background: #132447; color: #fff; border: 1px solid #1b3f95; border-radius: 6px; cursor: pointer; font-family: inherit; }
+  .noteform .btns button.go { background: #019fc4; border-color: #019fc4; }
+  .noteform .msg { font-size: 11px; color: #ffd23f; margin-top: 6px; min-height: 14px; }
   .dimtxt { color: #9fb2cc; font-size: 12px; }
   #panel .sec .check:first-of-type { margin-top: 8px; }
   #cloudlegbar { height: 8px; border-radius: 3px; background: linear-gradient(90deg, rgb(26,140,217), rgb(255,217,51), rgb(230,51,38)); border: 1px solid rgba(255,255,255,0.15); }
@@ -110,6 +142,8 @@
   #note { margin-top: 10px; font-size: 11px; color: #7f93b0; line-height: 1.4; }
   #status { position: absolute; z-index: 1100; left: 50%; top: 14px; transform: translateX(-50%); max-width: min(90vw, 520px);
     background: rgba(14,27,51,0.92); color: #e8eef7; border: 1px solid #1b3f95; border-radius: 6px; padding: 6px 12px; font-size: 13px; display: none; text-align: center; }
+  /* after the base rule, so it wins: on a phone the message sits above the view bar instead of under the title */
+  @media (max-width: 700px) { #status { top: auto; bottom: calc(100px + env(safe-area-inset-bottom, 0px)); } }
   #err { position: absolute; z-index: 1101; inset: 36% 10% auto 10%; text-align: center; color: #e0a5a5; background: rgba(14,27,51,0.95);
     border: 1px solid #5a2a2a; border-radius: 8px; padding: 16px; display: none; font-size: 14px; line-height: 1.5; }
   #err a { color: #5cc8dc; }
@@ -122,6 +156,7 @@
     font-size: 12px; line-height: 1.5; box-shadow: 0 2px 10px rgba(0,0,0,.55); max-width: 260px; }
   .maplibregl-popup-content b { color: #fff; font-size: 13px; }
   .maplibregl-popup-content a { color: #5cc8dc; }
+  .maplibregl-popup-content summary { cursor: pointer; color: #5cc8dc; font-size: 12px; }
   .maplibregl-popup-close-button { color: #9fb2cc; font-size: 17px; }
   .maplibregl-popup-close-button:hover { background: none; color: #fff; }
   .maplibregl-popup-anchor-bottom .maplibregl-popup-tip, .maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip, .maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip { border-top-color: #132447; }
@@ -146,6 +181,7 @@
   <canvas id="profcv"></canvas>
   <div id="profread"></div>
 </div>
+<svg id="hit" style="display:none" aria-hidden="true"><line id="hitline" stroke="#0e1b33" stroke-width="5" stroke-linecap="round"/><line id="hitline2" stroke="#ffd23f" stroke-width="2.5" stroke-linecap="round"/><circle id="hitdot" r="7" fill="#ffd23f" stroke="#0e1b33" stroke-width="2.5"/></svg>
 <div id="cmpdiv"><div class="grip">&#9664;&#9654;</div></div>
 <div class="cmptag" id="cmptagL"></div><div class="cmptag" id="cmptagR"></div>
 <div id="status"></div>
@@ -161,6 +197,7 @@
     <details class="sec" id="ovwrap" open>
       <summary id="ovhead">Layers</summary>
       <label class="check" id="stoprow"><input type="checkbox" id="stops" checked> 360 stops</label>
+      <label class="check" id="notesrow" style="display:none"><input type="checkbox" id="noteson" checked> <span>Notes <span id="notescount" class="dimtxt"></span></span></label>
       <label class="check" id="cloudrow" style="display:none"><input type="checkbox" id="cloudon" checked> <span>Point cloud <span id="cloudcount" class="dimtxt"></span></span></label>
       <div id="cmpwrap" style="display:none">
         <label class="check"><input type="checkbox" id="cmpon"> Compare two layers (drag the divider)</label>
@@ -183,6 +220,10 @@
       <input id="cloudmin" type="range" min="0" max="10" step="0.5" value="2">
       <div class="rangehead"><label for="cloudz">Raise or lower the points</label><span id="cloudzv">0 ft</span></div>
       <input id="cloudz" type="range" min="-100" max="100" step="1" value="0">
+      <label for="shadeday">Shade date</label>
+      <select id="shadeday"><option value="172">Jun&nbsp;21 (longest day)</option><option value="196" selected>Jul&nbsp;15</option><option value="227">Aug&nbsp;15</option><option value="265">Sep&nbsp;22</option><option value="355">Dec&nbsp;21 (shortest day)</option></select>
+      <label class="check"><input type="checkbox" id="shadew"> Count midday sun more (sun weighted)</label>
+      <div class="dimtxt" style="margin-top:10px;line-height:1.4">Canopy cover is the share of the ground within 30 ft that has anything taller than 6.5 ft above it. Shade is the share of the sunny day (Jul 15) that trees block the sun at that spot. Click or tap a tree to read its height. It reads the tallest point within 10 ft of the click, so it is not one measured tree: a taller neighbor’s branch can raise it, and thin treetops can read low.</div>
     </details>
 
     <details class="sec" id="floodwrap" style="display:none">
@@ -209,13 +250,6 @@
       <label class="check"><input type="checkbox" id="dim" checked> Dim outside the mapped area</label>
     </details>
 
-    <details class="sec" id="toolwrap">
-      <summary id="toolhead">Measure</summary>
-      <div class="twobtn" style="margin-top:6px"><button id="toolm" type="button">Height difference</button><button id="toolx" type="button">Cross section</button></div>
-      <div id="toolout"></div>
-      <div id="toolclear">Clear measurement</div>
-    </details>
-
     <details class="sec" id="viewwrap" style="display:none">
       <summary id="viewhead">Saved views</summary>
       <select id="viewsel" aria-label="Saved views" style="margin-top:6px"></select>
@@ -239,7 +273,14 @@
   </div>
 </div>
 <div id="busy">Loading map tiles ...</div>
-<div id="viewbar" style="display:none"><button id="viewprev" type="button" title="Previous view">&#9664;</button><span id="viewlabel"></span><button id="viewnext" type="button" title="Next view">&#9654;</button></div>
+<div id="mapbar">
+  <div id="viewbar" style="display:none"><button id="viewprev" type="button" title="Previous view">&#9664;</button><span id="viewlabel"></span><button id="viewnext" type="button" title="Next view">&#9654;</button></div>
+  <div id="toolbar"><button id="toolm" type="button" title="Click two points to read the height difference">Height</button><button id="toolx" type="button" title="Click two points to draw a cross section">Section</button><button id="tooln" type="button" style="display:none" title="Add a note, label or photo to the map">Add note</button></div>
+</div>
+<div id="cards">
+  <div id="infocard" style="display:none"></div>
+  <div id="toolcard" style="display:none"><div id="toolout"></div><div id="toolclear">Clear measurement</div></div>
+</div>
 
 <script>
 (function () {
@@ -377,6 +418,7 @@
       loadFootprint();
       addSiteOrtho();
       loadViews();
+      loadNotes();
       loadCloud();
       defaultsP.then(applyDefaults);
       if (M.tour && M.tour.base && M.tour.id) loadStops(M.tour); else { $('stoprow').classList.add('off'); $('stops').disabled = true; }
@@ -414,8 +456,9 @@
     // ---- elevation readout, read straight from the packed tiles ----
     var tool = null;          // null, 'm' (height difference) or 'x' (cross section)
     var tileCache = {};
-    function loadTile(z, x, y) {
-      var key = z + '/' + x + '/' + y;
+    function loadTile(z, x, y, kind) {
+      kind = kind || 'dem';
+      var key = (kind === 'dem' ? '' : kind + '/') + z + '/' + x + '/' + y;
       if (tileCache[key]) return tileCache[key];
       tileCache[key] = new Promise(function (resolve) {
         var img = new Image();
@@ -427,7 +470,7 @@
           } catch (e) { resolve('blocked'); }
         };
         img.onerror = function () { resolve(null); };
-        img.src = siteBase + 'dem/' + key + '.png';
+        img.src = siteBase + (kind === 'dem' ? 'dem/' : '') + key + '.png';
       });
       return tileCache[key];
     }
@@ -444,15 +487,42 @@
       });
     }
 
+    // height above the channel, from the REM tiles the builder cut (null where the REM has no value)
+    function remAt(lng, lat) {
+      if (!M.rem) return Promise.resolve(undefined);
+      var z = M.rem.zoom, n = Math.pow(2, z), s = Math.sin(lat * Math.PI / 180);
+      var fx = (lng + 180) / 360 * n, fy = (0.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI)) * n;
+      var tx = Math.floor(fx), ty = Math.floor(fy);
+      return loadTile(z, tx, ty, 'rem').then(function (d) {
+        if (!d || d === 'blocked') return null;
+        var px = Math.min(d.width - 1, Math.floor((fx - tx) * d.width)), py = Math.min(d.height - 1, Math.floor((fy - ty) * d.height));
+        var i = (py * d.width + px) * 4;
+        if (d.data[i + 3] === 0) return null;
+        return (d.data[i] * 256 + d.data[i + 1] + d.data[i + 2] / 256) - 32768;
+      });
+    }
+
     var popup = null;
+    // Results of a click on the ground or a tree go in a card beside the toolbar, so nothing covers what you clicked.
+    function showInfo(node) {
+      if (popup) popup.remove();
+      hideHit();
+      var c = $('infocard'); c.textContent = '';
+      var x = document.createElement('button'); x.type = 'button'; x.className = 'infox'; x.textContent = '\u00D7'; x.setAttribute('aria-label', 'Close');
+      x.addEventListener('click', hideInfo); c.appendChild(x); c.appendChild(node); c.style.display = 'block';
+    }
+    function hideInfo() { var c = $('infocard'); c.style.display = 'none'; c.textContent = ''; hideHit(); }
     function showPopup(lngLat, node) {
+      hideInfo();
       if (popup) popup.remove();
       popup = new maplibregl.Popup({ offset: 12, maxWidth: '260px' }).setLngLat(lngLat).setDOMContent(node).addTo(map);
+      popup.on('close', hideHit);
     }
     var markerClicked = false;
     map.on('click', function (e) {
       if (markerClicked) { markerClicked = false; return; }
-      if (tool) { toolClick(e.lngLat); return; }
+      if (tool === 'n') { hideHit(); if (typeof noteClick === 'function') noteClick(e.lngLat); return; }
+      if (tool) { hideHit(); toolClick(e.lngLat); return; }
       if (cloud.meta && $('t3d').checked) { var hit = cloudPick(e.point); if (hit) { showCloudHit(hit); return; } }
       if (!map.getTerrain()) return;
       elevationAt(e.lngLat.lng, e.lngLat.lat).then(function (m) {
@@ -478,7 +548,8 @@
           fsp.textContent = isNaN(fd) ? 'Dry in ' + lab : 'Flood depth ' + (Math.round(fd * 10) / 10) + ' ft in ' + lab;
           d.appendChild(fsp);
         }
-        showPopup(e.lngLat, d);
+        addExtras(d, e.lngLat.lng, e.lngLat.lat, typeof m === 'number' ? m : null);
+        showInfo(d);
       });
     });
 
@@ -734,6 +805,7 @@
             });
             markers.push(mk);
             pts.push([s.lng, s.lat]);
+            stopPts.push({ lng: s.lng, lat: s.lat, name: s.display_name || s.site_id, url: tourStopUrl(tour, s.site_id) });
             if (wantStop && !arrived && ((!isNaN(wantLat) && Math.abs(s.lat - wantLat) < 1e-6 && Math.abs(s.lng - wantLng) < 1e-6) ||
                 (String(s.display_name || '').toLowerCase() === wantStop.toLowerCase() || String(s.site_id).toLowerCase() === wantStop.toLowerCase()))) {
               arrived = true; flyToStop(s.lng, s.lat, s.display_name || s.site_id, tour, s.site_id);
@@ -879,7 +951,7 @@
 
     // ---- saved views, and a start camera that looks along the channel ----
     var views = [], canSave = /^(127\.0\.0\.1|localhost)$/.test(location.hostname);
-    if (canSave) $('savedef').style.display = 'block';
+    if (canSave) { $('savedef').style.display = 'block'; $('tooln').style.display = ''; }
     var defaultsP = fetch(siteBase + 'defaults.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
     function goHome(ms) {
       if (startView) map.flyTo({ center: startView.center, zoom: startView.zoom, pitch: startView.pitch, bearing: startView.bearing, duration: ms || 0, essential: true });
@@ -921,6 +993,8 @@
       if (!d || typeof d !== 'object') return;
       if (isFinite(d.exaggeration)) { $('ex').value = d.exaggeration; fire('ex'); }
       if (isFinite(d.relief)) { $('hs').value = d.relief; fire('hs'); }
+      if (isFinite(d.shadeDay)) { $('shadeday').value = String(d.shadeDay); $('shadeday').dispatchEvent(new Event('change')); }
+      if (typeof d.shadeWeighted === 'boolean') { $('shadew').checked = d.shadeWeighted; $('shadew').dispatchEvent(new Event('change')); }
       var c = d.cloud;
       if (c && cloud.meta) {
         if (isFinite(c.size)) { $('cloudsize').value = c.size; fire('cloudsize'); }
@@ -933,7 +1007,7 @@
       }
     }
     $('savedef').addEventListener('click', function () {
-      var d = { exaggeration: exag, relief: parseFloat($('hs').value),
+      var d = { exaggeration: exag, relief: parseFloat($('hs').value), shadeDay: SHADE_DAY.day, shadeWeighted: SHADE_WEIGHTED,
                 cloud: cloud.meta ? { mode: cloud.mode, size: cloud.size, minFt: parseFloat($('cloudmin').value), dzFt: parseFloat($('cloudz').value), hide: cloud.hide } : null };
       $('defmsg').textContent = 'Saving ...';
       fetch('/save_defaults?site=' + encodeURIComponent(M.site), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) })
@@ -1061,14 +1135,14 @@
     }
     function setTool(name) {
       tool = (tool === name) ? null : name;
-      $('toolm').classList.toggle('on', tool === 'm'); $('toolx').classList.toggle('on', tool === 'x');
+      $('toolm').classList.toggle('on', tool === 'm'); $('toolx').classList.toggle('on', tool === 'x'); $('tooln').classList.toggle('on', tool === 'n');
       map.getCanvas().style.cursor = tool ? 'crosshair' : '';
       if (popup) popup.remove();
       clearMeas();
       if (tool) {
         $('toolout').textContent = tool === 'm' ? 'Click the first point, then the second. Try the water edge, then the top of the bank.'
-                                               : 'Click the start of the line, then the end.';
-        $('toolclear').style.display = 'inline';
+                                 : tool === 'x' ? 'Click the start of the line, then the end.' : 'Click where the note goes.';
+        $('toolclear').style.display = tool === 'n' ? 'none' : 'inline';
       }
     }
     function toolClick(ll) {
@@ -1176,7 +1250,7 @@
     }
     function showProfile() {
       $('profile').style.display = 'block'; $('profread').textContent = 'Move along the graph to read heights. Click it to set a reference height, such as the water level.';
-      $('proftitle').textContent = 'Cross section' + (relative ? ' (height above the site\u2019s low point)' : '');
+      $('proftitle').textContent = 'Cross section, distance and height in feet' + (relative ? ' (height above the site\u2019s low point)' : '');
       $('profref').style.display = 'none';
       drawProfile(null);
     }
@@ -1211,6 +1285,8 @@
     window.addEventListener('resize', function () { if (profData) drawProfile(null); });
     $('toolm').addEventListener('click', function () { setTool('m'); });
     $('toolx').addEventListener('click', function () { setTool('x'); });
+    $('tooln').addEventListener('click', function () { setTool('n'); });
+    new MutationObserver(function () { $('toolcard').style.display = $('toolout').textContent.trim() ? 'block' : 'none'; }).observe($('toolout'), { childList: true, subtree: true, characterData: true });
     $('toolclear').addEventListener('click', function () { clearMeas(); if (tool) $('toolout').textContent = 'Click the first point.'; });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && tool) setTool(tool); });
 
@@ -1256,23 +1332,148 @@
       if (top) top.count = count;
       return top;
     }
+    // ---- popup extras: height above the channel, canopy cover, shade, and a folded More ----
+    var SHADE_DAY = { label: 'Jul\u00A015', day: 196 }, SHADE_WEIGHTED = false;          // peak of the stream temperature season
+    var CELL = 2, COVER_R = 9.14;                           // canopy grid cell in meters, and the 30 ft radius for cover
+    function localXY(lng, lat) {
+      var dec = cloud.dec, m = maplibregl.MercatorCoordinate.fromLngLat({ lng: lng, lat: lat }, 0);
+      return { e: (m.x - dec.o.x) / dec.sxy, n: -(m.y - dec.o.y) / dec.sxy };
+    }
+    // The canopy surface: the highest point of anything more than 2 m (6.5 ft) above the ground, in each 2 m cell of the site.
+    function canopyGrid() {
+      if (cloud.canopy) return cloud.canopy;
+      var bx = cloud.dec.bx, nx = Math.ceil((bx[1] - bx[0]) / CELL) + 1, ny = Math.ceil((bx[3] - bx[2]) / CELL) + 1;
+      var top = new Float32Array(nx * ny).fill(-1e9), zmax = -1e9, minSteps = 2 / cloud.hstep;
+      var qx = (bx[1] - bx[0]) / 65535, qy = (bx[3] - bx[2]) / 65535, qz = (bx[5] - bx[4]) / 65535;
+      cloud.data.forEach(function (d) {
+        var u16 = new Uint16Array(d.ab), u8 = new Uint8Array(d.ab);
+        for (var i = 0, n = d.count; i < n; i++) {
+          if (u8[i * 12 + 10] < minSteps) continue;
+          var ix = ((u16[i * 6] * qx) / CELL) | 0, iy = ((u16[i * 6 + 1] * qy) / CELL) | 0, k = iy * nx + ix, z = bx[4] + u16[i * 6 + 2] * qz;
+          if (z > top[k]) { top[k] = z; if (z > zmax) zmax = z; }
+        }
+      });
+      cloud.canopy = { nx: nx, ny: ny, top: top, zmax: zmax, x0: bx[0], y0: bx[2] };
+      return cloud.canopy;
+    }
+    function cellAt(g, e, n) {
+      var ix = Math.floor((e - g.x0) / CELL), iy = Math.floor((n - g.y0) / CELL);
+      return (ix < 0 || iy < 0 || ix >= g.nx || iy >= g.ny) ? -1 : iy * g.nx + ix;
+    }
+    // Canopy cover: of the 2 m cells whose centers lie within 30 ft, the share that hold canopy.
+    function coverAt(g, e, n) {
+      var r = Math.ceil(COVER_R / CELL), have = 0, all = 0;
+      for (var a = -r; a <= r; a++) for (var b = -r; b <= r; b++) {
+        var de = a * CELL, dn = b * CELL; if (de * de + dn * dn > COVER_R * COVER_R) continue;
+        var k = cellAt(g, e + de, n + dn); if (k < 0) continue;
+        all++; if (g.top[k] > -1e8) have++;
+      }
+      return all ? have / all : null;
+    }
+    // Shade: sun positions across the day (every 12 minutes of solar time, sun at least 10 degrees up). For each one, a ray
+    // runs from 1 m above the ground toward the sun, and the sun is blocked where the canopy surface is above the ray.
+    function shadeAt(g, e, n, z0, lat) {
+      var rad = Math.PI / 180, dec = 23.44 * Math.sin(2 * Math.PI * (284 + SHADE_DAY.day) / 365) * rad, phi = lat * rad, blocked = 0, total = 0;
+      for (var H = -100; H <= 100; H += 3) {
+        var h = H * rad, sinEl = Math.sin(phi) * Math.sin(dec) + Math.cos(phi) * Math.cos(dec) * Math.cos(h);
+        var el = Math.asin(sinEl); if (el < 10 * rad) continue;
+        var az = Math.atan2(Math.sin(h), Math.cos(h) * Math.sin(phi) - Math.tan(dec) * Math.cos(phi)) + Math.PI;
+        var dx = Math.sin(az), dy = Math.cos(az), t = Math.tan(el), hit = false, wgt = SHADE_WEIGHTED ? sinEl : 1;
+        for (var d = 1; d <= 150; d += 1) {
+          var zr = z0 + 1 + d * t; if (zr > g.zmax) break;
+          var k = cellAt(g, e + dx * d, n + dy * d); if (k < 0) break;
+          if (g.top[k] > zr) { hit = true; break; }
+        }
+        total += wgt; if (hit) blocked += wgt;
+      }
+      return total ? blocked / total : null;
+    }
+    $('shadeday').addEventListener('change', function () {
+      var o = $('shadeday').options[$('shadeday').selectedIndex];
+      SHADE_DAY = { label: o.textContent.replace(/ \(.*\)$/, '').replace(/\u00A0/g, ' ').replace(' ', '\u00A0'), day: parseInt(o.value, 10) };
+    });
+    $('shadew').addEventListener('change', function () { SHADE_WEIGHTED = $('shadew').checked; });
+    function pctText(v) { return Math.round(v * 100) + '%'; }
+    function addExtras(d, lng, lat, groundM) {
+      var box = document.createElement('div'); box.style.cssText = 'margin-top:4px;font-size:12px;color:#9fb2cc;line-height:1.5'; d.appendChild(box);
+      function row(text, color) { var r = document.createElement('div'); r.textContent = text || ''; if (color) r.style.color = color; box.appendChild(r); return r; }
+      var remRow = M.rem ? row('', '#5cc8dc') : null;
+      var canRow = (cloud.data && cloud.data.length && cloud.dec && groundM != null) ? row('Reading the canopy ...') : null;
+      var shRow = canRow ? row('') : null;
+      if (remRow) remAt(lng, lat).then(function (v) {
+        if (v == null) { remRow.remove(); return; }
+        remRow.textContent = fmt1(Math.abs(v * M_TO_FT)) + ' ft ' + (v >= 0 ? 'above' : 'below') + ' the channel';
+      });
+      if (canRow) setTimeout(function () {                 // let the popup draw first; the first call reads the whole cloud
+        try {
+          var g = canopyGrid(), xy = localXY(lng, lat), cov = coverAt(g, xy.e, xy.n), sh = shadeAt(g, xy.e, xy.n, groundM, cloud.dec ? cloud.meta.origin[1] : lat);
+          if (cov == null || sh == null) { canRow.remove(); shRow.remove(); return; }
+          canRow.textContent = 'Canopy cover ' + pctText(cov);
+          shRow.textContent = 'Shade ' + pctText(sh) + ' on ' + SHADE_DAY.label + (SHADE_WEIGHTED ? ', sun weighted' : '');
+        } catch (err) { canRow.remove(); shRow.remove(); }
+      }, 30);
+      // More: slope, coordinates, and the nearest 360 stop
+      var more = document.createElement('details'); more.style.marginTop = '4px';
+      var sum = document.createElement('summary'); sum.textContent = 'More'; more.appendChild(sum);
+      var slopeRow = document.createElement('div'); slopeRow.textContent = 'Slope ...'; more.appendChild(slopeRow);
+      var dLat = 2 / 111320, dLng = 2 / (111320 * Math.cos(lat * Math.PI / 180));
+      Promise.all([elevationAt(lng + dLng, lat), elevationAt(lng - dLng, lat), elevationAt(lng, lat + dLat), elevationAt(lng, lat - dLat)]).then(function (v) {
+        if (v.some(function (x) { return typeof x !== 'number'; })) { slopeRow.remove(); return; }
+        slopeRow.textContent = 'Slope ' + Math.round(Math.sqrt(Math.pow((v[0] - v[1]) / 4, 2) + Math.pow((v[2] - v[3]) / 4, 2)) * 100) + '%';
+      });
+      var cRow = document.createElement('div'), txt = lat.toFixed(5) + ', ' + lng.toFixed(5);
+      cRow.appendChild(document.createTextNode(txt + ' '));
+      var cp = document.createElement('a'); cp.href = '#'; cp.textContent = 'Copy';
+      cp.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        try { navigator.clipboard.writeText(txt).then(function () { cp.textContent = 'Copied'; }); } catch (e) { cp.textContent = 'Select and copy'; }
+      });
+      cRow.appendChild(cp); more.appendChild(cRow);
+      if (stopPts.length) {
+        var best = null, bd = Infinity;
+        stopPts.forEach(function (sp) { var dd = hav([lng, lat], [sp.lng, sp.lat]); if (dd < bd) { bd = dd; best = sp; } });
+        var sRow = document.createElement('div'); sRow.appendChild(document.createTextNode('Nearest 360 stop: '));
+        var a = document.createElement('a'); a.href = best.url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = best.name; sRow.appendChild(a);
+        sRow.appendChild(document.createTextNode(', ' + Math.round(bd * M_TO_FT).toLocaleString() + ' ft away')); more.appendChild(sRow);
+      }
+      box.appendChild(more);
+    }
+
+    // The clicked point: a dot at the treetop and a line down to the ground, drawn on top of the map each frame
+    var hitPt = null;
+    function hideHit() { hitPt = null; $('hit').style.display = 'none'; }
+    function drawHit() {
+      if (!hitPt || !cloud.mm) return;
+      var cv = map.getCanvas(), mm = cloud.mm, W = cv.clientWidth, H = cv.clientHeight;
+      function proj(x, y, z) {
+        var w = mm[3] * x + mm[7] * y + mm[11] * z + mm[15]; if (w <= 0) return null;
+        return [((mm[0] * x + mm[4] * y + mm[8] * z + mm[12]) / w * 0.5 + 0.5) * W, (0.5 - (mm[1] * x + mm[5] * y + mm[9] * z + mm[13]) / w * 0.5) * H];
+      }
+      var a = proj(hitPt.x, hitPt.y, hitPt.z), b = proj(hitPt.x, hitPt.y, hitPt.z - hitPt.hag);
+      if (!a || !b) { $('hit').style.display = 'none'; return; }
+      ['hitline', 'hitline2'].forEach(function (id) { var l = $(id); l.setAttribute('x1', a[0]); l.setAttribute('y1', a[1]); l.setAttribute('x2', b[0]); l.setAttribute('y2', b[1]); });
+      $('hitdot').setAttribute('cx', a[0]); $('hitdot').setAttribute('cy', a[1]);
+      $('hit').style.display = 'block';
+    }
+    map.on('render', drawHit);
+    function signed(v) { return (v < 0 ? '\u2212' : '') + fmt1(Math.abs(v)); }
     function showCloudHit(t) {
       var dec = cloud.dec, ll = new maplibregl.MercatorCoordinate(dec.o.x + t.x * dec.sxy, dec.o.y - t.y * dec.sxy, 0).toLngLat();
-      var hag = t.h * cloud.hstep * M_TO_FT, topFt = toFt(t.z), d = document.createElement('div');
-      var b1 = document.createElement('b'); b1.textContent = fmt1(hag) + ' ft'; d.appendChild(b1);
+      var hagM = t.h * cloud.hstep, hag = hagM * M_TO_FT, topFt = toFt(t.z), d = document.createElement('div');
+      var b1 = document.createElement('b'); b1.textContent = fmt1(hag) + ' ft'; b1.style.fontSize = '15px'; d.appendChild(b1);
       d.appendChild(document.createTextNode(' above the ground'));
       d.appendChild(document.createElement('br'));
-      var sm = document.createElement('span'); sm.style.color = '#9fb2cc';
-      sm.textContent = 'The tallest point within 10 ft of your click. It sits at ' + fmt1(topFt) + ' ft' + (relative ? ' above the low point' : ' elevation') + ', and the ground under it is at ' + fmt1(topFt - hag) + ' ft.';
+      var sm = document.createElement('span'); sm.style.color = '#9fb2cc'; sm.style.fontSize = '12px';
+      sm.textContent = 'top ' + signed(topFt) + ' ft \u00B7 ground ' + signed(topFt - hag) + ' ft' + (relative ? ' (above the low point)' : '');
       d.appendChild(sm);
-      d.appendChild(document.createElement('br'));
-      var sm2 = document.createElement('span'); sm2.style.color = '#7f93b0'; sm2.style.fontSize = '11px';
-      sm2.textContent = 'This is not one measured tree. A taller neighbor\u2019s branch within 10 ft can raise it, and thin treetops can read low.'; d.appendChild(sm2);
-      showPopup([ll.lng, ll.lat], d);
+      addExtras(d, ll.lng, ll.lat, t.z - hagM);
+      showInfo(d);
+      hitPt = { x: t.x, y: t.y, z: t.z, hag: hagM }; drawHit();
     }
 
     // ---- point cloud: one WebGL layer drawn in the map's own 3D scene ----
     var cloudComp = new URLSearchParams(location.search).get('cloudcomp') !== '0';   // ?cloudcomp=0 turns the height correction off, to compare
+    var stopPts = [];
     var cloud = { on: true, mode: 0, size: 2, hide: true, minH: 0.6096, meta: null, hstep: 0.1, maxH: 15, dz: 0 };
     function mat4mul(a, c) {
       var o = new Array(16);
@@ -1399,6 +1600,108 @@
       detail = parseInt($('detail').value, 10) === 2 ? 2 : 1;
       try { localStorage.setItem('terrainDetail', String(detail)); } catch (e) {}
       rebuildTiles();
+    });
+
+    // ---- notes: pins, text labels and photos placed on the terrain. Visitors read them; the local viewer edits them ----
+    var notes = [], noteMarkers = {};
+    function flash(text) { status(text); setTimeout(function () { status(''); }, 3500); }
+    function persistNotes(msg) {
+      return fetch('/save_notes?site=' + encodeURIComponent(M.site), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ notes: notes }) })
+        .then(function (r) { if (!r.ok) throw new Error('save'); flash((msg || 'Saved') + ' Publish to share it.'); })
+        .catch(function () { flash('Could not save. Open this page from the Terrain Viewer Builder window (Open viewer) to save notes.'); });
+    }
+    function webLink(u) { return /^https?:\/\//i.test(u || ''); }
+    function renderNotes() {
+      Object.keys(noteMarkers).forEach(function (k) { noteMarkers[k].remove(); }); noteMarkers = {};
+      notes.forEach(function (n) {
+        var el = document.createElement('div'), isLabel = n.kind === 'label';
+        if (isLabel) { el.className = 'notelabel'; el.textContent = n.title || 'Label'; }
+        else { el.className = 'notewrap'; var h = document.createElement('span'); h.className = 'notepin' + (n.photo ? ' photo' : ''); el.appendChild(h); el.title = n.title || ''; }
+        el.addEventListener('click', function (ev) { ev.stopPropagation(); markerClicked = true; openNote(n); });
+        var mk = new maplibregl.Marker({ element: el, draggable: canSave, anchor: isLabel ? 'center' : 'bottom' }).setLngLat([n.lng, n.lat]).addTo(map);
+        if (canSave) mk.on('dragend', function () { var ll = mk.getLngLat(); n.lng = ll.lng; n.lat = ll.lat; persistNotes('Moved.'); });
+        noteMarkers[n.id] = mk;
+      });
+      var show = $('noteson').checked;
+      Object.keys(noteMarkers).forEach(function (k) { noteMarkers[k].getElement().style.display = show ? '' : 'none'; });
+      $('notesrow').style.display = (notes.length || canSave) ? 'flex' : 'none';
+      $('notescount').textContent = notes.length ? '(' + notes.length + ')' : '';
+    }
+    function openNote(n) {
+      var d = document.createElement('div');
+      if (n.title) { var b = document.createElement('b'); b.textContent = n.title; d.appendChild(b); }
+      if (n.text) { var t = document.createElement('div'); t.style.cssText = 'white-space:pre-wrap;font-size:12.5px;color:#cfd9e8;margin-top:4px;line-height:1.45'; t.textContent = n.text; d.appendChild(t); }
+      if (n.photo) {
+        var a = document.createElement('a'); a.href = siteBase + n.photo; a.target = '_blank'; a.rel = 'noopener';
+        var im = document.createElement('img'); im.src = siteBase + n.photo; im.loading = 'lazy'; im.alt = n.title || 'Photo';
+        im.style.cssText = 'width:100%;border-radius:6px;margin-top:6px;display:block'; a.appendChild(im); d.appendChild(a);
+      }
+      var acts = document.createElement('div'); acts.className = 'noteacts';
+      if (n.view && views.some(function (v) { return v.name === n.view; })) {
+        var gv = document.createElement('button'); gv.type = 'button'; gv.textContent = 'Go to view';
+        gv.addEventListener('click', function () { var i = views.map(function (v) { return v.name; }).indexOf(n.view); if (i >= 0) goView(i); }); acts.appendChild(gv);
+      }
+      if (webLink(n.link)) { var ln = document.createElement('a'); ln.href = n.link; ln.target = '_blank'; ln.rel = 'noopener'; ln.textContent = 'Open link'; acts.appendChild(ln); }
+      if (canSave) { var ed = document.createElement('button'); ed.type = 'button'; ed.textContent = 'Edit'; ed.addEventListener('click', function () { openNoteEditor(n); }); acts.appendChild(ed); }
+      if (acts.childNodes.length) d.appendChild(acts);
+      showPopup([n.lng, n.lat], d);
+    }
+    // the editor: only the local viewer has it
+    function noteClick(ll) { setTool('n'); openNoteEditor(null, ll); }
+    function openNoteEditor(n, ll) {
+      var d = document.createElement('div'); d.className = 'noteform';
+      function field(label, el) { var l = document.createElement('label'); l.textContent = label; l.appendChild(el); d.appendChild(l); return el; }
+      var kind = document.createElement('select'); [['pin', 'Pin with a note'], ['label', 'Text label on the map']].forEach(function (o) { var x = document.createElement('option'); x.value = o[0]; x.textContent = o[1]; kind.appendChild(x); });
+      kind.value = n && n.kind === 'label' ? 'label' : 'pin'; field('Type', kind);
+      var title = document.createElement('input'); title.type = 'text'; title.maxLength = 120; title.value = n ? (n.title || '') : ''; field('Title', title);
+      var text = document.createElement('textarea'); text.rows = 3; text.maxLength = 2000; text.value = n ? (n.text || '') : ''; field('Note', text);
+      var photo = document.createElement('input'); photo.type = 'file'; photo.accept = 'image/*'; field(n && n.photo ? 'Replace the photo' : 'Photo (optional)', photo);
+      var rm = null;
+      if (n && n.photo) { var rl = document.createElement('label'); rm = document.createElement('input'); rm.type = 'checkbox'; rl.appendChild(rm); rl.appendChild(document.createTextNode(' Remove the current photo')); d.appendChild(rl); }
+      var link = document.createElement('input'); link.type = 'text'; link.placeholder = 'https://'; link.value = n ? (n.link || '') : ''; field('Link (optional)', link);
+      var vsel = document.createElement('select'); var none = document.createElement('option'); none.value = ''; none.textContent = 'None'; vsel.appendChild(none);
+      views.forEach(function (v) { var x = document.createElement('option'); x.value = v.name; x.textContent = v.name; vsel.appendChild(x); });
+      vsel.value = n && n.view ? n.view : ''; field('Link a saved view (optional)', vsel);
+      var msg = document.createElement('div'); msg.className = 'msg'; d.appendChild(msg);
+      var btns = document.createElement('div'); btns.className = 'btns'; d.appendChild(btns);
+      function mkBtn(label, cls, fn) { var b = document.createElement('button'); b.type = 'button'; b.textContent = label; if (cls) b.className = cls; b.addEventListener('click', fn); btns.appendChild(b); return b; }
+      var saveBtn = mkBtn('Save', 'go', function () {
+        var t = title.value.trim(), tx = text.value.trim();
+        if (kind.value === 'label' && !t) { msg.textContent = 'A label needs a title.'; return; }
+        if (!t && !tx && !photo.files[0] && !(n && n.photo && !(rm && rm.checked))) { msg.textContent = 'Add a title, a note or a photo.'; return; }
+        saveBtn.disabled = true;
+        function done(photoPath) {
+          var rec = { id: n ? n.id : 'n' + Date.now().toString(36), kind: kind.value, title: t, text: tx, lng: n ? n.lng : ll.lng, lat: n ? n.lat : ll.lat };
+          if (photoPath) rec.photo = photoPath;
+          if (webLink(link.value.trim())) rec.link = link.value.trim();
+          if (vsel.value) rec.view = vsel.value;
+          if (n) notes[notes.indexOf(n)] = rec; else notes.push(rec);
+          renderNotes(); if (popup) popup.remove(); persistNotes(n ? 'Updated.' : 'Added.');
+        }
+        var f = photo.files[0];
+        if (!f) { done(n && n.photo && !(rm && rm.checked) ? n.photo : null); return; }
+        msg.textContent = 'Uploading the photo ...';
+        fetch('/upload_photo?site=' + encodeURIComponent(M.site), { method: 'POST', headers: { 'Content-Type': f.type || 'image/jpeg' }, body: f })
+          .then(function (r) { if (!r.ok) throw new Error('up'); return r.json(); }).then(function (j) { done(j.file); })
+          .catch(function () { saveBtn.disabled = false; msg.textContent = 'Could not upload that photo. Try a JPEG or PNG.'; });
+      });
+      mkBtn('Cancel', '', function () { if (popup) popup.remove(); });
+      if (n) mkBtn('Delete', '', function () {
+        if (!window.confirm('Delete this note?')) return;
+        notes.splice(notes.indexOf(n), 1); renderNotes(); if (popup) popup.remove(); persistNotes('Deleted.');
+      });
+      showPopup(n ? [n.lng, n.lat] : [ll.lng, ll.lat], d);
+    }
+    function loadNotes() {
+      return fetch(siteBase + 'notes.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }).then(function (j) {
+        notes = ((j && j.notes) || []).filter(function (n) { return n && n.id && isFinite(n.lng) && isFinite(n.lat); });
+        renderNotes();
+        var want = qs.get('note'), hit = want && notes.filter(function (x) { return x.id === want; })[0];
+        if (hit) { userMoved = true; map.flyTo({ center: [hit.lng, hit.lat], zoom: Math.max(map.getZoom(), 18), pitch: 60, duration: 1800, essential: true }); openNote(hit); }
+      });
+    }
+    $('noteson').addEventListener('change', function () {
+      var show = $('noteson').checked; Object.keys(noteMarkers).forEach(function (k) { noteMarkers[k].getElement().style.display = show ? '' : 'none'; });
     });
 
     // ---- controls ----

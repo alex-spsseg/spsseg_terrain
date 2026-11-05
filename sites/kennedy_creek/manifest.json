@@ -13,10 +13,10 @@
  "tile_size": 256,
  "encoding": "terrarium",
  "elev_min_m": -22.373764038085938,
- "elev_max_m": 54.60363006591797,
+ "elev_max_m": 54.6036262512207,
  "relief": false,
  "elevation_mode": "absolute",
- "elev_base_m": -24.467078749831327,
+ "elev_base_m": -3.262099560850733,
  "exaggeration": 1.25,
  "footprint": "footprint.geojson",
  "tour": {
@@ -33,10 +33,14 @@
    },
    {
     "file": "cloud_01.bin",
-    "count": 2995340
+    "count": 7000000
+   },
+   {
+    "file": "cloud_02.bin",
+    "count": 995912
    }
   ],
-  "count": 9995340,
+  "count": 14995912,
   "stride": 12,
   "has_rgb": true,
   "has_class": true,
@@ -46,14 +50,14 @@
   ],
   "box": [
    -629.3004150390625,
-   647.7340087890625,
-   -591.1619873046875,
+   647.7518310546875,
+   -591.1752319335938,
    601.2186279296875,
-   -23.31407356262207,
-   80.52356719970703
+   -23.44209098815918,
+   80.71467590332031
   ],
   "h_step": 0.25,
-  "h_p98": 34.2,
+  "h_p98": 34.5,
   "ground_removed": true,
   "source": "KCST_20261016_point_cloud.copc.laz"
  },
@@ -73,6 +77,7 @@
   "source": "https://tiles.arcgis.com/tiles/buuvDFFARQiOEbVZ/arcgis/rest/services/KCST_20261016_ortho/MapServer",
   "tile_size": 256
  },
+ "rem": null,
  "basemap": {
   "type": "xyz_tile",
   "url": "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
