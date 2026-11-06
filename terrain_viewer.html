@@ -33,7 +33,7 @@
   #panel button, #panel a.btn { cursor: pointer; margin-top: 10px; }
   #panel button:hover, #panel select:hover, #panel a.btn:hover { border-color: #019fc4; }
   #panel input[type=range] { width: 100%; accent-color: #019fc4; }
-  #panel .check { display: flex; align-items: center; gap: 8px; margin: 12px 0 0; color: #e8eef7; font-size: 13px; }
+  #panel .check { display: flex; align-items: center; gap: 8px; margin: 9px 0 0; color: #e8eef7; font-size: 13px; }
   #panel .check input { width: auto; accent-color: #019fc4; }
   #panel .check.off { opacity: 0.45; }
   .rangehead { display: flex; justify-content: space-between; align-items: baseline; }
@@ -101,6 +101,16 @@
   #remleg i { flex: 1; }
   #remctl .legrow { display: flex; justify-content: space-between; font-size: 11px; color: #9fb2cc; margin-top: 2px; }
   details.about summary { cursor: pointer; color: #5cc8dc; font-size: 12px; margin-top: 12px; }
+  .grp { font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: #7f93b0; margin: 14px 0 0; }
+  .grp:first-of-type { margin-top: 8px; }
+  .subhead { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: #7f93b0; margin: 14px 0 0; padding-top: 10px; border-top: 1px dashed rgba(27,63,149,0.7); }
+  .subhead.first { margin-top: 8px; padding-top: 0; border-top: 0; }
+  .legblock { margin-top: 12px; }
+  .legblock:first-of-type { margin-top: 8px; }
+  .legt { font-size: 12px; color: #e8eef7; margin-bottom: 4px; }
+  .legblock .legrow { display: flex; justify-content: space-between; font-size: 11px; color: #9fb2cc; margin-top: 2px; }
+  #hint { display: flex; gap: 8px; align-items: flex-start; background: #132447; border: 1px solid #1b3f95; border-radius: 8px; padding: 8px 10px; margin-top: 10px; font-size: 12px; color: #cfd9e8; line-height: 1.4; }
+  #panel #hint button { width: auto; margin: 0; padding: 0 4px; border: 0; background: none; color: #9fb2cc; font-size: 18px; line-height: 1; }
   .notewrap { width: 26px; height: 26px; cursor: pointer; }
   .notepin { display: block; width: 20px; height: 20px; margin: 3px; border-radius: 50% 50% 50% 0; background: #ffb347; border: 2px solid #fff;
     transform: rotate(-45deg); box-shadow: 0 1px 5px rgba(0,0,0,.65); }
@@ -205,9 +215,12 @@
   </div>
   <div class="body">
     <div class="quick"><button id="reset" type="button">Reset view</button><button id="orbit" type="button">Orbit</button><a class="btn" id="tourlink" href="#" target="_blank" rel="noopener" style="display:none">360 tour</a></div>
+    <div id="hint" style="display:none"><span>Click or tap the ground or a tree to read it. The bar on the map has cross sections, shade and notes.</span><button id="hintx" type="button" aria-label="Dismiss">&times;</button></div>
 
     <details class="sec" id="ovwrap" open>
       <summary id="ovhead">Layers</summary>
+      <div class="grp" id="grpimg">Imagery and overlays</div>
+      <div id="ovrows"></div>
       <div id="cmpwrap" style="display:none">
         <label class="check"><input type="checkbox" id="cmpon"> Compare two layers (drag the divider)</label>
         <div id="cmpsel" style="display:none">
@@ -215,27 +228,22 @@
           <label for="cmpR">Right side</label><select id="cmpR"></select>
         </div>
       </div>
-      <label class="check" id="stoprow"><input type="checkbox" id="stops" checked> 360 stops</label>
-      <label class="check" id="remrow" style="display:none"><input type="checkbox" id="remon"> <span>Height above channel</span></label>
-      <div id="remctl" style="display:none"><input id="remop" class="ovop" type="range" min="0" max="1" step="0.05" value="0.65" title="Opacity"><div id="remleg"></div>
-        <div class="legrow" id="remlegl"><span></span><span></span><span></span></div><div class="dimtxt" id="remnote" style="margin-top:4px"></div></div>
-      <label class="check" id="notesrow" style="display:none"><input type="checkbox" id="noteson" checked> <span>Notes <span id="notescount" class="dimtxt"></span></span></label>
+      <div class="grp" id="grpdata" style="display:none">Data</div>
+      <label class="check" id="remrow" style="display:none"><input type="checkbox" id="remon"> <span>Height above channel (REM)</span></label>
+      <div id="remctl" style="display:none"><input id="remop" class="ovop" type="range" min="0" max="1" step="0.05" value="0.65" title="Opacity"></div>
       <label class="check" id="cloudrow" style="display:none"><input type="checkbox" id="cloudon" checked> <span>Point cloud <span id="cloudcount" class="dimtxt"></span></span></label>
+      <div class="grp" id="grpmark">Markers</div>
+      <label class="check" id="stoprow"><input type="checkbox" id="stops" checked> 360 stops</label>
+      <label class="check" id="notesrow" style="display:none"><input type="checkbox" id="noteson" checked> <span>Notes <span id="notescount" class="dimtxt"></span></span></label>
     </details>
 
-    <details class="sec" id="cloudwrap" style="display:none">
-      <summary id="cloudhead">Point cloud style</summary>
-      <label for="cloudmode">Color by</label>
-      <select id="cloudmode"></select>
-      <div id="cloudleg" style="display:none"><div id="cloudlegbar"></div><div class="legrow"><span>ground</span><span id="cloudlegmax"></span></div></div>
-      <div class="rangehead"><label for="cloudsize">Point size</label><span id="cloudsizev">2 px</span></div>
-      <input id="cloudsize" type="range" min="1" max="6" step="0.5" value="2">
-      <label class="check" id="cloudgrow"><input type="checkbox" id="cloudhide" checked> Hide ground points</label>
-      <div class="rangehead"><label for="cloudmin">Hide points lower than</label><span id="cloudminv">2 ft</span></div>
-      <input id="cloudmin" type="range" min="0" max="10" step="0.5" value="2">
-      <div class="rangehead"><label for="cloudz">Raise or lower the points</label><span id="cloudzv">0 ft</span></div>
-      <input id="cloudz" type="range" min="-100" max="100" step="1" value="0">
-
+    <details class="sec" id="legsec" open style="display:none">
+      <summary>Legend</summary>
+      <div class="legblock" id="legrem" style="display:none"><div class="legt">Height above channel</div><div id="remleg"></div>
+        <div class="legrow" id="remlegl"><span></span><span></span><span></span></div><div class="dimtxt" id="remnote" style="margin-top:4px"></div></div>
+      <div class="legblock" id="legcloud" style="display:none"><div class="legt">Point cloud, height above ground</div>
+        <div id="cloudleg"><div id="cloudlegbar"></div><div class="legrow"><span>ground</span><span id="cloudlegmax"></span></div></div></div>
+      <div class="legblock" id="legflood" style="display:none"><div class="legt">Flood depth</div><div id="floodbar"></div><div id="floodleg"><span>0 ft</span><span id="floodmax"></span></div></div>
     </details>
 
     <details class="sec" id="floodwrap" style="display:none">
@@ -244,12 +252,11 @@
       <select id="floodsel" aria-label="Flood scenario"></select>
       <div class="rangehead"><label for="floodop">Depth opacity</label><span id="floodopv">80%</span></div>
       <input id="floodop" type="range" min="0" max="1" step="0.05" value="0.8">
-      <div id="floodbar"></div>
-      <div id="floodleg"><span>0 ft</span><span id="floodmax"></span></div>
     </details>
 
-    <details class="sec" id="mapsec" open>
-      <summary>Map and terrain</summary>
+    <details class="sec" id="mapsec">
+      <summary>Appearance</summary>
+      <div class="subhead first">Terrain</div>
       <label for="base">Background imagery</label>
       <select id="base"></select>
       <label class="check"><input type="checkbox" id="t3d" checked> 3D terrain</label>
@@ -259,7 +266,18 @@
       </div>
       <div class="rangehead"><label for="hs">Relief shading</label><span id="hsv"></span></div>
       <input id="hs" type="range" min="0" max="1" step="0.05" value="0.3">
-      <label class="check"><input type="checkbox" id="dim" checked> Dim outside the mapped area</label>
+      <div id="cloudwrap" style="display:none">
+        <div class="subhead">Point cloud</div>
+        <label for="cloudmode">Color by</label>
+        <select id="cloudmode"></select>
+        <div class="rangehead"><label for="cloudsize">Point size</label><span id="cloudsizev">2 px</span></div>
+        <input id="cloudsize" type="range" min="1" max="6" step="0.5" value="2">
+        <label class="check" id="cloudgrow"><input type="checkbox" id="cloudhide" checked> Hide ground points</label>
+        <div class="rangehead"><label for="cloudmin">Hide points lower than</label><span id="cloudminv">2 ft</span></div>
+        <input id="cloudmin" type="range" min="0" max="10" step="0.5" value="2">
+        <div class="rangehead"><label for="cloudz">Raise or lower the points</label><span id="cloudzv">0 ft</span></div>
+        <input id="cloudz" type="range" min="-100" max="100" step="1" value="0">
+      </div>
     </details>
 
     <details class="sec" id="viewwrap" style="display:none">
@@ -278,6 +296,7 @@
       <summary>Settings</summary>
       <label for="detail">Imagery detail</label>
       <select id="detail"><option value="1">Sharp (more tiles, slower)</option><option value="2">Fast (a quarter of the tiles)</option></select>
+      <label class="check"><input type="checkbox" id="dim" checked> Dim outside the mapped area</label>
       <button id="savedef" type="button" style="display:none">Save this look as the site default</button>
       <div id="defmsg"></div>
       <details class="about"><summary>About these numbers</summary>
@@ -290,7 +309,7 @@
 <div id="busy">Loading map tiles ...</div>
 <div id="mapbar">
   <div id="viewbar" style="display:none"><button id="viewprev" type="button" title="Previous view">&#9664;</button><span id="viewlabel"></span><button id="viewnext" type="button" title="Next view">&#9654;</button></div>
-  <div id="toolbar"><button id="toolx" type="button" title="Click two points to draw a cross section">Cross section</button><button id="toolshade" type="button" style="display:none" title="Choose the date used for shade">Shade</button><button id="tooln" type="button" style="display:none" title="Add a note, label or photo to the map">Add note</button></div>
+  <div id="toolbar"><button id="toolx" type="button" title="Click two points to draw a cross section: the ground profile, the height and slope between the points, and options for the channel level and canopy">Cross section</button><button id="toolshade" type="button" style="display:none" title="Choose the date for shade, then click a spot and open More to read canopy cover and shade">Shade</button><button id="tooln" type="button" style="display:none" title="Add a note, label or photo to the map">Add note</button></div>
 </div>
 <div id="cards">
   <div id="shadecard" style="display:none">
@@ -314,7 +333,7 @@
 
   // which panel sections are open is remembered in this browser
   (function () {
-    var key = 'terrainSections2', saved = null;
+    var key = 'terrainSections3', saved = null;
     try { saved = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
     var secs = document.querySelectorAll('details.sec');
     if (!saved && (window.matchMedia && window.matchMedia('(max-width: 700px)').matches)) { var ms = document.getElementById('mapsec'); if (ms) ms.open = false; }
@@ -539,6 +558,7 @@
     var popup = null;
     // Results of a click on the ground or a tree go in a card beside the toolbar, so nothing covers what you clicked.
     function showInfo(node) {
+      if (!hintSeen && typeof dismissHint === 'function') dismissHint();
       if (popup) popup.remove();
       hideHit();
       var c = $('infocard'); c.textContent = '';
@@ -619,9 +639,10 @@
         sl.addEventListener('input', function () { onOpacity(parseFloat(sl.value)); });
         wrap.appendChild(sl);
       }
-      var head = $('ovhead');
-      $('ovwrap').insertBefore(wrap, head.nextSibling);
-      return { wrap: wrap, cb: cb, slider: sl };
+      var rows = $('ovrows'); rows.insertBefore(wrap, rows.firstChild);
+      function syncSl() { if (sl) sl.style.display = cb.checked ? '' : 'none'; }      // the opacity slider shows only while the layer is on
+      cb.addEventListener('change', syncSl); syncSl();
+      return { wrap: wrap, cb: cb, slider: sl, sync: syncSl };
     }
     function addTileOverlay(o, idx) {
       var probe = o.local ? Promise.resolve({ maxzoom: o.maxzoom, tileSize: o.tileSize || 256, ok: true }) : lodInfo(o.url);
@@ -642,7 +663,7 @@
           if (map.getLayer(lid)) map.setPaintProperty(lid, 'raster-opacity', v);
           if (cmpActive && cmpR() === rec && cmp && cmp.getLayer('cmpov')) cmp.setPaintProperty('cmpov', 'raster-opacity', v);
         });
-        rec.wrap = ui.wrap; rec.cb = ui.cb;
+        rec.wrap = ui.wrap; rec.cb = ui.cb; rec.sync = ui.sync;
         tileOv.push(rec);
         tileOv.sort(function (x, y) { return x.idx - y.idx; });
         refreshCmpSelects();
@@ -705,7 +726,7 @@
       }
       return chain.then(function () {      // the site ortho is on, so list it first
         var so = tileOv.filter(function (x) { return x.idx === 900; })[0];
-        if (so && so.wrap && so.wrap.parentNode) so.wrap.parentNode.insertBefore(so.wrap, $('ovhead').nextSibling);
+        if (so && so.wrap && so.wrap.parentNode) { var rr = $('ovrows'); rr.insertBefore(so.wrap, rr.firstChild); }
         raiseRem();
       });
     }
@@ -798,13 +819,14 @@
           });
           $('floodbar').style.background = 'linear-gradient(90deg,' + stops.join(',') + '), #0e1b33';
           $('floodmax').textContent = (Math.round((fm.maxDepth || 0) * 10) / 10) + ' ft';
-          $('floodwrap').style.display = 'block';
+          $('floodwrap').style.display = 'block'; $('legflood').style.display = $('flood').checked ? 'block' : 'none';
           showFlood(pick.id);
         })
         .catch(function () { note('Could not load the flood depth from the flow viewer site.'); });
     }
     $('floodsel').addEventListener('change', function () { showFlood($('floodsel').value); });
     $('flood').addEventListener('change', function () {
+      $('legflood').style.display = $('flood').checked ? 'block' : 'none';
       if (map.getLayer('flood')) map.setLayoutProperty('flood', 'visibility', $('flood').checked ? 'visible' : 'none');
     });
     $('floodop').addEventListener('input', function () {
@@ -963,7 +985,7 @@
         tileOv.forEach(function (t) {
           t.cb.disabled = false; t.wrap.classList.remove('dis');
           var was = t.savedOn !== undefined ? t.savedOn : t.cb.checked;
-          t.cb.checked = was;
+          t.cb.checked = was; if (t.sync) t.sync();
           if (map.getLayer(t.lid)) map.setLayoutProperty(t.lid, 'visibility', was ? 'visible' : 'none');
         });
       }
@@ -1694,8 +1716,8 @@
         });
       }, Promise.resolve()).then(function () { status(''); }).catch(function () { status(''); note('Could not load all of the point cloud.'); });
     }
-    $('cloudon').addEventListener('change', function () { cloud.on = $('cloudon').checked; map.triggerRepaint(); });
-    function showLegend() { $('cloudleg').style.display = (cloud.mode === 2) ? 'block' : 'none'; }
+    $('cloudon').addEventListener('change', function () { cloud.on = $('cloudon').checked; showLegend(); map.triggerRepaint(); });
+    function showLegend() { $('legcloud').style.display = (cloud.mode === 2 && cloud.on) ? 'block' : 'none'; }
     $('cloudmode').addEventListener('change', function () { cloud.mode = parseInt($('cloudmode').value, 10); showLegend(); map.triggerRepaint(); });
     $('cloudsize').addEventListener('input', function () { cloud.size = parseFloat($('cloudsize').value); $('cloudsizev').textContent = cloud.size + ' px'; map.triggerRepaint(); });
     $('cloudhide').addEventListener('change', function () { cloud.hide = $('cloudhide').checked; map.triggerRepaint(); });
@@ -1850,10 +1872,31 @@
     $('remon').addEventListener('change', function () {
       var on = $('remon').checked;
       if (map.getLayer('remlayer')) map.setLayoutProperty('remlayer', 'visibility', on ? 'visible' : 'none');
-      $('remctl').style.display = on ? 'block' : 'none';
+      $('remctl').style.display = on ? 'block' : 'none'; $('legrem').style.display = on ? 'block' : 'none';
       raiseRem();
     });
     $('remop').addEventListener('input', function () { if (map.getLayer('remlayer')) map.setPaintProperty('remlayer', 'raster-opacity', parseFloat($('remop').value)); });
+
+    // Group labels and the Legend section appear only when something under them is showing.
+    function shown(el) { return !!el && el.style.display !== 'none' && !el.classList.contains('off'); }
+    function setDisp(el, want) { if (el.style.display !== want) el.style.display = want; }
+    function syncGroups() {
+      setDisp($('grpimg'), $('ovrows').children.length ? '' : 'none');
+      setDisp($('grpdata'), (shown($('remrow')) || shown($('cloudrow'))) ? '' : 'none');
+      setDisp($('grpmark'), (shown($('stoprow')) || shown($('notesrow'))) ? '' : 'none');
+      setDisp($('legsec'), ['legrem', 'legcloud', 'legflood'].some(function (id) { return $(id).style.display === 'block'; }) ? '' : 'none');
+    }
+    new MutationObserver(syncGroups).observe(document.querySelector('#panel .body'), { subtree: true, childList: true, attributes: true, attributeFilter: ['style', 'class'] });
+    syncGroups();
+
+    // A one time hint: dismissed with the x, or by the first click on the map
+    var hintSeen = false; try { hintSeen = localStorage.getItem('terrainHint1') === '1'; } catch (e) {}
+    function dismissHint() { $('hint').style.display = 'none'; hintSeen = true; try { localStorage.setItem('terrainHint1', '1'); } catch (e) {} }
+    if (!hintSeen) {
+      $('hint').style.display = 'flex';
+      if (window.matchMedia && window.matchMedia('(max-width: 700px)').matches) setTimeout(function () { flash('Tap the menu for layers. Click the map to read it.'); }, 1500);
+    }
+    $('hintx').addEventListener('click', dismissHint);
 
     // ---- controls ----
     $('base').addEventListener('change', function () { setImagery($('base').value); });
