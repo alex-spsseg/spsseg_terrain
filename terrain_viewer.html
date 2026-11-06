@@ -63,9 +63,20 @@
   #toolcard, #infocard, #shadecard { background: rgba(14,27,51,0.95); border: 1px solid #1b3f95; border-radius: 10px; padding: 8px 12px; color: #e8eef7; font-size: 13px; }
   #infocard, #shadecard { position: relative; padding-right: 30px; }
   #shadecard b { color: #fff; }
-  #shadecard select { width: 100%; box-sizing: border-box; background: #0a1428; color: #fff; border: 1px solid #1b3f95; border-radius: 6px; padding: 7px 8px; margin-top: 8px; font-size: 13px; font-family: inherit; }
-  #shadecard .check { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
-  #shadecard .dimtxt { margin-top: 10px; line-height: 1.4; }
+  #shadecard .shtitle { display: flex; align-items: baseline; gap: 10px; }
+  #shadecard #shadelab { color: #ffd23f; font-weight: 700; font-size: 14px; }
+  #shadecard .shi { position: absolute; top: 7px; right: 36px; width: 20px; height: 20px; border-radius: 50%; border: 1px solid #5cc8dc; background: none; color: #5cc8dc;
+    font: italic 700 12px Georgia, serif; cursor: pointer; padding: 0; line-height: 18px; }
+  #shadecard .shi.on { background: #5cc8dc; color: #0e1b33; }
+  #shadecard #shadeinfo { margin-top: 8px; line-height: 1.4; }
+  #shadechips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  #shadechips button { background: #132447; border: 1px solid #1b3f95; color: #e8eef7; border-radius: 14px; padding: 4px 10px; font-size: 12px; cursor: pointer; font-family: inherit; }
+  #shadechips button:hover { border-color: #019fc4; }
+  #shadechips button.on { background: #1b3f95; border-color: #019fc4; color: #fff; }
+  #shadecard input[type=range] { width: 100%; margin: 12px 0 0; accent-color: #019fc4; }
+  #shadecard .shticks { display: flex; justify-content: space-between; font-size: 10px; color: #7f93b0; margin-top: 1px; }
+  #shadecard #shadesun { margin-top: 8px; font-size: 12px; }
+  #shadecard .check { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 13px; }
   #infocard b { color: #fff; }
   #infocard a { color: #5cc8dc; }
   #infocard summary { cursor: pointer; color: #5cc8dc; font-size: 12px; }
@@ -146,6 +157,19 @@
   #profile .pbtn:hover { border-color: #019fc4; }
   #profcv { width: 100%; height: 190px; display: block; margin-top: 6px; cursor: crosshair; }
   #profread { font-size: 12px; color: #9fb2cc; min-height: 17px; margin-top: 4px; }
+  #profsum { display: none; font-size: 12px; color: #cfd9e8; line-height: 1.45; margin-top: 4px; }
+  #profsum b { color: #ffd23f; }
+  @media (max-width: 700px) {
+    #profile { left: 12px; right: 12px; width: auto; transform: none; bottom: calc(112px + env(safe-area-inset-bottom, 0px)); padding: 8px 10px 8px; }
+    #profhead { flex-wrap: wrap; row-gap: 6px; }
+    #profhead .acts { flex-wrap: wrap; gap: 6px; }
+    #profile .pbtn { padding: 5px 9px; font-size: 12px; }
+    #profcv { height: 130px; }
+    #profsum { display: block; }
+    #profread { font-size: 11px; }
+    body.profopen #toolcard { display: none; }
+    #busy { bottom: calc(10px + env(safe-area-inset-bottom, 0px)); font-size: 11px; padding: 3px 10px; }
+  }
   .profdot { width: 12px; height: 12px; border-radius: 50%; background: #ffd23f; border: 2px solid #0e1b33; box-shadow: 0 0 0 1px #fff; pointer-events: none; }
   #panel input[type=text] { display: block; width: 100%; background: #0a1428; color: #fff; border: 1px solid #1b3f95; border-radius: 6px; padding: 7px 8px; font-size: 13px; font-family: inherit; margin-top: 8px; }
   #panel input[type=text]:focus { outline: none; border-color: #019fc4; }
@@ -200,6 +224,7 @@
 <div id="profile" style="display:none">
   <div id="profhead"><span id="proftitle">Cross section</span>
     <span class="acts"><button class="pbtn" id="profrem" type="button" style="display:none" title="Draw the channel level, from the REM">Channel level</button><button class="pbtn" id="profcan" type="button" style="display:none" title="Draw the point cloud surface above the ground">Canopy</button><button class="pbtn" id="profref" type="button">Clear reference</button><button class="pbtn" id="profcsv" type="button">Save CSV</button><button class="pbtn" id="profclose" type="button">&times;</button></span></div>
+  <div id="profsum"></div>
   <canvas id="profcv"></canvas>
   <div id="profread"></div>
 </div>
@@ -270,7 +295,10 @@
         <div class="subhead">Point cloud</div>
         <label for="cloudmode">Color by</label>
         <select id="cloudmode"></select>
-        <div class="rangehead"><label for="cloudsize">Point size</label><span id="cloudsizev">2 px</span></div>
+        <label for="clouddetail">Point detail</label>
+      <select id="clouddetail"><option value="fast">Fast (about half the points)</option><option value="full">Full (all points)</option></select>
+      <label class="check"><input type="checkbox" id="cloudthin"> Thin out when zoomed out or moving</label>
+      <div class="rangehead"><label for="cloudsize">Point size</label><span id="cloudsizev">2 px</span></div>
         <input id="cloudsize" type="range" min="1" max="6" step="0.5" value="2">
         <label class="check" id="cloudgrow"><input type="checkbox" id="cloudhide" checked> Hide ground points</label>
         <div class="rangehead"><label for="cloudmin">Hide points lower than</label><span id="cloudminv">2 ft</span></div>
@@ -313,11 +341,15 @@
 </div>
 <div id="cards">
   <div id="shadecard" style="display:none">
+    <button type="button" class="shi" id="shadei" aria-label="About shade" title="About shade">i</button>
     <button type="button" class="infox" id="shadex" aria-label="Close">&times;</button>
-    <b>Shade date</b>
-    <select id="shadeday"><option value="172">Jun&nbsp;21 (longest day)</option><option value="196" selected>Jul&nbsp;15</option><option value="227">Aug&nbsp;15</option><option value="265">Sep&nbsp;22</option><option value="355">Dec&nbsp;21 (shortest day)</option></select>
-    <label class="check"><input type="checkbox" id="shadew"> Count midday sun more (sun weighted)</label>
-    <div class="dimtxt">Shade is the share of the sunny day that trees block the sun at the spot you click. It uses the point cloud, so it counts trees and not hills. Once this is open, a clicked spot shows canopy cover and shade under More.</div>
+    <div class="shtitle"><b>Shade</b><span id="shadelab">Jul 15</span></div>
+    <div id="shadeinfo" class="dimtxt" style="display:none">Shade is the share of the sunny day that trees block the sun at the spot you click. It uses the point cloud, so it counts trees and not hills. While this card is open, a clicked spot shows canopy cover and shade under More.</div>
+    <div id="shadechips"><button type="button" data-day="172">Jun 21</button><button type="button" data-day="196">Jul 15</button><button type="button" data-day="227">Aug 15</button><button type="button" data-day="265">Sep 22</button><button type="button" data-day="355">Dec 21</button></div>
+    <input type="range" id="shadeday" min="1" max="365" step="1" value="196" aria-label="Day of the year">
+    <div class="shticks"><span>Jan</span><span>Apr</span><span>Jul</span><span>Oct</span><span>Dec</span></div>
+    <div id="shadesun" class="dimtxt"></div>
+    <label class="check"><input type="checkbox" id="shadew"> Count midday sun more</label>
   </div>
   <div id="infocard" style="display:none"></div>
   <div id="toolcard" style="display:none"><div id="toolout"></div><div id="toolclear">Clear measurement</div></div>
@@ -1243,6 +1275,7 @@
           for (var j2 = i2 + 1; j2 < d.length; j2++) { if (d[j2] - d[i2] >= 10) { if (e[j2] != null) steep = Math.max(steep, Math.abs(e[j2] - e[i2]) / (d[j2] - d[i2])); break; } }
         }
         if (steep > 0) line(out, 'Steepest 10 ft', fx(steep * 100) + '%');
+        profData.sum = { len: dTot, dh: dh, run: run, lo: lo, hi: hi, steep: steep, above: null };
         refFt = null; showProfile();
       });
     }
@@ -1263,8 +1296,21 @@
           pd.remLine = true;
           var mx = Math.max.apply(null, fin), av = fin.reduce(function (a, b) { return a + b; }, 0) / fin.length;
           line($('toolout'), 'Above channel', 'up to ' + fx(mx) + ' ft, average ' + fx(av) + ' ft');
+          if (pd.sum) { pd.sum.above = { mx: mx, av: av }; updateSum(); }
         }
       });
+    }
+    function updateSum() {
+      var sm = profData && profData.sum, el = $('profsum'); if (!sm) { el.textContent = ''; return; }
+      var parts = [fx(sm.len) + ' ft long, ' + (sm.dh > 0 ? 'up ' : sm.dh < 0 ? 'down ' : 'level ') + (sm.dh === 0 ? '' : fx(Math.abs(sm.dh)) + ' ft ') + '(' + fx(sm.run > 0 ? Math.abs(sm.dh) / sm.run * 100 : 0) + '% slope)',
+                   'relief ' + fx(sm.hi - sm.lo) + ' ft'];
+      if (sm.steep > 0) parts.push('steepest 10 ft ' + fx(sm.steep * 100) + '%');
+      if (sm.above) parts.push('up to ' + fx(sm.above.mx) + ' ft above the channel');
+      el.textContent = parts.join(' \u00B7 ');
+    }
+    function phoneLayout() {                                     // on a phone the cards stack above the graph
+      var phone = !!(window.matchMedia && window.matchMedia('(max-width: 700px)').matches), pr = $('profile');
+      $('cards').style.bottom = (phone && pr.style.display === 'block') ? ((parseFloat(getComputedStyle(pr).bottom) || 112) + pr.offsetHeight + 8) + 'px' : '';
     }
     function remLabel() { $('profrem').classList.toggle('on', profRem); }
     // The point cloud surface along the line: the highest canopy in each 2 m cell, kept only where it is above the ground.
@@ -1361,6 +1407,7 @@
       $('profread').textContent = parts.join(' \u00B7 ');
     }
     function showProfile() {
+      document.body.classList.add('profopen'); updateSum();
       $('profile').style.display = 'block'; $('profread').textContent = 'Move along the graph to read it. Click to set a reference height, such as the water level.';
       $('proftitle').textContent = 'Cross section (feet)' + (relative ? ', height above the site\u2019s low point' : '');
       $('profref').style.display = 'none';
@@ -1368,10 +1415,10 @@
       $('profrem').style.display = M.rem ? '' : 'none'; remLabel();
       if (M.rem && profRem) { var pd0 = profData; remSeries(pd0).then(function () { if (pd0 === profData) drawProfile(null); }); }
       if (profCan) canopySeries();
-      canLabel(); drawProfile(null);
+      canLabel(); drawProfile(null); phoneLayout();
     }
     function hideProfile() {
-      $('profile').style.display = 'none'; profData = null; refFt = null;
+      document.body.classList.remove('profopen'); $('profile').style.display = 'none'; $('profsum').textContent = ''; profData = null; refFt = null; phoneLayout();
       if (profMarker) { profMarker.remove(); profMarker = null; }
     }
     $('profcv').addEventListener('mousemove', function (ev) {
@@ -1406,7 +1453,7 @@
       a.href = URL.createObjectURL(blob); a.download = M.site + '_cross_section.csv'; document.body.appendChild(a); a.click();
       setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
     });
-    window.addEventListener('resize', function () { if (profData) drawProfile(null); });
+    window.addEventListener('resize', function () { if (profData) drawProfile(null); phoneLayout(); });
     $('toolx').addEventListener('click', function () { setTool('x'); });
     $('tooln').addEventListener('click', function () { setTool('n'); });
     $('toolshade').addEventListener('click', function () {
@@ -1516,11 +1563,31 @@
       }
       return total ? blocked / total : null;
     }
-    $('shadeday').addEventListener('change', function () {
-      var o = $('shadeday').options[$('shadeday').selectedIndex];
-      SHADE_DAY = { label: o.textContent.replace(/ \(.*\)$/, '').replace(/\u00A0/g, ' ').replace(' ', '\u00A0'), day: parseInt(o.value, 10) };
-      $('toolshade').title = 'Shade date: ' + SHADE_DAY.label;
+    // The shade date: quick buttons for useful days, and a slider for any day of the year
+    function dayLabel(day) { return new Date(Date.UTC(2026, 0, day)).toLocaleString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }); }
+    function sunFacts(day) {                                     // how long the sun is up (above 10 degrees) and how high it gets at noon
+      var rad = Math.PI / 180, lat = ((cloud && cloud.meta) ? cloud.meta.origin[1] : (M.bounds4326 ? (M.bounds4326[1] + M.bounds4326[3]) / 2 : map.getCenter().lat)) * rad;
+      var dec = 23.44 * Math.sin(2 * Math.PI * (284 + day) / 365) * rad;
+      var c = (Math.sin(10 * rad) - Math.sin(lat) * Math.sin(dec)) / (Math.cos(lat) * Math.cos(dec));
+      var hours = c <= -1 ? 24 : c >= 1 ? 0 : 2 * Math.acos(c) / rad / 15, noon = 90 - Math.abs(lat / rad - dec / rad);
+      var h = Math.floor(hours), m = Math.round((hours - h) * 60); if (m === 60) { h++; m = 0; }
+      return 'Sun above 10\u00B0 for ' + h + ' h ' + m + ' min. Noon sun ' + Math.round(noon) + '\u00B0 high.';
+    }
+    function updateShade() {
+      var day = parseInt($('shadeday').value, 10) || 196, lab = dayLabel(day);
+      SHADE_DAY = { label: lab.replace(' ', '\u00A0'), day: day };
+      $('shadelab').textContent = lab; $('shadesun').textContent = sunFacts(day);
+      Array.prototype.forEach.call($('shadechips').children, function (b) { b.classList.toggle('on', parseInt(b.getAttribute('data-day'), 10) === day); });
+      $('toolshade').title = 'Shade date: ' + lab;
+    }
+    $('shadeday').addEventListener('input', updateShade); $('shadeday').addEventListener('change', updateShade);
+    Array.prototype.forEach.call($('shadechips').children, function (b) {
+      b.addEventListener('click', function () { $('shadeday').value = b.getAttribute('data-day'); updateShade(); });
     });
+    $('shadei').addEventListener('click', function () {
+      var i = $('shadeinfo'), open = i.style.display === 'none'; i.style.display = open ? 'block' : 'none'; $('shadei').classList.toggle('on', open);
+    });
+    updateShade();
     $('shadew').addEventListener('change', function () { SHADE_WEIGHTED = $('shadew').checked; });
     function pctText(v) { return Math.round(v * 100) + '%'; }
     function addExtras(d, lng, lat, groundM, tree) {
@@ -1619,7 +1686,7 @@
     // ---- point cloud: one WebGL layer drawn in the map's own 3D scene ----
     var cloudComp = new URLSearchParams(location.search).get('cloudcomp') !== '0';   // ?cloudcomp=0 turns the height correction off, to compare
     var stopPts = [];
-    var cloud = { on: true, mode: 0, size: 2, hide: true, minH: 0.6096, meta: null, hstep: 0.1, maxH: 15, dz: 0 };
+    var cloud = { on: true, mode: 0, size: 2, hide: true, minH: 0.6096, meta: null, hstep: 0.1, maxH: 15, dz: 0, detail: 'full', thin: false };
     function mat4mul(a, c) {
       var o = new Array(16);
       for (var col = 0; col < 4; col++) for (var row = 0; row < 4; row++) {
@@ -1678,12 +1745,14 @@
           gl.uniform1f(loc.u_hide, cloud.hide ? 1 : 0); gl.uniform1f(loc.u_minh, cloud.minH);
           gl.uniform1f(loc.u_maxh, cloud.maxH); gl.uniform1f(loc.u_hstep, cloud.hstep);
           gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.BLEND);
-          bufs.forEach(function (b) {
+          var frac = 1;                                          // the points are shuffled, so the first part of each file is an even sample
+          if (cloud.thin) { frac = Math.max(0.15, Math.min(1, Math.pow(0.6, 18 - map.getZoom()))); if (map.isMoving()) frac = Math.min(frac, 0.3); }
+          bufs.slice(0, cloud.detail === 'fast' ? 1 : bufs.length).forEach(function (b) {
             gl.bindBuffer(gl.ARRAY_BUFFER, b.buf);
             gl.enableVertexAttribArray(loc.a_pos); gl.vertexAttribPointer(loc.a_pos, 3, gl.UNSIGNED_SHORT, true, stride, 0);
             gl.enableVertexAttribArray(loc.a_rgb); gl.vertexAttribPointer(loc.a_rgb, 3, gl.UNSIGNED_BYTE, true, stride, 6);
             gl.enableVertexAttribArray(loc.a_ch); gl.vertexAttribPointer(loc.a_ch, 2, gl.UNSIGNED_BYTE, false, stride, 9);
-            gl.drawArrays(gl.POINTS, 0, b.count);
+            gl.drawArrays(gl.POINTS, 0, Math.max(1, Math.floor(b.count * frac)));
           });
           gl.disableVertexAttribArray(loc.a_pos); gl.disableVertexAttribArray(loc.a_rgb); gl.disableVertexAttribArray(loc.a_ch);
         }
@@ -1703,18 +1772,40 @@
       if (!pcm.has_class || pcm.ground_removed) { $('cloudgrow').style.display = 'none'; cloud.hide = false; }
       $('cloudwrap').style.display = 'block'; $('cloudrow').style.display = 'flex'; $('toolshade').style.display = '';
       $('cloudlegmax').textContent = Math.round(cloud.maxH / 0.3048) + ' ft or taller'; showLegend();
-      var done = 0, shown = 0, n = pcm.chunks.length;
-      function head() { $('cloudcount').textContent = '(' + (shown < pcm.count ? (shown / 1e6).toFixed(1) + ' of ' + (pcm.count / 1e6).toFixed(1) : (pcm.count / 1e6).toFixed(1)) + 'M points)'; }
+      var phone = !!(window.matchMedia && window.matchMedia('(max-width: 700px)').matches), saved = null, savedThin = null;
+      try { saved = localStorage.getItem('terrainCloudDetail'); savedThin = localStorage.getItem('terrainCloudThin'); } catch (e) {}
+      cloud.detail = (saved === 'fast' || saved === 'full') ? saved : (phone ? 'fast' : 'full');
+      cloud.thin = savedThin === null ? phone : savedThin === '1';
+      $('clouddetail').value = cloud.detail; $('cloudthin').checked = cloud.thin;
+      var shown = 0, loading = false, nfiles = pcm.chunks.length;
+      function wanted() { return (cloud.detail === 'fast' || nfiles < 2) ? 1 : nfiles; }
+      function head() {
+        var have = cloud.detail === 'fast' ? Math.min(shown, pcm.chunks[0].count) : shown;
+        $('cloudcount').textContent = '(' + (have < pcm.count ? (have / 1e6).toFixed(1) + ' of ' + (pcm.count / 1e6).toFixed(1) : (pcm.count / 1e6).toFixed(1)) + 'M points)';
+      }
       head();
-      // one file at a time: each is an even sample of the whole site, so the picture fills in as they arrive
-      pcm.chunks.reduce(function (chain, c) {
-        return chain.then(function () {
-          status(n > 1 ? 'Loading point cloud (' + (done + 1) + ' of ' + n + ') ...' : 'Loading point cloud ...');
-          return fetch(siteBase + c.file).then(function (r) { if (!r.ok) throw new Error('cloud'); return r.arrayBuffer(); }).then(function (ab) {
-            cloud.pending.push({ ab: ab, count: c.count }); cloud.data.push({ ab: ab, count: c.count }); done++; shown += c.count; head(); map.triggerRepaint();
-          });
-        });
-      }, Promise.resolve()).then(function () { status(''); }).catch(function () { status(''); note('Could not load all of the point cloud.'); });
+      // One file at a time. Each file is an even sample of the whole site, so the picture fills in as they arrive.
+      // On a phone only the first file loads, and it waits until the map tiles have settled, so the tiles are not left waiting behind it.
+      function loadNext() {
+        var i = cloud.data.length;
+        if (loading || i >= wanted()) return;
+        loading = true;
+        status(wanted() > 1 ? 'Loading point cloud (' + (i + 1) + ' of ' + wanted() + ') ...' : 'Loading point cloud ...');
+        fetch(siteBase + pcm.chunks[i].file).then(function (r) { if (!r.ok) throw new Error('cloud'); return r.arrayBuffer(); }).then(function (ab) {
+          var c = pcm.chunks[i];
+          cloud.pending.push({ ab: ab, count: c.count }); cloud.data.push({ ab: ab, count: c.count }); cloud.canopy = null;
+          shown += c.count; head(); map.triggerRepaint(); loading = false; status(''); loadNext();
+        }).catch(function () { loading = false; status(''); note('Could not load all of the point cloud.'); });
+      }
+      if (phone) { var go = false; var start = function () { if (!go) { go = true; loadNext(); } }; map.once('idle', start); setTimeout(start, 6000); } else loadNext();
+      $('clouddetail').addEventListener('change', function () {
+        cloud.detail = $('clouddetail').value; try { localStorage.setItem('terrainCloudDetail', cloud.detail); } catch (e) {}
+        head(); loadNext(); map.triggerRepaint();
+      });
+      $('cloudthin').addEventListener('change', function () {
+        cloud.thin = $('cloudthin').checked; try { localStorage.setItem('terrainCloudThin', cloud.thin ? '1' : '0'); } catch (e) {} map.triggerRepaint();
+      });
+      map.on('moveend', function () { if (cloud.thin) map.triggerRepaint(); });
     }
     $('cloudon').addEventListener('change', function () { cloud.on = $('cloudon').checked; showLegend(); map.triggerRepaint(); });
     function showLegend() { $('legcloud').style.display = (cloud.mode === 2 && cloud.on) ? 'block' : 'none'; }
@@ -1741,7 +1832,10 @@
       raiseRem();
       if (cmpActive) { cmpBase(); cmpOverlay(); }
     }
-    try { var dsaved = localStorage.getItem('terrainDetail'); if (dsaved === '2') { detail = 2; $('detail').value = '2'; } } catch (e) {}
+    try {
+      var dsaved = localStorage.getItem('terrainDetail'), phoneNow = !!(window.matchMedia && window.matchMedia('(max-width: 700px)').matches);
+      if (dsaved === '2' || (dsaved === null && phoneNow)) { detail = 2; $('detail').value = '2'; }
+    } catch (e) {}
     $('detail').addEventListener('change', function () {
       detail = parseInt($('detail').value, 10) === 2 ? 2 : 1;
       try { localStorage.setItem('terrainDetail', String(detail)); } catch (e) {}
@@ -1851,13 +1945,22 @@
     });
 
     // ---- height above the channel, drawn from the REM tiles the builder made, in the same 1 ft color classes ----
+    // Crisp class edges (nearest) look right when you are zoomed in past the finest tiles. Zoomed out, or looking across the
+    // site at a tilt, the tiles are enlarged on screen and nearest turns that into blocks, so the layer is smoothed there.
+    var remMode = 'linear';
+    function fixRemResampling() {
+      var r = M.rem; if (!r || !map.getLayer('remlayer')) return;
+      var want = (r.resampling === 'nearest' && map.getZoom() > r.zoom + 0.25) ? 'nearest' : 'linear';
+      if (want !== remMode) { remMode = want; map.setPaintProperty('remlayer', 'raster-resampling', want); }
+    }
     function raiseRem() { if (map.getLayer('remlayer') && $('remon').checked) map.moveLayer('remlayer', 'hillshade'); }
     function addRemLayer() {
       var r = M.rem; if (!r || !r.color) return;
       map.addSource('rem', { type: 'raster', tiles: [siteBase + r.color], tileSize: 256, minzoom: r.minzoom, maxzoom: r.zoom, bounds: r.bounds });
       var op = (typeof r.opacity === 'number') ? r.opacity : 0.65;
       map.addLayer({ id: 'remlayer', type: 'raster', source: 'rem', layout: { visibility: 'none' },
-                     paint: { 'raster-opacity': op, 'raster-resampling': r.resampling === 'linear' ? 'linear' : 'nearest' } }, 'hillshade');
+                     paint: { 'raster-opacity': op, 'raster-resampling': 'linear' } }, 'hillshade');
+      map.on('zoom', fixRemResampling); fixRemResampling();
       $('remop').value = op;
       var br = r.breaks || [], u = r.unit || 'ft', sp = $('remlegl').children;
       if (br.length) {

@@ -11,5 +11,11 @@
   "updated": "2026-11-04",
   "thumb": "sites/kennedy_creek/thumb.png",
   "description": "Terrain from the drone ground points, 1.5 ft cells."
+ },
+ {
+  "site": "wria14_WestOaklandBay",
+  "title": "West Oakland Bay",
+  "updated": "2026-11-06",
+  "thumb": "sites/wria14_WestOaklandBay/thumb.png"
  }
 ]

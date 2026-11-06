@@ -1,0 +1,91 @@
+{
+ "site": "wria14_WestOaklandBay",
+ "title": "West Oakland Bay",
+ "description": "",
+ "bounds4326": [
+  -123.09338038330407,
+  47.209206221392016,
+  -123.08548054995708,
+  47.214419572692115
+ ],
+ "minzoom": 12,
+ "maxzoom": 17,
+ "tile_size": 256,
+ "encoding": "terrarium",
+ "elev_min_m": -5.677159309387207,
+ "elev_max_m": 41.658809661865234,
+ "relief": true,
+ "elevation_mode": "absolute",
+ "elev_base_m": -1.0048108080301243,
+ "exaggeration": 1.5,
+ "footprint": "footprint.geojson",
+ "tour": {
+  "base": "https://alex-spsseg.github.io/wria14_westoaklandbay/",
+  "id": "20260930"
+ },
+ "flow": null,
+ "pointcloud": {
+  "format": 2,
+  "chunks": [
+   {
+    "file": "cloud_00.bin",
+    "count": 7000000
+   },
+   {
+    "file": "cloud_01.bin",
+    "count": 7000000
+   },
+   {
+    "file": "cloud_02.bin",
+    "count": 996180
+   }
+  ],
+  "count": 14996180,
+  "stride": 12,
+  "has_rgb": true,
+  "has_class": true,
+  "origin": [
+   -123.08943046663057,
+   47.211812897042066
+  ],
+  "box": [
+   -280.1459045410156,
+   298.0656433105469,
+   -290.1388244628906,
+   286.41351318359375,
+   7.341683864593506,
+   64.41712188720703
+  ],
+  "h_step": 0.25,
+  "h_p98": 21.8,
+  "ground_removed": true,
+  "source": "WOB_20261105_plus3p1ft_group1_densified_point_cloud.laz"
+ },
+ "ortho": {
+  "tiles": "ortho/{z}/{x}/{y}.webp",
+  "minzoom": 11,
+  "maxzoom": 19,
+  "bounds": [
+   -123.09338038330407,
+   47.209206221392016,
+   -123.08548054995708,
+   47.214419572692115
+  ],
+  "label": "Ortho (9/30/2026)",
+  "count": 208,
+  "mb": 1.1,
+  "source": "https://tiles.arcgis.com/tiles/buuvDFFARQiOEbVZ/arcgis/rest/services/WOB_20260930_plus5p8ft_ortho/MapServer",
+  "tile_size": 256
+ },
+ "rem": null,
+ "basemap": {
+  "type": "xyz_tile",
+  "url": "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+  "attribution": "Imagery: Google"
+ },
+ "source": {
+  "file": "WOB_20261105_plus3p1ft_dsm_reprojected.tif",
+  "cell_size": 1.0,
+  "units": "ft"
+ }
+}
