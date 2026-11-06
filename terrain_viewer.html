@@ -60,12 +60,16 @@
   #toolbar button.on { background: #1b3f95; border-color: #019fc4; }
   #cards { position: absolute; z-index: 1000; top: 62px; left: 344px; width: 320px; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
   #cards > * { pointer-events: auto; }
-  #toolcard, #infocard { background: rgba(14,27,51,0.95); border: 1px solid #1b3f95; border-radius: 10px; padding: 8px 12px; color: #e8eef7; font-size: 13px; }
-  #infocard { position: relative; padding-right: 30px; }
+  #toolcard, #infocard, #shadecard { background: rgba(14,27,51,0.95); border: 1px solid #1b3f95; border-radius: 10px; padding: 8px 12px; color: #e8eef7; font-size: 13px; }
+  #infocard, #shadecard { position: relative; padding-right: 30px; }
+  #shadecard b { color: #fff; }
+  #shadecard select { width: 100%; box-sizing: border-box; background: #0a1428; color: #fff; border: 1px solid #1b3f95; border-radius: 6px; padding: 7px 8px; margin-top: 8px; font-size: 13px; font-family: inherit; }
+  #shadecard .check { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+  #shadecard .dimtxt { margin-top: 10px; line-height: 1.4; }
   #infocard b { color: #fff; }
   #infocard a { color: #5cc8dc; }
   #infocard summary { cursor: pointer; color: #5cc8dc; font-size: 12px; }
-  #infocard .infox { position: absolute; top: 2px; right: 8px; background: none; border: 0; color: #9fb2cc; font-size: 20px; cursor: pointer; padding: 2px 4px; line-height: 1; }
+  #infocard .infox, #shadecard .infox { position: absolute; top: 2px; right: 8px; background: none; border: 0; color: #9fb2cc; font-size: 20px; cursor: pointer; padding: 2px 4px; line-height: 1; }
   #toolcard #toolout { margin-top: 0; }
   #hit { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 850; pointer-events: none; overflow: visible; }
   #mapbar { position: absolute; z-index: 1000; top: 12px; left: 344px; display: flex; gap: 8px; align-items: flex-start; }
@@ -80,7 +84,8 @@
   @media (max-width: 700px) {
     #mapbar { top: auto; bottom: calc(46px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); width: min(calc(100vw - 24px), 360px); flex-direction: column-reverse; align-items: stretch; }
     #viewbar { width: auto; }
-    #toolbar { justify-content: center; }
+    #toolbar { justify-content: center; flex-wrap: wrap; }
+    #toolbar button { padding: 6px 10px; font-size: 12px; }
     #cards { top: auto; bottom: calc(150px + env(safe-area-inset-bottom, 0px)); left: 12px; right: 12px; width: auto; }
     #viewbar button { flex: 0 0 40px; width: 40px; height: 40px; }
     #viewlabel { font-size: 14px; }
@@ -90,6 +95,12 @@
     #panel { max-height: calc(100% - 24px - env(safe-area-inset-bottom, 0px)); }
   }
   #cloudleg { margin-top: 8px; }
+  #remctl { margin: 4px 0 0 26px; }
+  #remctl input.ovop { display: block; width: calc(100% - 4px); margin: 0 0 6px; height: 14px; }
+  #remleg { display: flex; height: 10px; border-radius: 3px; overflow: hidden; border: 1px solid rgba(255,255,255,0.15); }
+  #remleg i { flex: 1; }
+  #remctl .legrow { display: flex; justify-content: space-between; font-size: 11px; color: #9fb2cc; margin-top: 2px; }
+  details.about summary { cursor: pointer; color: #5cc8dc; font-size: 12px; margin-top: 12px; }
   .notewrap { width: 26px; height: 26px; cursor: pointer; }
   .notepin { display: block; width: 20px; height: 20px; margin: 3px; border-radius: 50% 50% 50% 0; background: #ffb347; border: 2px solid #fff;
     transform: rotate(-45deg); box-shadow: 0 1px 5px rgba(0,0,0,.65); }
@@ -121,6 +132,7 @@
   #profhead { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #fff; gap: 8px; }
   #profhead .acts { display: flex; gap: 6px; }
   #profile .pbtn { background: #132447; color: #e8eef7; border: 1px solid #1b3f95; border-radius: 6px; padding: 3px 9px; font-size: 12px; cursor: pointer; font-family: inherit; }
+  #profile .pbtn.on { background: #1b3f95; border-color: #019fc4; }
   #profile .pbtn:hover { border-color: #019fc4; }
   #profcv { width: 100%; height: 190px; display: block; margin-top: 6px; cursor: crosshair; }
   #profread { font-size: 12px; color: #9fb2cc; min-height: 17px; margin-top: 4px; }
@@ -177,7 +189,7 @@
 <div id="map"></div>
 <div id="profile" style="display:none">
   <div id="profhead"><span id="proftitle">Cross section</span>
-    <span class="acts"><button class="pbtn" id="profref" type="button">Clear reference</button><button class="pbtn" id="profcsv" type="button">Save CSV</button><button class="pbtn" id="profclose" type="button">&times;</button></span></div>
+    <span class="acts"><button class="pbtn" id="profrem" type="button" style="display:none" title="Draw the channel level, from the REM">Channel level</button><button class="pbtn" id="profcan" type="button" style="display:none" title="Draw the point cloud surface above the ground">Canopy</button><button class="pbtn" id="profref" type="button">Clear reference</button><button class="pbtn" id="profcsv" type="button">Save CSV</button><button class="pbtn" id="profclose" type="button">&times;</button></span></div>
   <canvas id="profcv"></canvas>
   <div id="profread"></div>
 </div>
@@ -196,9 +208,6 @@
 
     <details class="sec" id="ovwrap" open>
       <summary id="ovhead">Layers</summary>
-      <label class="check" id="stoprow"><input type="checkbox" id="stops" checked> 360 stops</label>
-      <label class="check" id="notesrow" style="display:none"><input type="checkbox" id="noteson" checked> <span>Notes <span id="notescount" class="dimtxt"></span></span></label>
-      <label class="check" id="cloudrow" style="display:none"><input type="checkbox" id="cloudon" checked> <span>Point cloud <span id="cloudcount" class="dimtxt"></span></span></label>
       <div id="cmpwrap" style="display:none">
         <label class="check"><input type="checkbox" id="cmpon"> Compare two layers (drag the divider)</label>
         <div id="cmpsel" style="display:none">
@@ -206,6 +215,12 @@
           <label for="cmpR">Right side</label><select id="cmpR"></select>
         </div>
       </div>
+      <label class="check" id="stoprow"><input type="checkbox" id="stops" checked> 360 stops</label>
+      <label class="check" id="remrow" style="display:none"><input type="checkbox" id="remon"> <span>Height above channel</span></label>
+      <div id="remctl" style="display:none"><input id="remop" class="ovop" type="range" min="0" max="1" step="0.05" value="0.65" title="Opacity"><div id="remleg"></div>
+        <div class="legrow" id="remlegl"><span></span><span></span><span></span></div><div class="dimtxt" id="remnote" style="margin-top:4px"></div></div>
+      <label class="check" id="notesrow" style="display:none"><input type="checkbox" id="noteson" checked> <span>Notes <span id="notescount" class="dimtxt"></span></span></label>
+      <label class="check" id="cloudrow" style="display:none"><input type="checkbox" id="cloudon" checked> <span>Point cloud <span id="cloudcount" class="dimtxt"></span></span></label>
     </details>
 
     <details class="sec" id="cloudwrap" style="display:none">
@@ -220,10 +235,7 @@
       <input id="cloudmin" type="range" min="0" max="10" step="0.5" value="2">
       <div class="rangehead"><label for="cloudz">Raise or lower the points</label><span id="cloudzv">0 ft</span></div>
       <input id="cloudz" type="range" min="-100" max="100" step="1" value="0">
-      <label for="shadeday">Shade date</label>
-      <select id="shadeday"><option value="172">Jun&nbsp;21 (longest day)</option><option value="196" selected>Jul&nbsp;15</option><option value="227">Aug&nbsp;15</option><option value="265">Sep&nbsp;22</option><option value="355">Dec&nbsp;21 (shortest day)</option></select>
-      <label class="check"><input type="checkbox" id="shadew"> Count midday sun more (sun weighted)</label>
-      <div class="dimtxt" style="margin-top:10px;line-height:1.4">Canopy cover is the share of the ground within 30 ft that has anything taller than 6.5 ft above it. Shade is the share of the sunny day (Jul 15) that trees block the sun at that spot. Click or tap a tree to read its height. It reads the tallest point within 10 ft of the click, so it is not one measured tree: a taller neighbor’s branch can raise it, and thin treetops can read low.</div>
+
     </details>
 
     <details class="sec" id="floodwrap" style="display:none">
@@ -268,6 +280,9 @@
       <select id="detail"><option value="1">Sharp (more tiles, slower)</option><option value="2">Fast (a quarter of the tiles)</option></select>
       <button id="savedef" type="button" style="display:none">Save this look as the site default</button>
       <div id="defmsg"></div>
+      <details class="about"><summary>About these numbers</summary>
+        <div class="dimtxt" style="margin-top:6px;line-height:1.45">Click or tap a tree to read its height: the tallest point of the point cloud within 10 ft of the click. It is not one measured tree, because a taller neighbor’s branch can raise it, and thin treetops can read low.
+          Under More: canopy cover is the share of the ground within 30 ft that has anything taller than 6.5 ft above it. Shade is the share of the sunny day that trees block the sun at that spot. Open the Shade tool to turn them on and pick the date.</div></details>
     </details>
     <div id="note"></div>
   </div>
@@ -275,9 +290,16 @@
 <div id="busy">Loading map tiles ...</div>
 <div id="mapbar">
   <div id="viewbar" style="display:none"><button id="viewprev" type="button" title="Previous view">&#9664;</button><span id="viewlabel"></span><button id="viewnext" type="button" title="Next view">&#9654;</button></div>
-  <div id="toolbar"><button id="toolm" type="button" title="Click two points to read the height difference">Height</button><button id="toolx" type="button" title="Click two points to draw a cross section">Section</button><button id="tooln" type="button" style="display:none" title="Add a note, label or photo to the map">Add note</button></div>
+  <div id="toolbar"><button id="toolx" type="button" title="Click two points to draw a cross section">Cross section</button><button id="toolshade" type="button" style="display:none" title="Choose the date used for shade">Shade</button><button id="tooln" type="button" style="display:none" title="Add a note, label or photo to the map">Add note</button></div>
 </div>
 <div id="cards">
+  <div id="shadecard" style="display:none">
+    <button type="button" class="infox" id="shadex" aria-label="Close">&times;</button>
+    <b>Shade date</b>
+    <select id="shadeday"><option value="172">Jun&nbsp;21 (longest day)</option><option value="196" selected>Jul&nbsp;15</option><option value="227">Aug&nbsp;15</option><option value="265">Sep&nbsp;22</option><option value="355">Dec&nbsp;21 (shortest day)</option></select>
+    <label class="check"><input type="checkbox" id="shadew"> Count midday sun more (sun weighted)</label>
+    <div class="dimtxt">Shade is the share of the sunny day that trees block the sun at the spot you click. It uses the point cloud, so it counts trees and not hills. Once this is open, a clicked spot shows canopy cover and shade under More.</div>
+  </div>
   <div id="infocard" style="display:none"></div>
   <div id="toolcard" style="display:none"><div id="toolout"></div><div id="toolclear">Clear measurement</div></div>
 </div>
@@ -375,9 +397,20 @@
         padding: { top: 50, bottom: 50, left: wide ? 360 : 30, right: 60 } });
     }
 
-    var busyTimer = null;
-    function busyOn() { if (busyTimer || $('busy').style.display === 'block') return; busyTimer = setTimeout(function () { busyTimer = null; $('busy').style.display = 'block'; }, 600); }
-    function busyOff() { if (busyTimer) { clearTimeout(busyTimer); busyTimer = null; } $('busy').style.display = 'none'; }
+    var busyTimer = null, busyPoll = null, busyStart = 0;
+    function busyOff() {
+      if (busyTimer) { clearTimeout(busyTimer); busyTimer = null; }
+      if (busyPoll) { clearInterval(busyPoll); busyPoll = null; }
+      $('busy').style.display = 'none';
+    }
+    // Shown only while tiles really are loading: it checks the map every half second, and gives up after 10 seconds.
+    function busyOn() {
+      if (busyTimer || busyPoll) return;
+      busyTimer = setTimeout(function () {
+        busyTimer = null; busyStart = Date.now(); $('busy').style.display = 'block';
+        busyPoll = setInterval(function () { if (map.areTilesLoaded() || Date.now() - busyStart > 10000) busyOff(); }, 500);
+      }, 600);
+    }
     map.on('dataloading', busyOn); map.on('idle', busyOff);
 
     var footprint = [];       // outer rings, for the point in polygon test
@@ -417,6 +450,7 @@
       status('');
       loadFootprint();
       addSiteOrtho();
+      addRemLayer();
       loadViews();
       loadNotes();
       loadCloud();
@@ -618,7 +652,7 @@
     function addSiteOrtho() {
       var oc = M.ortho; if (!oc || !oc.tiles) return;
       addTileOverlay({ label: oc.label || 'Site ortho', url: siteBase + oc.tiles, local: true, maxzoom: oc.maxzoom, tileSize: oc.tile_size || 256, opacity: 1,
-                       extra: { minzoom: oc.minzoom, bounds: oc.bounds } }, 900);
+                       extra: { minzoom: oc.minzoom, bounds: oc.bounds } }, 900).then(raiseRem);
     }
     function addFeatureOverlay(o, idx) {
       var q = o.url.replace(/\/+$/, '') + '/query?where=1%3D1&outFields=*&returnGeometry=true&f=geojson&outSR=4326&inSR=4326' +
@@ -672,6 +706,7 @@
       return chain.then(function () {      // the site ortho is on, so list it first
         var so = tileOv.filter(function (x) { return x.idx === 900; })[0];
         if (so && so.wrap && so.wrap.parentNode) so.wrap.parentNode.insertBefore(so.wrap, $('ovhead').nextSibling);
+        raiseRem();
       });
     }
 
@@ -994,6 +1029,7 @@
       if (isFinite(d.exaggeration)) { $('ex').value = d.exaggeration; fire('ex'); }
       if (isFinite(d.relief)) { $('hs').value = d.relief; fire('hs'); }
       if (isFinite(d.shadeDay)) { $('shadeday').value = String(d.shadeDay); $('shadeday').dispatchEvent(new Event('change')); }
+      if (typeof d.shadeShown === 'boolean') shadeShown = d.shadeShown;
       if (typeof d.shadeWeighted === 'boolean') { $('shadew').checked = d.shadeWeighted; $('shadew').dispatchEvent(new Event('change')); }
       var c = d.cloud;
       if (c && cloud.meta) {
@@ -1007,7 +1043,7 @@
       }
     }
     $('savedef').addEventListener('click', function () {
-      var d = { exaggeration: exag, relief: parseFloat($('hs').value), shadeDay: SHADE_DAY.day, shadeWeighted: SHADE_WEIGHTED,
+      var d = { exaggeration: exag, relief: parseFloat($('hs').value), shadeDay: SHADE_DAY.day, shadeWeighted: SHADE_WEIGHTED, shadeShown: shadeShown,
                 cloud: cloud.meta ? { mode: cloud.mode, size: cloud.size, minFt: parseFloat($('cloudmin').value), dzFt: parseFloat($('cloudz').value), hide: cloud.hide } : null };
       $('defmsg').textContent = 'Saving ...';
       fetch('/save_defaults?site=' + encodeURIComponent(M.site), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) })
@@ -1114,6 +1150,7 @@
       var h = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(a[1] * d2r) * Math.cos(b[1] * d2r) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
       return 2 * R * Math.asin(Math.min(1, Math.sqrt(h)));
     }
+    function fx(v) { return Number(v).toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 }); }
     function fmt1(v) { return (Math.round(v * 10) / 10).toLocaleString(); }
     function ensureMeas() {
       if (measReady) return; measReady = true;
@@ -1135,13 +1172,12 @@
     }
     function setTool(name) {
       tool = (tool === name) ? null : name;
-      $('toolm').classList.toggle('on', tool === 'm'); $('toolx').classList.toggle('on', tool === 'x'); $('tooln').classList.toggle('on', tool === 'n');
+      $('toolx').classList.toggle('on', tool === 'x'); $('tooln').classList.toggle('on', tool === 'n');
       map.getCanvas().style.cursor = tool ? 'crosshair' : '';
       if (popup) popup.remove();
       clearMeas();
       if (tool) {
-        $('toolout').textContent = tool === 'm' ? 'Click the first point, then the second. Try the water edge, then the top of the bank.'
-                                 : tool === 'x' ? 'Click the start of the line, then the end.' : 'Click where the note goes.';
+        $('toolout').textContent = tool === 'x' ? 'Click the start of the line, then the end. Try the water edge, then the top of the bank.' : 'Click where the note goes.';
         $('toolclear').style.display = tool === 'n' ? 'none' : 'inline';
       }
     }
@@ -1149,29 +1185,14 @@
       if (tpts.length >= 2) { tpts = []; hideProfile(); }
       tpts.push([ll.lng, ll.lat]); drawMeas();
       if (tpts.length === 1) { $('toolout').textContent = 'Now click the second point.'; return; }
-      if (tool === 'm') finishDiff(); else finishSection();
+      finishSection();
     }
     map.on('mousemove', function (e) { if (tool && tpts.length === 1) drawMeas([e.lngLat.lng, e.lngLat.lat]); });
     function line(parent, label, value, cls) {
-      var d = document.createElement('div');
-      var l = document.createElement('span'); l.className = 'dim'; l.textContent = label + ' '; d.appendChild(l);
-      var v = document.createElement(cls === 'b' ? 'b' : 'span'); v.textContent = value; d.appendChild(v);
+      var d = document.createElement('div'); d.style.cssText = 'display:grid;grid-template-columns:7.4em 1fr;gap:0 8px;line-height:1.55';
+      var l = document.createElement('span'); l.className = 'dim'; l.textContent = label; d.appendChild(l);
+      var v = document.createElement('span'); v.textContent = value; v.style.color = cls === 'b' ? '#ffd23f' : '#fff'; if (cls === 'b') v.style.fontWeight = '700'; d.appendChild(v);
       parent.appendChild(d);
-    }
-    function finishDiff() {
-      var a = tpts[0], b2 = tpts[1];
-      $('toolout').textContent = 'Reading heights ...';
-      Promise.all([elevationAt(a[0], a[1]), elevationAt(b2[0], b2[1])]).then(function (v) {
-        var out = $('toolout'); out.textContent = '';
-        if (v[0] === 'blocked' || v[1] === 'blocked') { out.textContent = 'Height readouts need the page to be served over http.'; return; }
-        if (v[0] == null || v[1] == null) { out.textContent = 'There is no terrain data at one of those points.'; return; }
-        var ea = toFt(v[0]), eb = toFt(v[1]), dh = eb - ea, dist = hav(a, b2) * M_TO_FT;
-        var unit = relative ? ' ft above the low point' : ' ft';
-        line(out, 'First point', fmt1(ea) + unit); line(out, 'Second point', fmt1(eb) + unit);
-        line(out, 'Height difference', fmt1(Math.abs(dh)) + ' ft (' + (dh > 0 ? 'second is higher' : dh < 0 ? 'second is lower' : 'level') + ')', 'b');
-        line(out, 'Distance along the ground', fmt1(dist) + ' ft');
-        if (dist > 0) line(out, 'Slope', fmt1(Math.abs(dh) / dist * 100) + ' percent');
-      });
     }
     function finishSection() {
       var a = tpts[0], b2 = tpts[1], distM = hav(a, b2), n = Math.max(30, Math.min(300, Math.round(distM / 1.2)));
@@ -1188,8 +1209,18 @@
         if (!fin.length) { $('toolout').textContent = 'There is no terrain data along that line.'; return; }
         profData = { d: d, e: e, ll: ll };
         var lo = Math.min.apply(null, fin), hi = Math.max.apply(null, fin), out = $('toolout'); out.textContent = '';
-        line(out, 'Line length', fmt1(d[d.length - 1]) + ' ft'); line(out, 'Lowest', fmt1(lo) + ' ft'); line(out, 'Highest', fmt1(hi) + ' ft');
-        line(out, 'Relief along the line', fmt1(hi - lo) + ' ft', 'b');
+        // end to end: the height difference and slope between the two points you clicked
+        var iS = 0, iE = e.length - 1; while (e[iS] == null) iS++; while (e[iE] == null) iE--;
+        var dTot = d[d.length - 1], dh = e[iE] - e[iS], run = d[iE] - d[iS];
+        line(out, 'Length', fx(dTot) + ' ft');
+        line(out, 'Start to end', fx(e[iS]) + ' to ' + fx(e[iE]) + ' ft, ' + (dh > 0 ? 'up ' : dh < 0 ? 'down ' : 'level ') + (dh === 0 ? '' : fx(Math.abs(dh)) + ' ft ') + '(' + fx(run > 0 ? Math.abs(dh) / run * 100 : 0) + '% slope)');
+        line(out, 'Low to high', fx(lo) + ' to ' + fx(hi) + ' ft, relief ' + fx(hi - lo) + ' ft', 'b');
+        var steep = 0;                                           // the steepest 10 ft stretch, a quick read of bank angle
+        for (var i2 = 0; i2 < d.length; i2++) {
+          if (e[i2] == null) continue;
+          for (var j2 = i2 + 1; j2 < d.length; j2++) { if (d[j2] - d[i2] >= 10) { if (e[j2] != null) steep = Math.max(steep, Math.abs(e[j2] - e[i2]) / (d[j2] - d[i2])); break; } }
+        }
+        if (steep > 0) line(out, 'Steepest 10 ft', fx(steep * 100) + '%');
         refFt = null; showProfile();
       });
     }
@@ -1197,7 +1228,34 @@
       var raw = range / target, mag = Math.pow(10, Math.floor(Math.log(raw) / Math.LN10)), r = raw / mag;
       return (r < 1.5 ? 1 : r < 3 ? 2 : r < 7 ? 5 : 10) * mag;
     }
-    var PAD = { l: 54, r: 12, t: 10, b: 26 }, profGeom = null;
+    var PAD = { l: 54, r: 12, t: 10, b: 26 }, profGeom = null, profCan = false, profRem = true;
+    // Height above the channel along the line, read from the REM tiles. Ground minus that height is the channel level at each point.
+    function remSeries(pd) {
+      if (!M.rem || pd.r) return Promise.resolve();
+      return Promise.all(pd.ll.map(function (p) { return remAt(p[0], p[1]); })).then(function (vals) {
+        if (pd !== profData) return;                                  // a newer line has replaced this one
+        pd.r = vals.map(function (v) { return typeof v === 'number' ? v * M_TO_FT : null; });
+        pd.rl = pd.r.map(function (v, i) { return (v != null && pd.e[i] != null) ? pd.e[i] - v : null; });
+        var fin = pd.r.filter(function (v) { return v != null; });
+        if (fin.length && !pd.remLine) {
+          pd.remLine = true;
+          var mx = Math.max.apply(null, fin), av = fin.reduce(function (a, b) { return a + b; }, 0) / fin.length;
+          line($('toolout'), 'Above channel', 'up to ' + fx(mx) + ' ft, average ' + fx(av) + ' ft');
+        }
+      });
+    }
+    function remLabel() { $('profrem').classList.toggle('on', profRem); }
+    // The point cloud surface along the line: the highest canopy in each 2 m cell, kept only where it is above the ground.
+    function canopySeries() {
+      if (!profData || profData.c || !(cloud.data && cloud.data.length && cloud.dec)) return;
+      var g = canopyGrid();
+      profData.c = profData.ll.map(function (p, i) {
+        var xy = localXY(p[0], p[1]), k = cellAt(g, xy.e, xy.n);
+        if (k < 0 || !(g.top[k] > -1e8) || profData.e[i] == null) return null;
+        var f = toFt(g.top[k]); return f > profData.e[i] ? f : null;
+      });
+    }
+    function canLabel() { $('profcan').classList.toggle('on', profCan); }
     function drawProfile(hoverIdx) {
       if (!profData) return;
       var cv = $('profcv'), dpr = window.devicePixelRatio || 1, w = cv.clientWidth, h = cv.clientHeight;
@@ -1206,6 +1264,10 @@
       var g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
       var fin = profData.e.filter(function (v) { return v != null; }), lo = Math.min.apply(null, fin), hi = Math.max.apply(null, fin);
       if (refFt != null) { lo = Math.min(lo, refFt); hi = Math.max(hi, refFt); }
+      var showRem = profRem && profData.rl && profData.rl.some(function (v) { return v != null; });
+      if (showRem) { var rf = profData.rl.filter(function (v) { return v != null; }); lo = Math.min(lo, Math.min.apply(null, rf)); hi = Math.max(hi, Math.max.apply(null, rf)); }
+      var showCan = profCan && profData.c && profData.c.some(function (v) { return v != null; });
+      if (showCan) hi = Math.max(hi, Math.max.apply(null, profData.c.filter(function (v) { return v != null; })));
       var padv = Math.max((hi - lo) * 0.08, 0.5); lo -= padv; hi += padv;
       var dmax = profData.d[profData.d.length - 1];
       var X = function (d) { return PAD.l + d / dmax * (w - PAD.l - PAD.r); };
@@ -1217,6 +1279,20 @@
       var sd = niceStep(dmax, 5); g.textAlign = 'center';
       for (var dd = 0; dd <= dmax; dd += sd) g.fillText(fmt1(dd), X(dd), h - 8);
       g.textAlign = 'left'; g.fillText('ft', 6, 12);
+      if (showCan) {                                                    // the canopy band, from the ground up to the highest point
+        var run = [];
+        function flush() {
+          if (run.length < 1) return;
+          g.beginPath(); g.moveTo(X(profData.d[run[0]]), Y(profData.c[run[0]]));
+          run.forEach(function (i) { g.lineTo(X(profData.d[i]), Y(profData.c[i])); });
+          var back = run.slice().reverse(); back.forEach(function (i) { g.lineTo(X(profData.d[i]), Y(profData.e[i])); });
+          g.closePath(); g.fillStyle = 'rgba(108,192,112,0.30)'; g.fill();
+          g.beginPath(); g.moveTo(X(profData.d[run[0]]), Y(profData.c[run[0]]));
+          run.forEach(function (i) { g.lineTo(X(profData.d[i]), Y(profData.c[i])); });
+          g.strokeStyle = '#6cc070'; g.lineWidth = 1.5; g.stroke(); run = [];
+        }
+        profData.c.forEach(function (v, i) { if (v == null) flush(); else run.push(i); }); flush();
+      }
       // ground
       g.beginPath(); var started = false, lastX = 0;
       profData.e.forEach(function (v, i) {
@@ -1226,6 +1302,18 @@
       });
       g.strokeStyle = '#019fc4'; g.lineWidth = 2; g.stroke();
       g.lineTo(lastX, h - PAD.b); g.lineTo(PAD.l, h - PAD.b); g.closePath(); g.fillStyle = 'rgba(1,159,196,0.18)'; g.fill();
+      if (showRem) {                                                    // the channel level, and the band of height above it
+        var runs = [], cur = [];
+        profData.rl.forEach(function (v, i) { if (v == null) { if (cur.length) runs.push(cur); cur = []; } else cur.push(i); }); if (cur.length) runs.push(cur);
+        runs.forEach(function (run) {
+          g.beginPath(); g.moveTo(X(profData.d[run[0]]), Y(profData.e[run[0]]));
+          run.forEach(function (i) { g.lineTo(X(profData.d[i]), Y(profData.e[i])); });
+          run.slice().reverse().forEach(function (i) { g.lineTo(X(profData.d[i]), Y(profData.rl[i])); });
+          g.closePath(); g.fillStyle = 'rgba(195,166,255,0.16)'; g.fill();
+          g.setLineDash([5, 4]); g.strokeStyle = '#c3a6ff'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(X(profData.d[run[0]]), Y(profData.rl[run[0]]));
+          run.forEach(function (i) { g.lineTo(X(profData.d[i]), Y(profData.rl[i])); }); g.stroke(); g.setLineDash([]);
+        });
+      }
       if (refFt != null) {
         g.setLineDash([6, 4]); g.strokeStyle = '#ff9f1c'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(PAD.l, Y(refFt)); g.lineTo(w - PAD.r, Y(refFt)); g.stroke(); g.setLineDash([]);
         g.fillStyle = '#ff9f1c'; g.textAlign = 'right'; g.fillText('reference ' + fmt1(refFt) + ' ft', w - PAD.r - 4, Y(refFt) - 5);
@@ -1244,15 +1332,21 @@
     function readout(i) {
       var v = profData.e[i];
       if (v == null) { $('profread').textContent = 'No terrain data here.'; return; }
-      var t = fmt1(profData.d[i]) + ' ft along the line, ' + fmt1(v) + ' ft' + (relative ? ' above the low point' : ' elevation');
-      if (refFt != null) { var dv = v - refFt; t += ', ' + fmt1(Math.abs(dv)) + ' ft ' + (dv >= 0 ? 'above' : 'below') + ' the reference'; }
-      $('profread').textContent = t;
+      var parts = ['Distance ' + fx(profData.d[i]) + ' ft', 'Ground ' + fx(v) + ' ft' + (relative ? ' above the low point' : '')];
+      if (profRem && profData.r && profData.r[i] != null) parts.push(fx(profData.r[i]) + ' ft above channel');
+      if (profCan && profData.c && profData.c[i] != null) parts.push('Canopy ' + fx(profData.c[i]) + ' ft (' + fx(profData.c[i] - v) + ' ft tall)');
+      if (refFt != null) { var dv = v - refFt; parts.push(fx(Math.abs(dv)) + ' ft ' + (dv >= 0 ? 'above' : 'below') + ' reference'); }
+      $('profread').textContent = parts.join(' \u00B7 ');
     }
     function showProfile() {
-      $('profile').style.display = 'block'; $('profread').textContent = 'Move along the graph to read heights. Click it to set a reference height, such as the water level.';
-      $('proftitle').textContent = 'Cross section, distance and height in feet' + (relative ? ' (height above the site\u2019s low point)' : '');
+      $('profile').style.display = 'block'; $('profread').textContent = 'Move along the graph to read it. Click to set a reference height, such as the water level.';
+      $('proftitle').textContent = 'Cross section (feet)' + (relative ? ', height above the site\u2019s low point' : '');
       $('profref').style.display = 'none';
-      drawProfile(null);
+      $('profcan').style.display = (cloud.data && cloud.data.length) ? '' : 'none';
+      $('profrem').style.display = M.rem ? '' : 'none'; remLabel();
+      if (M.rem && profRem) { var pd0 = profData; remSeries(pd0).then(function () { if (pd0 === profData) drawProfile(null); }); }
+      if (profCan) canopySeries();
+      canLabel(); drawProfile(null);
     }
     function hideProfile() {
       $('profile').style.display = 'none'; profData = null; refFt = null;
@@ -1272,20 +1366,32 @@
       refFt = profGeom.lo + t * (profGeom.hi - profGeom.lo);
       $('profref').style.display = 'inline-block'; var i = profIndex(ev); drawProfile(i); readout(i);
     });
+    $('profrem').addEventListener('click', function () {
+      profRem = !profRem; remLabel();
+      if (profRem && profData) { var pd0 = profData; remSeries(pd0).then(function () { if (pd0 === profData) drawProfile(null); }); } else drawProfile(null);
+    });
+    $('profcan').addEventListener('click', function () {
+      profCan = !profCan; if (profCan) canopySeries(); canLabel(); drawProfile(null);
+    });
     $('profref').addEventListener('click', function () { refFt = null; $('profref').style.display = 'none'; drawProfile(null); $('profread').textContent = 'Reference cleared.'; });
     $('profclose').addEventListener('click', function () { hideProfile(); });
     $('profcsv').addEventListener('click', function () {
       if (!profData) return;
-      var rows = ['distance_ft,elevation_ft,longitude,latitude'];
-      profData.d.forEach(function (d, i) { rows.push([d.toFixed(2), profData.e[i] == null ? '' : profData.e[i].toFixed(2), profData.ll[i][0].toFixed(7), profData.ll[i][1].toFixed(7)].join(',')); });
+      canopySeries();
+      var rows = ['distance_ft,ground_ft' + (profData.c ? ',canopy_top_ft' : '') + (profData.r ? ',above_channel_ft' : '') + ',longitude,latitude'];
+      profData.d.forEach(function (d, i) { rows.push([d.toFixed(2), profData.e[i] == null ? '' : profData.e[i].toFixed(2)].concat(profData.c ? [profData.c[i] == null ? '' : profData.c[i].toFixed(2)] : [], profData.r ? [profData.r[i] == null ? '' : profData.r[i].toFixed(2)] : [], [profData.ll[i][0].toFixed(7), profData.ll[i][1].toFixed(7)]).join(',')); });
       var blob = new Blob([rows.join('\n')], { type: 'text/csv' }), a = document.createElement('a');
       a.href = URL.createObjectURL(blob); a.download = M.site + '_cross_section.csv'; document.body.appendChild(a); a.click();
       setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
     });
     window.addEventListener('resize', function () { if (profData) drawProfile(null); });
-    $('toolm').addEventListener('click', function () { setTool('m'); });
     $('toolx').addEventListener('click', function () { setTool('x'); });
     $('tooln').addEventListener('click', function () { setTool('n'); });
+    $('toolshade').addEventListener('click', function () {
+      var c = $('shadecard'), open = c.style.display !== 'block'; c.style.display = open ? 'block' : 'none'; $('toolshade').classList.toggle('on', open);
+      shadeShown = true;
+    });
+    $('shadex').addEventListener('click', function () { $('shadecard').style.display = 'none'; $('toolshade').classList.remove('on'); });
     new MutationObserver(function () { $('toolcard').style.display = $('toolout').textContent.trim() ? 'block' : 'none'; }).observe($('toolout'), { childList: true, subtree: true, characterData: true });
     $('toolclear').addEventListener('click', function () { clearMeas(); if (tool) $('toolout').textContent = 'Click the first point.'; });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && tool) setTool(tool); });
@@ -1333,7 +1439,7 @@
       return top;
     }
     // ---- popup extras: height above the channel, canopy cover, shade, and a folded More ----
-    var SHADE_DAY = { label: 'Jul\u00A015', day: 196 }, SHADE_WEIGHTED = false;          // peak of the stream temperature season
+    var SHADE_DAY = { label: 'Jul\u00A015', day: 196 }, SHADE_WEIGHTED = false, shadeShown = false, moreOpen = false;          // peak of the stream temperature season
     var CELL = 2, COVER_R = 9.14;                           // canopy grid cell in meters, and the 30 ft radius for cover
     function localXY(lng, lat) {
       var dec = cloud.dec, m = maplibregl.MercatorCoordinate.fromLngLat({ lng: lng, lat: lat }, 0);
@@ -1391,31 +1497,48 @@
     $('shadeday').addEventListener('change', function () {
       var o = $('shadeday').options[$('shadeday').selectedIndex];
       SHADE_DAY = { label: o.textContent.replace(/ \(.*\)$/, '').replace(/\u00A0/g, ' ').replace(' ', '\u00A0'), day: parseInt(o.value, 10) };
+      $('toolshade').title = 'Shade date: ' + SHADE_DAY.label;
     });
     $('shadew').addEventListener('change', function () { SHADE_WEIGHTED = $('shadew').checked; });
     function pctText(v) { return Math.round(v * 100) + '%'; }
-    function addExtras(d, lng, lat, groundM) {
+    function addExtras(d, lng, lat, groundM, tree) {
       var box = document.createElement('div'); box.style.cssText = 'margin-top:4px;font-size:12px;color:#9fb2cc;line-height:1.5'; d.appendChild(box);
       function row(text, color) { var r = document.createElement('div'); r.textContent = text || ''; if (color) r.style.color = color; box.appendChild(r); return r; }
       var remRow = M.rem ? row('', '#5cc8dc') : null;
-      var canRow = (cloud.data && cloud.data.length && cloud.dec && groundM != null) ? row('Reading the canopy ...') : null;
-      var shRow = canRow ? row('') : null;
       if (remRow) remAt(lng, lat).then(function (v) {
         if (v == null) { remRow.remove(); return; }
-        remRow.textContent = fmt1(Math.abs(v * M_TO_FT)) + ' ft ' + (v >= 0 ? 'above' : 'below') + ' the channel';
+        remRow.textContent = (tree ? 'The ground is ' : '') + fmt1(Math.abs(v * M_TO_FT)) + ' ft ' + (v >= 0 ? 'above' : 'below') + ' the channel';
       });
-      if (canRow) setTimeout(function () {                 // let the popup draw first; the first call reads the whole cloud
-        try {
-          var g = canopyGrid(), xy = localXY(lng, lat), cov = coverAt(g, xy.e, xy.n), sh = shadeAt(g, xy.e, xy.n, groundM, cloud.dec ? cloud.meta.origin[1] : lat);
-          if (cov == null || sh == null) { canRow.remove(); shRow.remove(); return; }
-          canRow.textContent = 'Canopy cover ' + pctText(cov);
-          shRow.textContent = 'Shade ' + pctText(sh) + ' on ' + SHADE_DAY.label + (SHADE_WEIGHTED ? ', sun weighted' : '');
-        } catch (err) { canRow.remove(); shRow.remove(); }
-      }, 30);
       // More: slope, coordinates, and the nearest 360 stop
       var more = document.createElement('details'); more.style.marginTop = '4px';
       var sum = document.createElement('summary'); sum.textContent = 'More'; more.appendChild(sum);
       var slopeRow = document.createElement('div'); slopeRow.textContent = 'Slope ...'; more.appendChild(slopeRow);
+      // Canopy cover and shade appear here once the Shade tool has been opened, and are worked out when More is opened
+      var canRow = null, shRow = null, canDone = false, shadeOn = $('shadecard').style.display === 'block';
+      if (shadeShown && cloud.data && cloud.data.length && cloud.dec && groundM != null) {
+        canRow = document.createElement('div'); canRow.textContent = 'Canopy cover ...'; more.appendChild(canRow);
+        shRow = document.createElement('div'); more.appendChild(shRow);
+      }
+      function fillCanopy() {
+        if (canDone || !canRow) return; canDone = true;
+        setTimeout(function () {                       // let the card draw first; the first call reads the whole cloud
+          try {
+            var g = canopyGrid(), xy = localXY(lng, lat), cov = coverAt(g, xy.e, xy.n), sh = shadeAt(g, xy.e, xy.n, groundM, cloud.meta.origin[1]);
+            if (cov == null || sh == null) { canRow.remove(); shRow.remove(); return; }
+            function put(el, label, val, tail) {
+              el.textContent = label + ' ';
+              var b = document.createElement(shadeOn ? 'b' : 'span'); b.textContent = val; if (shadeOn) { b.style.color = '#ffd23f'; b.style.fontSize = '14px'; } el.appendChild(b);
+              if (tail) el.appendChild(document.createTextNode(tail));
+              if (shadeOn) el.style.cssText = 'color:#fff;font-weight:600;margin-top:2px';
+            }
+            put(canRow, 'Canopy cover', pctText(cov), '');
+            put(shRow, 'Shade', pctText(sh), ' on ' + SHADE_DAY.label + (SHADE_WEIGHTED ? ', sun weighted' : ''));
+          } catch (err) { canRow.remove(); shRow.remove(); }
+        }, 30);
+      }
+      more.open = moreOpen || (shadeOn && !!canRow);
+      more.addEventListener('toggle', function () { moreOpen = more.open; if (more.open) fillCanopy(); });
+      if (more.open) fillCanopy();
       var dLat = 2 / 111320, dLng = 2 / (111320 * Math.cos(lat * Math.PI / 180));
       Promise.all([elevationAt(lng + dLng, lat), elevationAt(lng - dLng, lat), elevationAt(lng, lat + dLat), elevationAt(lng, lat - dLat)]).then(function (v) {
         if (v.some(function (x) { return typeof x !== 'number'; })) { slopeRow.remove(); return; }
@@ -1466,7 +1589,7 @@
       var sm = document.createElement('span'); sm.style.color = '#9fb2cc'; sm.style.fontSize = '12px';
       sm.textContent = 'top ' + signed(topFt) + ' ft \u00B7 ground ' + signed(topFt - hag) + ' ft' + (relative ? ' (above the low point)' : '');
       d.appendChild(sm);
-      addExtras(d, ll.lng, ll.lat, t.z - hagM);
+      addExtras(d, ll.lng, ll.lat, t.z - hagM, true);
       showInfo(d);
       hitPt = { x: t.x, y: t.y, z: t.z, hag: hagM }; drawHit();
     }
@@ -1556,7 +1679,7 @@
       var o3 = document.createElement('option'); o3.value = 2; o3.textContent = 'Height above ground'; sel.appendChild(o3);
       cloud.mode = pcm.has_rgb ? 0 : (pcm.has_class ? 1 : 2); sel.value = String(cloud.mode);
       if (!pcm.has_class || pcm.ground_removed) { $('cloudgrow').style.display = 'none'; cloud.hide = false; }
-      $('cloudwrap').style.display = 'block'; $('cloudrow').style.display = 'flex';
+      $('cloudwrap').style.display = 'block'; $('cloudrow').style.display = 'flex'; $('toolshade').style.display = '';
       $('cloudlegmax').textContent = Math.round(cloud.maxH / 0.3048) + ' ft or taller'; showLegend();
       var done = 0, shown = 0, n = pcm.chunks.length;
       function head() { $('cloudcount').textContent = '(' + (shown < pcm.count ? (shown / 1e6).toFixed(1) + ' of ' + (pcm.count / 1e6).toFixed(1) : (pcm.count / 1e6).toFixed(1)) + 'M points)'; }
@@ -1593,6 +1716,7 @@
         map.addLayer({ id: t.lid, type: 'raster', source: t.sid, layout: { visibility: vis || 'visible' }, paint: { 'raster-opacity': t.opacity } }, 'hillshade');
       });
       setImagery($('base').value);
+      raiseRem();
       if (cmpActive) { cmpBase(); cmpOverlay(); }
     }
     try { var dsaved = localStorage.getItem('terrainDetail'); if (dsaved === '2') { detail = 2; $('detail').value = '2'; } } catch (e) {}
@@ -1703,6 +1827,33 @@
     $('noteson').addEventListener('change', function () {
       var show = $('noteson').checked; Object.keys(noteMarkers).forEach(function (k) { noteMarkers[k].getElement().style.display = show ? '' : 'none'; });
     });
+
+    // ---- height above the channel, drawn from the REM tiles the builder made, in the same 1 ft color classes ----
+    function raiseRem() { if (map.getLayer('remlayer') && $('remon').checked) map.moveLayer('remlayer', 'hillshade'); }
+    function addRemLayer() {
+      var r = M.rem; if (!r || !r.color) return;
+      map.addSource('rem', { type: 'raster', tiles: [siteBase + r.color], tileSize: 256, minzoom: r.minzoom, maxzoom: r.zoom, bounds: r.bounds });
+      var op = (typeof r.opacity === 'number') ? r.opacity : 0.65;
+      map.addLayer({ id: 'remlayer', type: 'raster', source: 'rem', layout: { visibility: 'none' },
+                     paint: { 'raster-opacity': op, 'raster-resampling': r.resampling === 'linear' ? 'linear' : 'nearest' } }, 'hillshade');
+      $('remop').value = op;
+      var br = r.breaks || [], u = r.unit || 'ft', sp = $('remlegl').children;
+      if (br.length) {
+        sp[0].textContent = '< ' + br[0] + ' ' + u; sp[1].textContent = br[Math.floor(br.length / 2) - 1] + ' ' + u; sp[2].textContent = br[br.length - 1] + ' ' + u;
+        var ex = (r.exclude || []).filter(function (e) { return e[0] > br[br.length - 1]; })[0];
+        $('remnote').textContent = ex ? 'Values above ' + br[br.length - 1] + ' ' + u + ' are not drawn.' : '';
+      }
+      var leg = $('remleg'); leg.textContent = '';
+      (r.classes || []).forEach(function (c) { var i = document.createElement('i'); i.style.background = c; leg.appendChild(i); });
+      $('remrow').style.display = 'flex';
+    }
+    $('remon').addEventListener('change', function () {
+      var on = $('remon').checked;
+      if (map.getLayer('remlayer')) map.setLayoutProperty('remlayer', 'visibility', on ? 'visible' : 'none');
+      $('remctl').style.display = on ? 'block' : 'none';
+      raiseRem();
+    });
+    $('remop').addEventListener('input', function () { if (map.getLayer('remlayer')) map.setPaintProperty('remlayer', 'raster-opacity', parseFloat($('remop').value)); });
 
     // ---- controls ----
     $('base').addEventListener('change', function () { setImagery($('base').value); });

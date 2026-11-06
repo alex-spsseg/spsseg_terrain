@@ -53,11 +53,11 @@
    219.690185546875,
    -204.15956115722656,
    360.2293701171875,
-   -42.74701690673828,
-   48.10063552856445
+   -21.395713806152344,
+   69.45193481445312
   ],
   "h_step": 0.25,
-  "h_p98": 12.8,
+  "h_p98": 34.2,
   "ground_removed": true,
   "source": "DeschutesRM34_20261104_34cfs_point_cloud.laz"
  },
@@ -77,7 +77,73 @@
   "source": "https://tiles.arcgis.com/tiles/buuvDFFARQiOEbVZ/arcgis/rest/services/DeschutesRM34_20261104_34cfs_ortho/MapServer",
   "tile_size": 256
  },
- "rem": null,
+ "rem": {
+  "tiles": "rem/{z}/{x}/{y}.png",
+  "zoom": 17,
+  "count": 31,
+  "source": "UpperDeschutesRM34_REM_2024lidar.tif",
+  "color": "rem_color/{z}/{x}/{y}.png",
+  "minzoom": 12,
+  "bounds": [
+   -122.52833894732682,
+   46.806001155695114,
+   -122.50733237048358,
+   46.81770695733349
+  ],
+  "classes": [
+   "#283285",
+   "#41569e",
+   "#567bb8",
+   "#6aa2d3",
+   "#6fe8f5",
+   "#66dbbe",
+   "#5cc286",
+   "#52a857",
+   "#5b8f47",
+   "#779e56",
+   "#bfd188",
+   "#fbf9b6",
+   "#e5d88b",
+   "#cfb365",
+   "#ba8b44",
+   "#a46429",
+   "#aa6e3a",
+   "#a8734d",
+   "#a57860",
+   "#9c8386"
+  ],
+  "breaks": [
+   1.0,
+   2.0,
+   3.0,
+   4.0,
+   5.0,
+   6.0,
+   7.0,
+   8.0,
+   9.0,
+   10.0,
+   11.0,
+   12.0,
+   13.0,
+   14.0,
+   15.0,
+   16.0,
+   17.0,
+   18.0,
+   19.0,
+   20.0
+  ],
+  "exclude": [
+   [
+    20.01,
+    2000.0
+   ]
+  ],
+  "opacity": 0.5,
+  "resampling": "nearest",
+  "unit": "ft"
+ },
  "basemap": {
   "type": "xyz_tile",
   "url": "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
