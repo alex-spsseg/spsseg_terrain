@@ -1,0 +1,91 @@
+{
+ "site": "wria13_DeschutesRM34",
+ "title": "Deschites River RM 34.5",
+ "description": "",
+ "bounds4326": [
+  -122.52833892298965,
+  46.80565923511702,
+  -122.50731969489834,
+  46.817706307775666
+ ],
+ "minzoom": 12,
+ "maxzoom": 17,
+ "tile_size": 256,
+ "encoding": "terrarium",
+ "elev_min_m": -1.9414666891098022,
+ "elev_max_m": 89.6004409790039,
+ "relief": true,
+ "elevation_mode": "absolute",
+ "elev_base_m": 149.44247012517462,
+ "exaggeration": 1.25,
+ "footprint": "footprint.geojson",
+ "tour": {
+  "base": "https://alex-spsseg.github.io/wria13_DeschutesRM34/",
+  "id": "20261104"
+ },
+ "flow": null,
+ "pointcloud": {
+  "format": 2,
+  "chunks": [
+   {
+    "file": "cloud_00.bin",
+    "count": 7000000
+   },
+   {
+    "file": "cloud_01.bin",
+    "count": 7000000
+   },
+   {
+    "file": "cloud_02.bin",
+    "count": 997761
+   }
+  ],
+  "count": 14997761,
+  "stride": 12,
+  "has_rgb": true,
+  "has_class": true,
+  "origin": [
+   -122.51782930894399,
+   46.81168277144634
+  ],
+  "box": [
+   -461.49481201171875,
+   219.690185546875,
+   -204.15956115722656,
+   360.2293701171875,
+   -42.74701690673828,
+   48.10063552856445
+  ],
+  "h_step": 0.25,
+  "h_p98": 12.8,
+  "ground_removed": true,
+  "source": "DeschutesRM34_20261104_34cfs_point_cloud.laz"
+ },
+ "ortho": {
+  "tiles": "ortho/{z}/{x}/{y}.webp",
+  "minzoom": 11,
+  "maxzoom": 19,
+  "bounds": [
+   -122.52833892298965,
+   46.80565923511702,
+   -122.50731969489834,
+   46.817706307775666
+  ],
+  "label": "Ortho (11/4/26, 34cfs)",
+  "count": 904,
+  "mb": 2.6,
+  "source": "https://tiles.arcgis.com/tiles/buuvDFFARQiOEbVZ/arcgis/rest/services/DeschutesRM34_20261104_34cfs_ortho/MapServer",
+  "tile_size": 256
+ },
+ "rem": null,
+ "basemap": {
+  "type": "xyz_tile",
+  "url": "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+  "attribution": "Imagery: Google"
+ },
+ "source": {
+  "file": "UpperDeschutesRM34_DTM_2024lidar.tif",
+  "cell_size": 1.5,
+  "units": "ft"
+ }
+}
