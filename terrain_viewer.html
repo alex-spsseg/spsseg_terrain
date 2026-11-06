@@ -83,7 +83,7 @@
   #infocard .infox, #shadecard .infox { position: absolute; top: 2px; right: 8px; background: none; border: 0; color: #9fb2cc; font-size: 20px; cursor: pointer; padding: 2px 4px; line-height: 1; }
   #toolcard #toolout { margin-top: 0; }
   #hit { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 850; pointer-events: none; overflow: visible; }
-  #mapbar { position: absolute; z-index: 1000; top: 12px; left: 344px; display: flex; gap: 8px; align-items: flex-start; }
+  #mapbar { position: absolute; z-index: 1000; top: 12px; left: 344px; display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start; max-width: calc(100vw - 440px); }
   #viewbar { position: relative; align-items: center; gap: 8px; background: rgba(14,27,51,0.94); color: #fff;
     border: 1px solid #1b3f95; border-radius: 22px; padding: 4px 6px; font-size: 13px; }
   #viewbar button { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #1b3f95; background: #132447; color: #fff; cursor: pointer; font-size: 12px; padding: 0; }
@@ -93,7 +93,7 @@
   #viewlabel { flex: 1 1 0; min-width: 0; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   #viewlabel small { color: #9fb2cc; margin-right: 6px; }
   @media (max-width: 700px) {
-    #mapbar { top: auto; bottom: calc(46px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); width: min(calc(100vw - 24px), 360px); flex-direction: column-reverse; align-items: stretch; }
+    #mapbar { top: auto; bottom: calc(46px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); width: min(calc(100vw - 24px), 360px); max-width: none; flex-wrap: nowrap; flex-direction: column-reverse; align-items: stretch; }
     #viewbar { width: auto; }
     #toolbar { justify-content: center; flex-wrap: wrap; }
     #toolbar button { padding: 6px 10px; font-size: 12px; }
@@ -120,6 +120,11 @@
   .legblock:first-of-type { margin-top: 8px; }
   .legt { font-size: 12px; color: #e8eef7; margin-bottom: 4px; }
   .legblock .legrow { display: flex; justify-content: space-between; font-size: 11px; color: #9fb2cc; margin-top: 2px; }
+  #switcher { display: flex; align-items: center; background: rgba(14,27,51,0.94); border: 1px solid #1b3f95; border-radius: 22px; padding: 4px; order: -1; }
+  #switcher a, #switcher .on { padding: 7px 14px; border-radius: 16px; font-size: 13px; text-decoration: none; color: #e8eef7; }
+  #switcher a:hover { background: #132447; }
+  #switcher .on { background: #019fc4; color: #fff; font-weight: 600; }
+  @media (max-width: 700px) { #switcher { order: 0; justify-content: center; } #switcher a, #switcher .on { padding: 6px 12px; font-size: 12px; } }
   #hint { display: flex; gap: 8px; align-items: flex-start; background: #132447; border: 1px solid #1b3f95; border-radius: 8px; padding: 8px 10px; margin-top: 10px; font-size: 12px; color: #cfd9e8; line-height: 1.4; }
   #panel #hint button { width: auto; margin: 0; padding: 0 4px; border: 0; background: none; color: #9fb2cc; font-size: 18px; line-height: 1; }
   .notewrap { width: 26px; height: 26px; cursor: pointer; }
@@ -186,10 +191,11 @@
   #floodbar { height: 10px; border-radius: 3px; margin: 10px 0 2px; border: 1px solid rgba(255,255,255,0.15); }
   #floodleg { display: flex; justify-content: space-between; font-size: 11px; color: #9fb2cc; }
   #note { margin-top: 10px; font-size: 11px; color: #7f93b0; line-height: 1.4; }
-  #status { position: absolute; z-index: 1100; left: 50%; top: 14px; transform: translateX(-50%); max-width: min(90vw, 520px);
-    background: rgba(14,27,51,0.92); color: #e8eef7; border: 1px solid #1b3f95; border-radius: 6px; padding: 6px 12px; font-size: 13px; display: none; text-align: center; }
-  /* after the base rule, so it wins: on a phone the message sits above the view bar instead of under the title */
-  @media (max-width: 700px) { #status { top: auto; bottom: calc(100px + env(safe-area-inset-bottom, 0px)); } }
+  #status { position: absolute; z-index: 1100; left: 50%; bottom: 48px; transform: translateX(-50%); max-width: min(90vw, 520px);
+    background: rgba(14,27,51,0.92); color: #e8eef7; border: 1px solid #1b3f95; border-radius: 16px; padding: 4px 12px; font-size: 12px; display: none; text-align: center; }
+  /* The loading messages live at the bottom edge, clear of the toolbar. On a phone there is room for one at a time, so the message
+     takes the tile chip's place while it shows. */
+  @media (max-width: 700px) { #status { bottom: calc(10px + env(safe-area-inset-bottom, 0px)); } body.statusup #busy { display: none !important; } }
   #err { position: absolute; z-index: 1101; inset: 36% 10% auto 10%; text-align: center; color: #e0a5a5; background: rgba(14,27,51,0.95);
     border: 1px solid #5a2a2a; border-radius: 8px; padding: 16px; display: none; font-size: 14px; line-height: 1.5; }
   #err a { color: #5cc8dc; }
@@ -239,7 +245,7 @@
     <button id="toggle" type="button" title="Show or hide controls">&#9776;</button>
   </div>
   <div class="body">
-    <div class="quick"><button id="reset" type="button">Reset view</button><button id="orbit" type="button">Orbit</button><a class="btn" id="tourlink" href="#" target="_blank" rel="noopener" style="display:none">360 tour</a></div>
+    <div class="quick"><button id="reset" type="button">Reset view</button><button id="orbit" type="button">Orbit</button></div>
     <div id="hint" style="display:none"><span>Click or tap the ground or a tree to read it. The bar on the map has cross sections, shade and notes.</span><button id="hintx" type="button" aria-label="Dismiss">&times;</button></div>
 
     <details class="sec" id="ovwrap" open>
@@ -338,6 +344,7 @@
 <div id="mapbar">
   <div id="viewbar" style="display:none"><button id="viewprev" type="button" title="Previous view">&#9664;</button><span id="viewlabel"></span><button id="viewnext" type="button" title="Next view">&#9654;</button></div>
   <div id="toolbar"><button id="toolx" type="button" title="Click two points to draw a cross section: the ground profile, the height and slope between the points, and options for the channel level and canopy">Cross section</button><button id="toolshade" type="button" style="display:none" title="Choose the date for shade, then click a spot and open More to read canopy cover and shade">Shade</button><button id="tooln" type="button" style="display:none" title="Add a note, label or photo to the map">Add note</button></div>
+  <div id="switcher" style="display:none" role="navigation" aria-label="Other viewers for this place"><a id="swtour" href="#" style="display:none">Tour</a><span class="on">Terrain</span><a id="swflow" href="#" style="display:none">Flow</a></div>
 </div>
 <div id="cards">
   <div id="shadecard" style="display:none">
@@ -359,7 +366,7 @@
 (function () {
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
-  function status(msg) { var s = $('status'); s.style.display = msg ? 'block' : 'none'; s.textContent = msg || ''; }
+  function status(msg) { var s = $('status'); s.style.display = msg ? 'block' : 'none'; s.textContent = msg || ''; document.body.classList.toggle('statusup', !!msg); }
   function fail(html) { var e = $('err'); e.style.display = 'block'; e.innerHTML = html; status(''); }
   function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
 
@@ -506,7 +513,7 @@
       loadNotes();
       loadCloud();
       defaultsP.then(applyDefaults);
-      if (M.tour && M.tour.base && M.tour.id) loadStops(M.tour); else { $('stoprow').classList.add('off'); $('stops').disabled = true; }
+      if (M.tour && M.tour.base && M.tour.id) loadStops(M.tour); else { $('stoprow').classList.add('off'); $('stops').disabled = true; setLinks(null); }
       if (M.flow && M.flow.base && M.flow.site) loadFlow(M.flow);
     });
 
@@ -869,7 +876,7 @@
     // ---- 360 stops ----
     var markers = [];
     function loadStops(tour) {
-      var tl = $('tourlink'); tl.href = tourStopUrl(tour, null); tl.style.display = 'block';
+      setLinks(tour);
       fetch(tour.base + 'tours/' + encodeURIComponent(tour.id) + '.json', { cache: 'no-store' })
         .then(function (r) { if (!r.ok) throw new Error('tour'); return r.json(); })
         .then(function (t) {
@@ -1192,6 +1199,34 @@
     }
     // The terrain address rides along on tour links, so the tour can offer a Show on Terrain button that comes back here.
     function terrainAddress() { return location.origin + location.pathname + '?site=' + encodeURIComponent(M.site); }
+    // The shared switcher: Tour, Terrain, Flow. The tour sends the way back to this very stop (?tour=) and, when it has one, the
+    // flow viewer link (?flow=). Opened on its own, the tour's repo is asked for its flow link instead.
+    var linkTour = '', linkFlow = '';
+    function okLink(u) { return /^https?:\/\//i.test(u || '') ? u : ''; }
+    function flowFromHere() {
+      var u; try { u = new URL(linkFlow, location.href); } catch (e) { return linkFlow; }
+      var c = map.getCenter();
+      if (u.searchParams.has('site')) { u.searchParams.set('ll', c.lat.toFixed(5) + ',' + c.lng.toFixed(5)); u.searchParams.set('z', Math.max(12, Math.min(21, map.getZoom())).toFixed(2)); }
+      if (linkTour) u.searchParams.set('tour', linkTour);
+      u.searchParams.set('terrain', terrainAddress());
+      return u.toString();
+    }
+    function showSwitcher() {
+      var t = $('swtour'), f = $('swflow');
+      t.style.display = linkTour ? '' : 'none'; f.style.display = linkFlow ? '' : 'none';
+      if (linkTour) t.href = linkTour;
+      if (linkFlow) { f.href = flowFromHere(); f.onmouseenter = function () { f.href = flowFromHere(); }; f.onclick = function (e) { e.preventDefault(); location.href = flowFromHere(); }; }
+      $('switcher').style.display = (linkTour || linkFlow) ? 'flex' : 'none';
+    }
+    function setLinks(tour) {
+      linkTour = okLink(qs.get('tour')) || (tour ? tourStopUrl(tour, null) : '');
+      linkFlow = okLink(qs.get('flow'));
+      showSwitcher();
+      if (!linkFlow && tour) {
+        fetch(tour.base + 'landing_config.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; })
+          .then(function (c) { linkFlow = okLink(c && c.flow_url); showSwitcher(); });
+      }
+    }
     function tourStopUrl(tour, sid) {
       return tour.base + 'index.html?tour=' + encodeURIComponent(tour.id) + (sid ? '&stop=' + encodeURIComponent(sid) : '') + '&terrain=' + encodeURIComponent(terrainAddress());
     }
