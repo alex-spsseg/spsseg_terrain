@@ -1075,16 +1075,30 @@
         }, i * 4);
       });
     }
-    function stopLabelsChanged() {
+    function applyStopLabels() {
       document.body.classList.toggle('stoplabels', $('stoplabel').checked);
-      try { localStorage.setItem('terrainStopLabels', $('stoplabel').checked ? '1' : '0'); } catch (e) {}
       if ($('stoplabel').checked) fillStopElevs();
       refreshStopLabels();
     }
-    function initStops3dLabels() {                                    // the choice is remembered
-      var on = false; try { on = localStorage.getItem('terrainStopLabels') === '1'; } catch (e) {}
-      if (on) { $('stoplabel').checked = true; stopLabelsChanged(); }
+    function stopLabelsChanged() {                                    // a choice you make is remembered
+      try { localStorage.setItem('terrainStopLabels', $('stoplabel').checked ? '1' : '0'); } catch (e) {}
+      applyStopLabels();
     }
+    var siteStops = null;                 // from defaults.json: { labels, gps, dzFt }, what the site was saved with
+    function storedPref(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+    function onPhone() { return !!(window.matchMedia && window.matchMedia('(max-width: 700px)').matches); }
+    // Labels: a choice you made, else off on a phone (they would cover the map), else the site's saved default, else on unless the tour is long.
+    function wantLabels() {
+      var pref = storedPref('terrainStopLabels'); if (pref !== null) return pref === '1';
+      if (onPhone()) return false;
+      if (siteStops && typeof siteStops.labels === 'boolean') return siteStops.labels;
+      return stopPts.length <= 40;
+    }
+    function wantGps() {
+      var pref = storedPref('terrainStop3d'); if (pref !== null) return pref === '1';
+      return (siteStops && typeof siteStops.gps === 'boolean') ? siteStops.gps : true;
+    }
+    function initStops3dLabels() { $('stoplabel').checked = wantLabels(); applyStopLabels(); }
     $('stoplabel').addEventListener('change', stopLabelsChanged);
 
     // ---- stops at their GPS height ----
@@ -1253,8 +1267,7 @@
         stopMode(); return;
       }
       $('stop3drow').style.display = 'flex';
-      var pref = null; try { pref = localStorage.getItem('terrainStop3d'); } catch (e) {}
-      $('stop3d').checked = pref !== '0';
+      $('stop3d').checked = wantGps();
       if ($('stop3d').checked) prepStop3d().then(stopMode);
     }
     $('stop3d').addEventListener('change', function () {
@@ -1514,6 +1527,16 @@
       if (isFinite(d.relief)) { $('hs').value = d.relief; fire('hs'); }
       if (isFinite(d.shadeDay)) { $('shadeday').value = String(d.shadeDay); $('shadeday').dispatchEvent(new Event('change')); }
       if (typeof d.shadeShown === 'boolean') shadeShown = d.shadeShown;
+      if (d.stops && typeof d.stops === 'object') {
+        siteStops = d.stops;
+        if (isFinite(d.stops.dzFt)) { $('stopdz').value = d.stops.dzFt; $('stopdz').dispatchEvent(new Event('input')); }
+        if (stopPts.length) {                                       // the stops were set up before this arrived: apply it now, unless you have chosen
+          if (storedPref('terrainStopLabels') === null) initStops3dLabels();
+          if (storedPref('terrainStop3d') === null && $('stop3drow').style.display !== 'none') {
+            $('stop3d').checked = wantGps(); if ($('stop3d').checked && !stop3d.ready) prepStop3d().then(stopMode); else stopMode();
+          }
+        }
+      }
       if (typeof d.shadeWeighted === 'boolean') { $('shadew').checked = d.shadeWeighted; $('shadew').dispatchEvent(new Event('change')); }
       var c = d.cloud;
       if (c && cloud.meta) {
@@ -1528,6 +1551,7 @@
     }
     $('savedef').addEventListener('click', function () {
       var d = { exaggeration: exag, relief: parseFloat($('hs').value), shadeDay: SHADE_DAY.day, shadeWeighted: SHADE_WEIGHTED, shadeShown: shadeShown,
+                stops: stopPts.length ? { labels: $('stoplabel').checked, gps: $('stop3d').checked, dzFt: parseFloat($('stopdz').value) || 0 } : null,
                 cloud: cloud.meta ? { mode: cloud.mode, size: cloud.size, minFt: parseFloat($('cloudmin').value), dzFt: parseFloat($('cloudz').value), hide: cloud.hide } : null };
       $('defmsg').textContent = 'Saving ...';
       fetch('/save_defaults?site=' + encodeURIComponent(M.site), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) })

@@ -1,0 +1,19 @@
+{
+ "exaggeration": 1.25,
+ "relief": 0.3,
+ "shadeDay": 196,
+ "shadeWeighted": false,
+ "shadeShown": false,
+ "stops": {
+  "labels": true,
+  "gps": true,
+  "dzFt": 0.0
+ },
+ "cloud": {
+  "mode": 0,
+  "size": 2.0,
+  "minFt": 2.0,
+  "dzFt": 0.0,
+  "hide": false
+ }
+}

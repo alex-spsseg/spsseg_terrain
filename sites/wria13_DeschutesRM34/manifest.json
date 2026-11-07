@@ -8,6 +8,12 @@
   -122.50731969489834,
   46.817706307775666
  ],
+ "dem_bounds4326": [
+  -122.52992398199767,
+  46.804571127343394,
+  -122.50573542896159,
+  46.818794128283564
+ ],
  "minzoom": 12,
  "maxzoom": 17,
  "tile_size": 256,
@@ -17,6 +23,7 @@
  "relief": true,
  "elevation_mode": "absolute",
  "elev_base_m": 149.44247012517462,
+ "gps_shift_m": 21.351,
  "exaggeration": 1.25,
  "footprint": "footprint.geojson",
  "tour": {
@@ -142,7 +149,8 @@
   ],
   "opacity": 0.5,
   "resampling": "nearest",
-  "unit": "ft"
+  "unit": "ft",
+  "zero_hidden": false
  },
  "basemap": {
   "type": "xyz_tile",
