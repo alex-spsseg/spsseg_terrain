@@ -496,6 +496,7 @@
     $('title').textContent = M.title;
     $('sub').textContent = M.description || '';
     var b = M.bounds4326;
+    var demB = (M.dem_bounds4326 && M.dem_bounds4326.length === 4) ? M.dem_bounds4326 : b;      // the terrain tiles reach past the data, over the skirt
     var siteBase = new URL('sites/' + encodeURIComponent(M.site) + '/', location.href).href;
     var demTiles = siteBase + 'dem/{z}/{x}/{y}.png';
     var relative = M.elevation_mode === 'relative';
@@ -513,7 +514,7 @@
     if (prim.url) choices.push({ id: 'primary', label: primLabel, url: prim.url, maxzoom: 20, attribution: prim.attribution || '' });
     choices.push({ id: 'esri', label: 'Esri World Imagery', url: ESRI.url, maxzoom: ESRI.maxzoom, attribution: ESRI.attribution });
     choices.push({ id: 'none', label: 'Terrain shading only' });
-    if (M.relief) choices.unshift({ id: 'relief', label: 'Shaded relief (elevation colors)', url: siteBase + 'relief/{z}/{x}/{y}.jpg', maxzoom: M.maxzoom, tileSize: 256, attribution: '', bounds: b });
+    if (M.relief) choices.unshift({ id: 'relief', label: 'Shaded relief (elevation colors)', url: siteBase + 'relief/{z}/{x}/{y}.jpg', maxzoom: M.maxzoom, tileSize: 256, attribution: '', bounds: demB });
     choices.forEach(function (c) { var o = document.createElement('option'); o.value = c.id; o.textContent = c.label; $('base').appendChild(o); });
 
     var pad = 0.04, dx = (b[2] - b[0]) * pad, dy = (b[3] - b[1]) * pad;
@@ -579,7 +580,7 @@
 
     map.on('load', function () {
       map.addSource('dem', { type: 'raster-dem', tiles: [demTiles], tileSize: 256, encoding: 'terrarium',
-        minzoom: M.minzoom, maxzoom: M.maxzoom, bounds: b });
+        minzoom: M.minzoom, maxzoom: M.maxzoom, bounds: demB });
       map.addLayer({ id: 'hillshade', type: 'hillshade', source: 'dem', paint: {
         'hillshade-exaggeration': 0.3, 'hillshade-shadow-color': '#0b1630', 'hillshade-highlight-color': '#ffffff',
         'hillshade-accent-color': '#0b1630', 'hillshade-illumination-direction': 315 } });
@@ -1368,7 +1369,7 @@
           maxPitch: 82, minZoom: map.getMinZoom(), maxBounds: [[b[0] - dx, b[1] - dy], [b[2] + dx, b[3] + dy]]
         });
         cmp.on('load', function () {
-          cmp.addSource('dem', { type: 'raster-dem', tiles: [demTiles], tileSize: 256, encoding: 'terrarium', minzoom: M.minzoom, maxzoom: M.maxzoom, bounds: b });
+          cmp.addSource('dem', { type: 'raster-dem', tiles: [demTiles], tileSize: 256, encoding: 'terrarium', minzoom: M.minzoom, maxzoom: M.maxzoom, bounds: demB });
           cmp.addLayer({ id: 'hillshade', type: 'hillshade', source: 'dem', paint: {
             'hillshade-exaggeration': parseFloat($('hs').value), 'hillshade-shadow-color': '#0b1630', 'hillshade-highlight-color': '#ffffff',
             'hillshade-accent-color': '#0b1630', 'hillshade-illumination-direction': 315 } });
