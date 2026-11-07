@@ -69,8 +69,8 @@
     font: italic 700 12px Georgia, serif; cursor: pointer; padding: 0; line-height: 18px; }
   #shadecard .shi.on { background: #5cc8dc; color: #0e1b33; }
   #shadecard #shadeinfo { margin-top: 8px; line-height: 1.4; }
-  #shadechips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-  #shadechips button { background: #132447; border: 1px solid #1b3f95; color: #e8eef7; border-radius: 14px; padding: 4px 10px; font-size: 12px; cursor: pointer; font-family: inherit; }
+  #shadechips { display: flex; flex-wrap: nowrap; gap: 4px; margin-top: 10px; }
+  #shadechips button { flex: 1 1 0; min-width: 0; background: #132447; border: 1px solid #1b3f95; color: #e8eef7; border-radius: 14px; padding: 4px 0; font-size: 12px; white-space: nowrap; text-align: center; cursor: pointer; font-family: inherit; }
   #shadechips button:hover { border-color: #019fc4; }
   #shadechips button.on { background: #1b3f95; border-color: #019fc4; color: #fff; }
   #shadecard input[type=range] { width: 100%; margin: 12px 0 0; accent-color: #019fc4; }
@@ -111,6 +111,8 @@
   #remleg { display: flex; height: 10px; border-radius: 3px; overflow: hidden; border: 1px solid rgba(255,255,255,0.15); }
   #remleg i { flex: 1; }
   #remctl .legrow { display: flex; justify-content: space-between; font-size: 11px; color: #9fb2cc; margin-top: 2px; }
+  #stopopts summary, #viewedit summary, #cloudmore summary { cursor: pointer; color: #5cc8dc; font-size: 12px; margin-top: 8px; }
+  #cloudmore, #viewedit { margin-top: 2px; }
   details.about summary { cursor: pointer; color: #5cc8dc; font-size: 12px; margin-top: 12px; }
   .grp { font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: #7f93b0; margin: 14px 0 0; }
   .grp:first-of-type { margin-top: 8px; }
@@ -138,6 +140,42 @@
   .noteform input[type=text], .noteform textarea, .noteform select { width: 100%; box-sizing: border-box; background: #0a1428; color: #fff; border: 1px solid #1b3f95;
     border-radius: 6px; padding: 6px 8px; font-size: 13px; font-family: inherit; margin-top: 3px; }
   .noteform input[type=file] { margin-top: 3px; font-size: 12px; color: #e8eef7; max-width: 100%; }
+  #lb { position: fixed; left: 0; top: 0; right: 0; bottom: 0; z-index: 5000; background: rgba(4,9,22,0.95); display: none; flex-direction: column; }
+  #lb.on { display: flex; }
+  #lbtop { display: flex; align-items: center; gap: 12px; padding: 10px 14px; color: #fff; }
+  #lbtitle { flex: 1; font-weight: 600; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #lbcnt { color: #9fb2cc; font-size: 13px; white-space: nowrap; }
+  #lbtools { display: flex; gap: 6px; }
+  #lbtools button, #lbtools a { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.28); color: #fff; border-radius: 6px; min-width: 34px; height: 32px; padding: 0 10px;
+    font: inherit; font-size: 15px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+  #lbtools button:hover, #lbtools a:hover { background: rgba(255,255,255,0.2); }
+  #lbtools button:disabled { opacity: 0.35; cursor: default; }
+  #lbstage { position: relative; flex: 1; min-height: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; touch-action: none; cursor: zoom-in; }
+  #lbstage.zoomed { cursor: grab; }
+  #lbimg { max-width: 100%; max-height: 100%; user-select: none; -webkit-user-select: none; transform-origin: 50% 50%; will-change: transform; }
+  .lbnav { position: absolute; top: 50%; margin-top: -22px; width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.6); background: rgba(8,16,36,0.7);
+    color: #fff; font-size: 26px; line-height: 40px; padding: 0; cursor: pointer; z-index: 2; }
+  .lbnav:hover { background: rgba(8,16,36,0.95); }
+  #lbprev { left: 14px; } #lbnext { right: 14px; }
+  #lb.single .lbnav, #lb.single #lbstrip { display: none; }
+  #lbstrip { display: flex; gap: 6px; padding: 8px 14px 12px; justify-content: center; overflow-x: auto; }
+  #lbstrip img { width: 72px; height: 54px; object-fit: cover; border-radius: 4px; cursor: pointer; opacity: 0.55; border: 2px solid transparent; flex: none; }
+  #lbstrip img.on { opacity: 1; border-color: #019fc4; }
+  .noteform .thumbs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .noteform .thumb { position: relative; width: 62px; height: 62px; border-radius: 6px; overflow: hidden; border: 1px solid #1b3f95; background: #0a1428; }
+  .noteform .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .noteform .thumb button { position: absolute; width: 20px; height: 20px; padding: 0; line-height: 18px; font-size: 13px; background: rgba(8,16,36,0.85); color: #fff; border: 1px solid #5cc8dc; border-radius: 50%; cursor: pointer; font-family: inherit; }
+  .noteform .thumb .rm { top: 2px; right: 2px; } .noteform .thumb .mv { bottom: 2px; left: 2px; }
+  .noteform .thumb .first { position: absolute; bottom: 2px; right: 3px; font-size: 10px; color: #fff; background: rgba(8,16,36,0.85); border-radius: 6px; padding: 0 4px; }
+  .noteform .thumbhint { font-size: 11px; color: #9fb2cc; margin-top: 4px; }
+  .notegal { position: relative; margin-top: 6px; }
+  .notegal img.main { width: 100%; border-radius: 6px; display: block; }
+  .notegal .nav { position: absolute; top: 40%; width: 26px; height: 26px; padding: 0; border-radius: 50%; border: 1px solid rgba(255,255,255,0.7); background: rgba(8,16,36,0.7); color: #fff; font-size: 16px; line-height: 24px; cursor: pointer; }
+  .notegal .prev { left: 6px; } .notegal .next { right: 6px; }
+  .notegal .cnt { position: absolute; right: 6px; bottom: 6px; background: rgba(8,16,36,0.75); color: #fff; font-size: 11px; padding: 1px 7px; border-radius: 9px; }
+  .notestrip { display: flex; gap: 4px; margin-top: 4px; overflow-x: auto; }
+  .notestrip img { width: 44px; height: 44px; object-fit: cover; border-radius: 4px; cursor: pointer; opacity: 0.6; border: 2px solid transparent; flex: none; }
+  .notestrip img.on { opacity: 1; border-color: #019fc4; }
   .noteform .btns { display: flex; gap: 8px; margin-top: 10px; }
   .noteform .btns button { flex: 1; padding: 6px; background: #132447; color: #fff; border: 1px solid #1b3f95; border-radius: 6px; cursor: pointer; font-family: inherit; }
   .noteform .btns button.go { background: #019fc4; border-color: #019fc4; }
@@ -162,6 +200,11 @@
   #profile .pbtn:hover { border-color: #019fc4; }
   #profcv { width: 100%; height: 190px; display: block; margin-top: 6px; cursor: crosshair; }
   #profread { font-size: 12px; color: #9fb2cc; min-height: 17px; margin-top: 4px; }
+  #toolout .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 9px 18px; }
+  #toolout .stat { display: flex; flex-direction: column; min-width: 0; }
+  #toolout .sv { font-size: 16px; font-weight: 700; color: #fff; line-height: 1.2; }
+  #toolout .sv.hot { color: #ffd23f; }
+  #toolout .sc { font-size: 11px; color: #9fb2cc; line-height: 1.3; }
   #profsum { display: none; font-size: 12px; color: #cfd9e8; line-height: 1.45; margin-top: 4px; }
   #profsum b { color: #ffd23f; }
   @media (max-width: 700px) {
@@ -202,6 +245,20 @@
   .stop { width: 16px; height: 16px; border-radius: 50%; padding: 0; background: #019fc4; border: 2px solid #fff; cursor: pointer;
     box-shadow: 0 0 0 1px rgba(0,0,0,.55), 0 1px 5px rgba(0,0,0,.6); }
   .stop:hover { background: #fff; border-color: #019fc4; }
+  .stop .stopelev { display: none; position: absolute; left: 20px; top: -3px; background: rgba(14,27,51,0.92); color: #fff; border: 1px solid #1b3f95;
+    border-radius: 9px; padding: 0 6px; font-size: 11px; line-height: 16px; white-space: nowrap; pointer-events: none; }
+  body.stoplabels .stop .stopelev:not(:empty) { display: block; }
+  .stop .stoptip { display: none; position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); background: rgba(14,27,51,0.97); color: #fff; border: 1px solid #019fc4;
+    border-radius: 6px; padding: 3px 9px; font-size: 12px; font-weight: 400; line-height: 1.4; white-space: pre; text-align: left; pointer-events: none; z-index: 30; }
+  .stop .stoptip b { font-size: 13px; }
+  .stop:hover .stoptip, .stop:focus-visible .stoptip { display: block; }
+  .stop:hover { z-index: 20; }
+  /* no hover label when the same thing is already on screen: a label beside the stop, or its own card */
+  body.stoplabels .stop:hover .stoptip, body.stoplabels .stop:focus-visible .stoptip,
+  .stop.hasPopup:hover .stoptip, .stop.hasPopup:focus-visible .stoptip { display: none; }
+  #stopscv { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 840; pointer-events: none; }
+  #stops3d { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 845; pointer-events: none; overflow: hidden; }
+  #stops3d .stop { position: absolute; left: -8px; top: -8px; pointer-events: auto; will-change: transform; }
   .stop.aerial { background: #ff9f1c; }
   .stop.float { background: #7fd4ff; }
   .maplibregl-popup-content { background: #132447; color: #e8eef7; border: 1px solid #1b3f95; border-radius: 8px; padding: 10px 28px 10px 12px;
@@ -235,6 +292,14 @@
   <div id="profread"></div>
 </div>
 <svg id="hit" style="display:none" aria-hidden="true"><line id="hitline" stroke="#0e1b33" stroke-width="5" stroke-linecap="round"/><line id="hitline2" stroke="#ffd23f" stroke-width="2.5" stroke-linecap="round"/><circle id="hitdot" r="7" fill="#ffd23f" stroke="#0e1b33" stroke-width="2.5"/></svg>
+<canvas id="stopscv" style="display:none"></canvas><div id="stops3d" style="display:none"></div>
+<div id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <div id="lbtop"><div id="lbtitle"></div><div id="lbcnt"></div>
+    <div id="lbtools"><button id="lbzo" type="button" aria-label="Zoom out" title="Zoom out">&minus;</button><button id="lbzi" type="button" aria-label="Zoom in" title="Zoom in">+</button><button id="lbfit" type="button" title="Fit the photo to the window">Fit</button><a id="lbopen" target="_blank" rel="noopener" title="Open the photo in its own tab">Open</a><button id="lbx" type="button" aria-label="Close" title="Close">&times;</button></div></div>
+  <div id="lbstage"><img id="lbimg" alt="" draggable="false">
+    <button id="lbprev" class="lbnav" type="button" aria-label="Previous photo">&#8249;</button><button id="lbnext" class="lbnav" type="button" aria-label="Next photo">&#8250;</button></div>
+  <div id="lbstrip"></div>
+</div>
 <div id="cmpdiv"><div class="grip">&#9664;&#9654;</div></div>
 <div class="cmptag" id="cmptagL"></div><div class="cmptag" id="cmptagR"></div>
 <div id="status"></div>
@@ -265,6 +330,18 @@
       <label class="check" id="cloudrow" style="display:none"><input type="checkbox" id="cloudon" checked> <span>Point cloud <span id="cloudcount" class="dimtxt"></span></span></label>
       <div class="grp" id="grpmark">Markers</div>
       <label class="check" id="stoprow"><input type="checkbox" id="stops" checked> 360 stops</label>
+      <details id="stopopts" style="display:none;margin-left:26px">
+        <summary>Stop options</summary>
+        <label class="check" id="stoplabelrow" style="display:none"><input type="checkbox" id="stoplabel"> <span>Show labels (name and elevation)</span></label>
+        <label class="check" id="stop3drow" style="display:none"><input type="checkbox" id="stop3d"> <span>Place at GPS height</span></label>
+        <div id="stop3dwrap" style="display:none">
+          <div class="dimtxt" id="stop3dnote"></div>
+          <div id="stop3dslider" style="display:none">
+            <div class="rangehead"><label for="stopdz">Raise or lower the stops</label><span id="stopdzv">0 ft</span></div>
+            <input id="stopdz" type="range" min="-100" max="100" step="1" value="0">
+          </div>
+        </div>
+      </details>
       <label class="check" id="notesrow" style="display:none"><input type="checkbox" id="noteson" checked> <span>Notes <span id="notescount" class="dimtxt"></span></span></label>
     </details>
 
@@ -301,29 +378,33 @@
         <div class="subhead">Point cloud</div>
         <label for="cloudmode">Color by</label>
         <select id="cloudmode"></select>
-        <label for="clouddetail">Point detail</label>
-      <select id="clouddetail"><option value="fast">Fast (about half the points)</option><option value="full">Full (all points)</option></select>
-      <label class="check"><input type="checkbox" id="cloudthin"> Thin out when zoomed out or moving</label>
-      <div class="rangehead"><label for="cloudsize">Point size</label><span id="cloudsizev">2 px</span></div>
+        <div class="rangehead"><label for="cloudsize">Point size</label><span id="cloudsizev">2 px</span></div>
         <input id="cloudsize" type="range" min="1" max="6" step="0.5" value="2">
-        <label class="check" id="cloudgrow"><input type="checkbox" id="cloudhide" checked> Hide ground points</label>
-        <div class="rangehead"><label for="cloudmin">Hide points lower than</label><span id="cloudminv">2 ft</span></div>
-        <input id="cloudmin" type="range" min="0" max="10" step="0.5" value="2">
-        <div class="rangehead"><label for="cloudz">Raise or lower the points</label><span id="cloudzv">0 ft</span></div>
-        <input id="cloudz" type="range" min="-100" max="100" step="1" value="0">
+        <details id="cloudmore">
+          <summary>More point cloud options</summary>
+          <label for="clouddetail">Point detail</label>
+          <select id="clouddetail"><option value="fast">Fast (about half the points)</option><option value="full">Full (all points)</option></select>
+          <label class="check"><input type="checkbox" id="cloudthin"> Thin out when zoomed out or moving</label>
+          <label class="check" id="cloudgrow"><input type="checkbox" id="cloudhide" checked> Hide ground points</label>
+          <div class="rangehead"><label for="cloudmin">Hide points lower than</label><span id="cloudminv">2 ft</span></div>
+          <input id="cloudmin" type="range" min="0" max="10" step="0.5" value="2">
+          <div class="rangehead"><label for="cloudz">Raise or lower the points</label><span id="cloudzv">0 ft</span></div>
+          <input id="cloudz" type="range" min="-100" max="100" step="1" value="0">
+        </details>
       </div>
     </details>
 
     <details class="sec" id="viewwrap" style="display:none">
       <summary id="viewhead">Saved views</summary>
       <select id="viewsel" aria-label="Saved views" style="margin-top:6px"></select>
-      <div id="viewedit" style="display:none">
+      <details id="viewedit" style="display:none">
+        <summary>Edit views</summary>
         <input type="text" id="viewname" placeholder="Name for this camera position" maxlength="60">
         <label class="check"><input type="checkbox" id="viewstart"> Open the site here</label>
         <div class="twobtn"><button id="viewsave" type="button">Save view</button><button id="viewdel" type="button">Delete</button></div>
         <div class="twobtn"><button id="viewup" type="button">Move earlier</button><button id="viewdown" type="button">Move later</button></div>
         <div id="viewmsg">Move the camera where you want it, name it, and press Save view. Publish to share it.</div>
-      </div>
+      </details>
     </details>
 
     <details class="sec" id="setsec">
@@ -513,6 +594,7 @@
       loadNotes();
       loadCloud();
       defaultsP.then(applyDefaults);
+      try { addStopRef(); } catch (e) { console.warn('Stop placement', e); }
       if (M.tour && M.tour.base && M.tour.id) loadStops(M.tour); else { $('stoprow').classList.add('off'); $('stops').disabled = true; setLinks(null); }
       if (M.flow && M.flow.base && M.flow.site) loadFlow(M.flow);
     });
@@ -609,7 +691,7 @@
       hideInfo();
       if (popup) popup.remove();
       popup = new maplibregl.Popup({ offset: 12, maxWidth: '260px' }).setLngLat(lngLat).setDOMContent(node).addTo(map);
-      popup.on('close', hideHit);
+      popup.on('close', function () { hideHit(); clearStopOpen(); });
     }
     var markerClicked = false;
     map.on('click', function (e) {
@@ -875,7 +957,21 @@
 
     // ---- 360 stops ----
     var markers = [];
+    // The ground under a stop: its elevation from the terrain, and its height above the channel when the site has a REM.
+    function stopGround(lng, lat) {
+      return elevationAt(lng, lat).then(function (m) {
+        if (m === 'blocked' || m == null) return { ft: null, text: 'No terrain data at this stop.' };
+        var ft = toFt(m);
+        return remAt(lng, lat).then(function (r) {
+          var t = 'Ground ' + fx(ft) + ' ft';
+          if (typeof r === 'number') t += ' \u00B7 ' + fx(Math.abs(r * M_TO_FT)) + ' ft ' + (r >= 0 ? 'above' : 'below') + ' the channel';
+          return { ft: ft, text: t };
+        });
+      });
+    }
+    var stopTour = null;
     function loadStops(tour) {
+      stopTour = tour;
       setLinks(tour);
       fetch(tour.base + 'tours/' + encodeURIComponent(tour.id) + '.json', { cache: 'no-store' })
         .then(function (r) { if (!r.ok) throw new Error('tour'); return r.json(); })
@@ -886,22 +982,41 @@
             if (s.lat == null || s.lng == null) return;
             var el = document.createElement('button');
             el.type = 'button'; el.className = 'stop' + (s.platform ? ' ' + s.platform : '');
-            el.title = s.display_name || s.site_id;
+            el.setAttribute('aria-label', s.display_name || s.site_id);
+            var lab = document.createElement('span'); lab.className = 'stopelev'; el.appendChild(lab);
             var mk = new maplibregl.Marker({ element: el, anchor: 'center' }).setLngLat([s.lng, s.lat]).addTo(map);
-            el.addEventListener('click', function (ev) {
+            // a second copy of the button that the 3D placement moves around when the stops are put at their GPS height
+            var tip = document.createElement('span'); tip.className = 'stoptip'; el.appendChild(tip);
+            var el3 = el.cloneNode(false), lab3 = document.createElement('span'); lab3.className = 'stopelev'; el3.appendChild(lab3);
+            var tip3 = document.createElement('span'); tip3.className = 'stoptip'; el3.appendChild(tip3); $('stops3d').appendChild(el3);
+            var rec = { sid: s.site_id, lng: s.lng, lat: s.lat, name: s.display_name || s.site_id, url: tourStopUrl(tour, s.site_id), lab: lab, lab3: lab3, el3: el3, mk: mk, tip: tip, tip3: tip3,
+                        platform: s.platform || '', alt: (typeof s.alt === 'number' && isFinite(s.alt)) ? s.alt : null };
+            var onStop = function (ev) {
               ev.stopPropagation(); markerClicked = true;
               var d = document.createElement('div');
               var nm = document.createElement('b'); nm.textContent = s.display_name || s.site_id; d.appendChild(nm);
               d.appendChild(document.createElement('br'));
+              var ge = document.createElement('div'); ge.className = 'stopground'; ge.style.cssText = 'margin:2px 0 4px;color:#cfd9e8;font-size:12.5px;line-height:1.45'; ge.textContent = 'Reading the ground ...'; d.appendChild(ge);
+              stopGround(s.lng, s.lat).then(function (g) {
+                // just the elevation, and how far above the ground when the stop floats
+                var lines = [];
+                if (stop3d.on && rec.z != null) { lines.push('Elevation ' + fx(toFt(rec.z + stop3d.dzM)) + ' ft'); lines.push(fx((rec.z + stop3d.dzM - rec.g) * M_TO_FT) + ' ft above the ground'); }
+                else if (g.ft != null) lines.push('Elevation ' + fx(g.ft) + ' ft');
+                else lines.push(g.text);
+                ge.style.whiteSpace = 'pre-line'; ge.textContent = lines.join('\n');
+              }).catch(function () { ge.textContent = ''; });
               var a = document.createElement('a');
               a.href = tourStopUrl(tour, s.site_id);
               a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Open this stop in the tour';
               d.appendChild(a);
               showPopup([s.lng, s.lat], d);
-            });
+              setStopOpen(rec);
+            };
+            el.addEventListener('click', onStop); el3.addEventListener('click', onStop);
+            el.addEventListener('mouseenter', function () { fillStopTip(rec); }); el3.addEventListener('mouseenter', function () { fillStopTip(rec); });
             markers.push(mk);
             pts.push([s.lng, s.lat]);
-            stopPts.push({ lng: s.lng, lat: s.lat, name: s.display_name || s.site_id, url: tourStopUrl(tour, s.site_id) });
+            stopPts.push(rec);
             if (wantStop && !arrived && ((!isNaN(wantLat) && Math.abs(s.lat - wantLat) < 1e-6 && Math.abs(s.lng - wantLng) < 1e-6) ||
                 (String(s.display_name || '').toLowerCase() === wantStop.toLowerCase() || String(s.site_id).toLowerCase() === wantStop.toLowerCase()))) {
               arrived = true; flyToStop(s.lng, s.lat, s.display_name || s.site_id, tour, s.site_id);
@@ -912,7 +1027,7 @@
             var ab = alongAxis(pts);
             if (ab !== null) { startBearing = ab; fit(700); }
           }
-          if (!markers.length) { $('stoprow').classList.add('off'); $('stops').disabled = true; }
+          if (!markers.length) { $('stoprow').classList.add('off'); $('stops').disabled = true; } else { $('stopopts').style.display = 'block'; $('stoplabelrow').style.display = 'flex'; initStops3dLabels(); initStops3d(); }
         })
         .catch(function () {
           status('Could not load the tour\u2019s stops.');
@@ -920,6 +1035,313 @@
           $('stoprow').classList.add('off'); $('stops').disabled = true;
         });
     }
+
+    var openStop = null;              // the stop whose card is open, so it does not also show its hover label
+    function clearStopOpen() { if (openStop) { openStop.mk.getElement().classList.remove('hasPopup'); openStop.el3.classList.remove('hasPopup'); openStop = null; } }
+    function setStopOpen(sp) { clearStopOpen(); openStop = sp; sp.mk.getElement().classList.add('hasPopup'); sp.el3.classList.add('hasPopup'); }
+    var stopElevDone = false;
+    // The label is the elevation of the stop itself: where it floats when placed at its GPS height, the ground under it when it sits on the ground.
+    function stopElevFt(sp) { return (stop3d.on && sp.z != null) ? toFt(sp.z + stop3d.dzM) : sp.gft; }
+    function updateStopLab(sp) {
+      var t = '';
+      if ($('stoplabel').checked) {                                   // the name, and its elevation once that is known
+        var ft = stopElevFt(sp);
+        t = sp.name + ((ft != null && isFinite(ft)) ? ' \u00B7 ' + Math.round(ft).toLocaleString() + ' ft' : '');
+      }
+      sp.lab.textContent = t; if (sp.lab3) sp.lab3.textContent = t;
+    }
+    function refreshStopLabels() { stopPts.forEach(updateStopLab); }
+    // the label that appears when the pointer rests on a stop: its name, where it is, and the ground under it
+    function fillStopTip(sp) {
+      function put() {
+        var lines = [], ft = stopElevFt(sp);
+        if (stop3d.on && sp.z != null) { lines.push('Elevation ' + fx(ft) + ' ft'); lines.push(fx((sp.z + stop3d.dzM - sp.g) * M_TO_FT) + ' ft above the ground'); }
+        else if (sp.gft != null) lines.push('Elevation ' + fx(sp.gft) + ' ft');
+        [sp.tip, sp.tip3].forEach(function (el) {
+          if (!el) return; el.textContent = '';
+          var b = document.createElement('b'); b.textContent = sp.name; el.appendChild(b);
+          if (lines.length) el.appendChild(document.createTextNode('\n' + lines.join('\n')));
+        });
+      }
+      put();
+      if (sp.gft == null) stopGround(sp.lng, sp.lat).then(function (g) { if (g.ft != null) { sp.gft = g.ft; put(); } }).catch(function () {});
+    }
+    function fillStopElevs() {
+      if (stopElevDone) return; stopElevDone = true;
+      stopPts.forEach(function (sp, i) {                         // spaced out a little so a long tour does not ask for every tile at once
+        setTimeout(function () {
+          stopGround(sp.lng, sp.lat).then(function (g) { if (g.ft != null) { sp.gft = g.ft; updateStopLab(sp); } }).catch(function () {});
+        }, i * 4);
+      });
+    }
+    function stopLabelsChanged() {
+      document.body.classList.toggle('stoplabels', $('stoplabel').checked);
+      try { localStorage.setItem('terrainStopLabels', $('stoplabel').checked ? '1' : '0'); } catch (e) {}
+      if ($('stoplabel').checked) fillStopElevs();
+      refreshStopLabels();
+    }
+    function initStops3dLabels() {                                    // the choice is remembered
+      var on = false; try { on = localStorage.getItem('terrainStopLabels') === '1'; } catch (e) {}
+      if (on) { $('stoplabel').checked = true; stopLabelsChanged(); }
+    }
+    $('stoplabel').addEventListener('change', stopLabelsChanged);
+
+    // ---- stops at their GPS height ----
+    // Each stop in the tour carries the altitude its photo was taken at. GPS heights are usually on a different vertical reference
+    // than the terrain (ellipsoid against NAVD88, for one), so the stops are matched to the terrain first: the ground stops (a person with
+    // a pole, about 1.8 m up) set the offset, and every stop is then placed at its GPS height minus that offset.
+    var STOP_CAM_M = 1.8, stop3d = { ready: false, on: false, S: 0, dzM: 0, mm: null, note: '' };
+    function stopMedian(a) { a = a.slice().sort(function (x, y) { return x - y; }); var n = a.length; return n ? (n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2) : null; }
+    function have_n(list) { var n = list.filter(function (sp) { return sp.alt != null; }).length; return n + ' of ' + list.length + ' stops have a GPS height.'; }
+    function addStopRef() {               // an empty layer that only records the camera matrix each frame, so stops can be placed in 3D
+      map.addLayer({ id: 'stopref', type: 'custom', renderingMode: '3d', onAdd: function () {}, render: function (gl, matrix) {
+        if (!stop3d.on) return;
+        var tr = map.transform, elev = (cloudComp && tr && isFinite(tr.elevation)) ? tr.elevation : 0, cc = map.getCenter();
+        var mpu = maplibregl.MercatorCoordinate.fromLngLat({ lng: cc.lng, lat: cc.lat }, 0).meterInMercatorCoordinateUnits();
+        stop3d.mm = mat4mul(Array.prototype.slice.call(matrix), [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, mpu * exag, 0, 0, 0, -elev * mpu, 1]);
+      } });
+    }
+    function prepStop3d() {
+      return Promise.all(stopPts.map(function (sp) {
+        return elevationAt(sp.lng, sp.lat).then(function (m) { sp.g = (m === 'blocked' || m == null) ? null : m; }).catch(function () { sp.g = null; });
+      })).then(function () {
+        var diffs = stopPts.filter(function (sp) { return !sp.platform && sp.alt != null && sp.g != null; }).map(function (sp) { return sp.alt - sp.g; });
+        // The builder saves how to bring a GPS height onto the terrain's scale (the geoid, plus any Height shift), the same correction the
+        // point cloud gets. Without it, the ground stops (about 1.8 m up) are used to work the offset out, and with none the heights go as given.
+        var known = typeof M.gps_shift_m === 'number' && isFinite(M.gps_shift_m);
+        var matched = known || diffs.length > 0;
+        stop3d.S = known ? (M.elev_base_m || 0) - M.gps_shift_m : (diffs.length ? stopMedian(diffs) - STOP_CAM_M : (M.elev_base_m || 0));
+        var withAlt = 0;
+        stopPts.forEach(function (sp) {
+          if (sp.g == null) { sp.z = null; sp.h = null; return; }
+          if (sp.alt != null) withAlt++;
+          sp.z = (sp.alt != null) ? sp.alt - stop3d.S : sp.g + STOP_CAM_M;     // a stop with no GPS height sits at camera height on the ground
+          sp.h = sp.z - sp.g;
+          var mc = maplibregl.MercatorCoordinate.fromLngLat({ lng: sp.lng, lat: sp.lat }, 0); sp.mx = mc.x; sp.my = mc.y;
+        });
+        var ftS = Math.abs(stop3d.S) * M_TO_FT, nG = diffs.length;
+        var fromCfg = stopPts.filter(function (sp) { return sp.altSrc === 'config'; }).length, fromPhoto = stopPts.filter(function (sp) { return sp.altSrc === 'photo'; }).length;
+        var how;
+        if (known) {
+          var resid = diffs.length ? stopMedian(diffs) - stop3d.S - STOP_CAM_M : null;       // how far the ground stops are from a pole's height above the ground
+          how = 'GPS heights placed with the same ' + (M.gps_shift_m >= 0 ? '+' : '') + fx(M.gps_shift_m * M_TO_FT) + ' ft correction as the point cloud.' +
+                (resid != null && Math.abs(resid) > 1.5 ? ' The ground stops sit ' + fx(Math.abs(resid) * M_TO_FT) + ' ft ' + (resid > 0 ? 'higher' : 'lower') + ' than a pole height above the ground; use the slider if that is not right.' : '');
+        } else if (!matched) how = 'There are no ground stops to match the heights against, so GPS heights are used as given and may sit higher or lower than the terrain. Use the slider to line them up.';
+        else how = (ftS < 1 ? 'GPS heights already match the terrain.' : 'GPS heights ' + (stop3d.S > 0 ? 'lowered' : 'raised') + ' by ' + fx(ftS) + ' ft so the ground stops sit about 6 ft above the ground') +
+                   (nG < 3 ? ' (matched to ' + nG + ' ground stop' + (nG === 1 ? '' : 's') + ', so check it and use the slider if needed).' : '.');
+        stop3d.note = have_n(stopPts) + (fromCfg + fromPhoto ? ' (' + (fromCfg + fromPhoto) + ' were not in the tour file, so ' + (fromPhoto ? 'their photos were read' : 'their stop files were read') + '. Republish the tour to save them.)' : '') + ' ' + how +
+                      (withAlt < stopPts.length ? ' ' + ((stopPts.length - withAlt) === 1 ? '1 stop has no GPS height and stays' : (stopPts.length - withAlt) + ' stops have no GPS height and stay') + ' at camera height on the ground.' : '');
+        stop3d.ready = true;
+      });
+    }
+    var stopOptsOpened = false;           // the options start folded; they open once by themselves if there is something to explain
+    try { $('stopopts').open = localStorage.getItem('terrainStopOpts') === '1'; } catch (e) {}
+    $('stopopts').addEventListener('toggle', function () { try { localStorage.setItem('terrainStopOpts', $('stopopts').open ? '1' : '0'); } catch (e) {} });
+    function stopMode() {                 // 3D placement when it is ready and wanted and the terrain is 3D; otherwise the usual pins on the ground
+      var on = stop3d.ready && $('stop3d').checked && $('t3d').checked;
+      stop3d.on = on;
+      var show = $('stops').checked;
+      $('stops3d').style.display = (on && show) ? 'block' : 'none'; $('stopscv').style.display = (on && show) ? 'block' : 'none';
+      markers.forEach(function (m) { m.getElement().style.display = (show && !on) ? '' : 'none'; });
+      $('stop3dwrap').style.display = stop3d.note ? 'block' : 'none'; $('stop3dnote').textContent = stop3d.note;
+      if (stop3d.note && !stop3d.ready && !stop3d.searching && !stopOptsOpened) { stopOptsOpened = true; $('stopopts').open = true; }
+      $('stop3dslider').style.display = (stop3d.ready && $('stop3d').checked) ? 'block' : 'none';
+      refreshStopLabels();
+      map.triggerRepaint();
+    }
+    function placeStops3d() {
+      if (!stop3d.on || !stop3d.mm || !$('stops').checked) return;
+      var host = map.getCanvas(), W = host.clientWidth, H = host.clientHeight, dpr = window.devicePixelRatio || 1, cv = $('stopscv');
+      if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+      var g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+      var mm = stop3d.mm, dz = stop3d.dzM;
+      function proj(x, y, z) {
+        var w = mm[3] * x + mm[7] * y + mm[11] * z + mm[15]; if (w <= 0) return null;
+        return [((mm[0] * x + mm[4] * y + mm[8] * z + mm[12]) / w * 0.5 + 0.5) * W, (0.5 - (mm[1] * x + mm[5] * y + mm[9] * z + mm[13]) / w * 0.5) * H];
+      }
+      g.lineWidth = 1.5; g.strokeStyle = 'rgba(255,255,255,0.6)';
+      stopPts.forEach(function (sp) {
+        if (sp.z == null) { sp.el3.style.display = 'none'; return; }
+        var z = sp.z + dz, a = proj(sp.mx, sp.my, z);
+        if (!a || a[0] < -30 || a[0] > W + 30 || a[1] < -30 || a[1] > H + 30) { sp.el3.style.display = 'none'; return; }
+        sp.el3.style.display = ''; sp.el3.style.transform = 'translate(' + a[0].toFixed(1) + 'px,' + a[1].toFixed(1) + 'px)';
+        if (z - sp.g > 0.9) { var b0 = proj(sp.mx, sp.my, sp.g); if (b0) { g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b0[0], b0[1]); g.stroke(); } }
+      });
+    }
+    map.on('render', placeStops3d);
+    // The tour file is the usual place for a stop's GPS height. When it is missing there, the publisher may still hold it in the stop's own
+    // config.json, and failing that it is in the photo itself (EXIF GPS altitude, or the drone's AbsoluteAltitude). Only the first part of a photo is read.
+    function exifAlt(u8) {
+      function parse(base) {
+        var le = u8[base] === 0x49;
+        function u16(o) { return le ? (u8[o] | (u8[o + 1] << 8)) : ((u8[o] << 8) | u8[o + 1]); }
+        function u32(o) { return (le ? (u8[o] | (u8[o + 1] << 8) | (u8[o + 2] << 16) | (u8[o + 3] << 24)) : ((u8[o] << 24) | (u8[o + 1] << 16) | (u8[o + 2] << 8) | u8[o + 3])) >>> 0; }
+        var ifd0 = base + u32(base + 4), n = u16(ifd0), gps = null, k;
+        for (k = 0; k < n; k++) { var e = ifd0 + 2 + k * 12; if (u16(e) === 0x8825) gps = base + u32(e + 8); }
+        if (!gps) return null;
+        var m = u16(gps), ref = 0, alt = null;
+        for (k = 0; k < m; k++) {
+          var g = gps + 2 + k * 12, tag = u16(g);
+          if (tag === 5) ref = u8[g + 8];
+          if (tag === 6) { var off = base + u32(g + 8), den = u32(off + 4); alt = u32(off) / (den || 1); }
+        }
+        return alt == null ? null : (ref === 1 ? -alt : alt);
+      }
+      var i = 2;
+      while (i + 10 < u8.length && u8[i] === 0xFF) {
+        var mk = u8[i + 1], len = (u8[i + 2] << 8) | u8[i + 3];
+        if (mk === 0xE1 && u8[i + 4] === 0x45 && u8[i + 5] === 0x78 && u8[i + 6] === 0x69 && u8[i + 7] === 0x66) return parse(i + 10);
+        i += 2 + len;
+      }
+      return null;
+    }
+    function altFromPhoto(u8) {
+      var txt = ''; for (var i = 0; i < u8.length; i += 8192) txt += String.fromCharCode.apply(null, u8.subarray(i, Math.min(u8.length, i + 8192)));
+      var m = /AbsoluteAltitude(?:\s*=\s*"|>)\s*([+-]?\d+(?:\.\d+)?)/.exec(txt);
+      if (m) return parseFloat(m[1]);
+      try { return exifAlt(u8); } catch (e) { return null; }
+    }
+    function fetchHead(url, max) {              // the first part of a file, even if the server ignores a range request
+      var ctl = new AbortController();
+      return fetch(url, { signal: ctl.signal }).then(function (r) {
+        if (!r.ok || !r.body) throw new Error('no photo');
+        var rd = r.body.getReader(), chunks = [], got = 0;
+        function pump() {
+          return rd.read().then(function (x) {
+            if (x.done) return; chunks.push(x.value); got += x.value.length;
+            if (got >= max) { try { ctl.abort(); } catch (e) {} return; }
+            return pump();
+          });
+        }
+        return pump().catch(function () {}).then(function () {
+          var out = new Uint8Array(Math.min(got, max)), o = 0;
+          chunks.forEach(function (c) { var take = Math.min(c.length, out.length - o); if (take > 0) { out.set(c.subarray(0, take), o); o += take; } });
+          return out;
+        });
+      });
+    }
+    function findStopAlt(sp) {
+      var base = stopTour.base + 'tiles/' + encodeURIComponent(sp.sid) + '/';
+      return fetch(base + 'config.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }).then(function (cfg) {
+        if (cfg && typeof cfg.alt === 'number' && isFinite(cfg.alt)) { sp.alt = cfg.alt; sp.altSrc = 'config'; return; }
+        var name = (cfg && cfg.mode === 'flat' && cfg.file) ? cfg.file : 'img1.jpg';
+        return fetchHead(base + encodeURIComponent(name), 262144).then(function (u8) {
+          var a = altFromPhoto(u8); if (a != null && isFinite(a)) { sp.alt = a; sp.altSrc = 'photo'; }
+        }).catch(function () {});
+      });
+    }
+    function fillStopAlts(list) {               // a few at a time
+      var i = 0;
+      function worker() { if (i >= list.length) return Promise.resolve(); var sp = list[i++]; return findStopAlt(sp).then(worker); }
+      return Promise.all([worker(), worker(), worker(), worker()]);
+    }
+    function initStops3d() {
+      var missing = stopPts.filter(function (sp) { return sp.alt == null; });
+      if (missing.length && stopPts.length <= 60 && stopTour) {
+        stop3d.note = 'Looking for GPS heights in the stops\u2019 files and photos ...'; stop3d.searching = true; stopMode();
+        fillStopAlts(missing).then(function () { stop3d.searching = false; initStops3dNow(); }); return;
+      }
+      initStops3dNow();
+    }
+    function initStops3dNow() {
+      var have = stopPts.filter(function (sp) { return sp.alt != null; }).length;
+      if (have < 1) {                                             // say why the stops are still on the ground
+        stop3d.note = have === 0
+          ? 'No GPS height was found for these stops (the tour file, their stop files and their photos were checked), so they stay on the ground.'
+          : '';
+        stopMode(); return;
+      }
+      $('stop3drow').style.display = 'flex';
+      var pref = null; try { pref = localStorage.getItem('terrainStop3d'); } catch (e) {}
+      $('stop3d').checked = pref !== '0';
+      if ($('stop3d').checked) prepStop3d().then(stopMode);
+    }
+    $('stop3d').addEventListener('change', function () {
+      try { localStorage.setItem('terrainStop3d', $('stop3d').checked ? '1' : '0'); } catch (e) {}
+      if ($('stop3d').checked && !stop3d.ready) prepStop3d().then(stopMode); else stopMode();
+    });
+    $('stopdz').addEventListener('input', function () {
+      var ft = parseFloat($('stopdz').value) || 0; stop3d.dzM = ft / M_TO_FT; $('stopdzv').textContent = ft + ' ft'; refreshStopLabels(); map.triggerRepaint();
+    });
+    $('t3d').addEventListener('change', stopMode);
+
+    // ---- the photo viewer: a large photo with arrows, a strip of thumbnails, and zoom ----
+    var lb = { photos: [], i: 0, z: 1, tx: 0, ty: 0, ptrs: {}, moved: 0, d0: 0, z0: 1, open: false };
+    function lbApply() { $('lbimg').style.transform = 'translate(' + lb.tx + 'px,' + lb.ty + 'px) scale(' + lb.z + ')'; $('lbstage').classList.toggle('zoomed', lb.z > 1); $('lbzo').disabled = lb.z <= 1; $('lbzi').disabled = lb.z >= 8; }
+    function lbClamp() {                              // the photo cannot be dragged off the screen
+      var st = $('lbstage'), im = $('lbimg'), mx = Math.max(0, (im.clientWidth * lb.z - st.clientWidth) / 2), my = Math.max(0, (im.clientHeight * lb.z - st.clientHeight) / 2);
+      lb.tx = Math.max(-mx, Math.min(mx, lb.tx)); lb.ty = Math.max(-my, Math.min(my, lb.ty));
+    }
+    function lbZoom(z2, cx, cy) {                     // about a point, measured from the middle of the window, so what is under the pointer stays put
+      z2 = Math.max(1, Math.min(8, z2)); cx = cx || 0; cy = cy || 0;
+      var k = z2 / lb.z; lb.tx = cx - (cx - lb.tx) * k; lb.ty = cy - (cy - lb.ty) * k; lb.z = z2;
+      if (lb.z === 1) { lb.tx = 0; lb.ty = 0; } lbClamp(); lbApply();
+    }
+    function lbShow(i) {
+      var n = lb.photos.length; lb.i = (i % n + n) % n; lb.z = 1; lb.tx = 0; lb.ty = 0;
+      var im = $('lbimg'); im.src = lb.photos[lb.i]; im.alt = $('lbtitle').textContent || 'Photo'; lbApply();
+      $('lbcnt').textContent = n > 1 ? (lb.i + 1) + ' of ' + n : ''; $('lbopen').href = lb.photos[lb.i];
+      Array.prototype.forEach.call($('lbstrip').children, function (t, k) { t.className = k === lb.i ? 'on' : ''; });
+      [lb.i - 1, lb.i + 1].forEach(function (k) { if (n > 1) { var pre = new Image(); pre.src = lb.photos[(k % n + n) % n]; } });   // the neighbors, ready before you press the arrow
+    }
+    function lbKeys(e) {
+      if (!lb.open) return;
+      var key = e.key;
+      if (key === 'Escape') { closeLightbox(); e.stopPropagation(); e.preventDefault(); }
+      else if (key === 'ArrowRight') { lbShow(lb.i + 1); e.preventDefault(); }
+      else if (key === 'ArrowLeft') { lbShow(lb.i - 1); e.preventDefault(); }
+      else if (key === '+' || key === '=') { lbZoom(lb.z * 1.5); e.preventDefault(); }
+      else if (key === '-' || key === '_') { lbZoom(lb.z / 1.5); e.preventDefault(); }
+      else if (key === '0') { lbZoom(1); e.preventDefault(); }
+    }
+    function openLightbox(photos, index, title) {
+      if (!photos || !photos.length) return;
+      lb.photos = photos; lb.open = true;
+      $('lbtitle').textContent = title || '';
+      var strip = $('lbstrip'); strip.innerHTML = '';
+      photos.forEach(function (u, k) { var t = document.createElement('img'); t.src = u; t.alt = 'Photo ' + (k + 1); t.addEventListener('click', function () { lbShow(k); }); strip.appendChild(t); });
+      $('lb').classList.toggle('single', photos.length < 2); $('lb').classList.add('on');
+      lbShow(index || 0);
+      document.addEventListener('keydown', lbKeys, true);
+      try { $('lbx').focus(); } catch (e) {}
+    }
+    function closeLightbox() { lb.open = false; $('lb').classList.remove('on'); $('lbimg').removeAttribute('src'); lb.ptrs = {}; document.removeEventListener('keydown', lbKeys, true); }
+    (function () {
+      var st = $('lbstage');
+      function rel(e) { var r = st.getBoundingClientRect(); return { x: e.clientX - (r.left + r.width / 2), y: e.clientY - (r.top + r.height / 2) }; }
+      $('lbx').addEventListener('click', closeLightbox);
+      $('lbprev').addEventListener('click', function (e) { e.stopPropagation(); lbShow(lb.i - 1); });
+      $('lbnext').addEventListener('click', function (e) { e.stopPropagation(); lbShow(lb.i + 1); });
+      $('lbzi').addEventListener('click', function () { lbZoom(lb.z * 1.5); });
+      $('lbzo').addEventListener('click', function () { lbZoom(lb.z / 1.5); });
+      $('lbfit').addEventListener('click', function () { lbZoom(1); });
+      st.addEventListener('wheel', function (e) { e.preventDefault(); var c = rel(e); lbZoom(lb.z * Math.exp(-e.deltaY * 0.0018), c.x, c.y); }, { passive: false });
+      st.addEventListener('dblclick', function (e) { if (e.target.closest && e.target.closest('.lbnav')) return; var c = rel(e); if (lb.z > 1) lbZoom(1); else lbZoom(3, c.x, c.y); });
+      st.addEventListener('pointerdown', function (e) {
+        if (e.target.closest && e.target.closest('.lbnav')) return;
+        try { st.setPointerCapture(e.pointerId); } catch (x) {}
+        lb.ptrs[e.pointerId] = { x: e.clientX, y: e.clientY, x0: e.clientX, y0: e.clientY }; lb.moved = 0;
+        var ids = Object.keys(lb.ptrs); if (ids.length === 2) { var a = lb.ptrs[ids[0]], b = lb.ptrs[ids[1]]; lb.d0 = Math.hypot(a.x - b.x, a.y - b.y) || 1; lb.z0 = lb.z; }
+      });
+      st.addEventListener('pointermove', function (e) {
+        var p = lb.ptrs[e.pointerId]; if (!p) return;
+        var ids = Object.keys(lb.ptrs);
+        if (ids.length === 2) {                                   // two fingers: pinch
+          p.x = e.clientX; p.y = e.clientY; var a = lb.ptrs[ids[0]], b = lb.ptrs[ids[1]], r = st.getBoundingClientRect();
+          lbZoom(lb.z0 * (Math.hypot(a.x - b.x, a.y - b.y) || 1) / lb.d0, (a.x + b.x) / 2 - (r.left + r.width / 2), (a.y + b.y) / 2 - (r.top + r.height / 2)); lb.moved = 999;
+        } else {
+          var dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY; lb.moved += Math.abs(dx) + Math.abs(dy);
+          if (lb.z > 1) { lb.tx += dx; lb.ty += dy; lbClamp(); lbApply(); }
+        }
+      });
+      function up(e) {
+        var p = lb.ptrs[e.pointerId]; delete lb.ptrs[e.pointerId]; if (!p || Object.keys(lb.ptrs).length) return;
+        var dx = e.clientX - p.x0, dy = e.clientY - p.y0;
+        if (lb.z === 1 && lb.photos.length > 1 && Math.abs(dx) > 60 && Math.abs(dx) > 1.5 * Math.abs(dy)) { lbShow(lb.i + (dx < 0 ? 1 : -1)); return; }       // a swipe
+        if (lb.moved < 6 && e.target === st) closeLightbox();                                                                                          // a tap on the empty background
+      }
+      st.addEventListener('pointerup', up); st.addEventListener('pointercancel', function (e) { delete lb.ptrs[e.pointerId]; });
+    })();
 
     // ---- compare two dated layers: a second map sits underneath and shows through where the first is clipped ----
     function cmpL() { var v = parseInt($('cmpL').value, 10); return tileOv.filter(function (t) { return t.idx === v; })[0]; }
@@ -1283,6 +1705,12 @@
       var v = document.createElement('span'); v.textContent = value; v.style.color = cls === 'b' ? '#ffd23f' : '#fff'; if (cls === 'b') v.style.fontWeight = '700'; d.appendChild(v);
       parent.appendChild(d);
     }
+    // A result as a tile: the number large, a few words under it
+    function stat(box, value, caption, hot) {
+      var t = document.createElement('div'); t.className = 'stat';
+      var v = document.createElement('span'); v.className = 'sv' + (hot ? ' hot' : ''); v.textContent = value; t.appendChild(v);
+      var c = document.createElement('span'); c.className = 'sc'; c.textContent = caption; t.appendChild(c); box.appendChild(t);
+    }
     function finishSection() {
       var a = tpts[0], b2 = tpts[1], distM = hav(a, b2), n = Math.max(30, Math.min(300, Math.round(distM / 1.2)));
       $('toolout').textContent = 'Drawing the cross section ...';
@@ -1301,16 +1729,13 @@
         // end to end: the height difference and slope between the two points you clicked
         var iS = 0, iE = e.length - 1; while (e[iS] == null) iS++; while (e[iE] == null) iE--;
         var dTot = d[d.length - 1], dh = e[iE] - e[iS], run = d[iE] - d[iS];
-        line(out, 'Length', fx(dTot) + ' ft');
-        line(out, 'Start to end', fx(e[iS]) + ' to ' + fx(e[iE]) + ' ft, ' + (dh > 0 ? 'up ' : dh < 0 ? 'down ' : 'level ') + (dh === 0 ? '' : fx(Math.abs(dh)) + ' ft ') + '(' + fx(run > 0 ? Math.abs(dh) / run * 100 : 0) + '% slope)');
-        line(out, 'Low to high', fx(lo) + ' to ' + fx(hi) + ' ft, relief ' + fx(hi - lo) + ' ft', 'b');
-        var steep = 0;                                           // the steepest 10 ft stretch, a quick read of bank angle
-        for (var i2 = 0; i2 < d.length; i2++) {
-          if (e[i2] == null) continue;
-          for (var j2 = i2 + 1; j2 < d.length; j2++) { if (d[j2] - d[i2] >= 10) { if (e[j2] != null) steep = Math.max(steep, Math.abs(e[j2] - e[i2]) / (d[j2] - d[i2])); break; } }
-        }
-        if (steep > 0) line(out, 'Steepest 10 ft', fx(steep * 100) + '%');
-        profData.sum = { len: dTot, dh: dh, run: run, lo: lo, hi: hi, steep: steep, above: null };
+        var box = document.createElement('div'); box.className = 'stats'; out.appendChild(box);
+        var relief = hi - lo, slope = run > 0 ? Math.abs(dh) / run * 100 : 0;
+        stat(box, fx(dTot) + ' ft', 'length');
+        if (Math.abs(dh) < 0.05) stat(box, 'Level', 'start and end at the same height');
+        else stat(box, (dh > 0 ? '\u2191 ' : '\u2193 ') + fx(Math.abs(dh)) + ' ft', fx(slope) + '% slope \u00B7 ' + fx(e[iS]) + ' \u2192 ' + fx(e[iE]) + ' ft');
+        if (relief - Math.abs(dh) > 0.5) stat(box, fx(relief) + ' ft', 'relief \u00B7 ' + fx(lo) + ' to ' + fx(hi) + ' ft', true);   // only when the line goes up and down, so it adds something
+        profData.sum = { len: dTot, dh: dh, run: run, lo: lo, hi: hi, above: null };
         refFt = null; showProfile();
       });
     }
@@ -1330,16 +1755,17 @@
         if (fin.length && !pd.remLine) {
           pd.remLine = true;
           var mx = Math.max.apply(null, fin), av = fin.reduce(function (a, b) { return a + b; }, 0) / fin.length;
-          line($('toolout'), 'Above channel', 'up to ' + fx(mx) + ' ft, average ' + fx(av) + ' ft');
+          var sbox = $('toolout').querySelector('.stats'); if (sbox) stat(sbox, fx(mx) + ' ft', 'highest above the channel \u00B7 avg ' + fx(av) + ' ft');
           if (pd.sum) { pd.sum.above = { mx: mx, av: av }; updateSum(); }
         }
       });
     }
     function updateSum() {
       var sm = profData && profData.sum, el = $('profsum'); if (!sm) { el.textContent = ''; return; }
-      var parts = [fx(sm.len) + ' ft long, ' + (sm.dh > 0 ? 'up ' : sm.dh < 0 ? 'down ' : 'level ') + (sm.dh === 0 ? '' : fx(Math.abs(sm.dh)) + ' ft ') + '(' + fx(sm.run > 0 ? Math.abs(sm.dh) / sm.run * 100 : 0) + '% slope)',
-                   'relief ' + fx(sm.hi - sm.lo) + ' ft'];
-      if (sm.steep > 0) parts.push('steepest 10 ft ' + fx(sm.steep * 100) + '%');
+      var parts = [fx(sm.len) + ' ft long'];
+      if (Math.abs(sm.dh) < 0.05) parts.push('level');
+      else parts.push((sm.dh > 0 ? '\u2191 ' : '\u2193 ') + fx(Math.abs(sm.dh)) + ' ft (' + fx(sm.run > 0 ? Math.abs(sm.dh) / sm.run * 100 : 0) + '%)');
+      if ((sm.hi - sm.lo) - Math.abs(sm.dh) > 0.5) parts.push('relief ' + fx(sm.hi - sm.lo) + ' ft');
       if (sm.above) parts.push('up to ' + fx(sm.above.mx) + ' ft above the channel');
       el.textContent = parts.join(' \u00B7 ');
     }
@@ -1886,12 +2312,14 @@
         .catch(function () { flash('Could not save. Open this page from the Terrain Viewer Builder window (Open viewer) to save notes.'); });
     }
     function webLink(u) { return /^https?:\/\//i.test(u || ''); }
+    var MAX_NOTE_PHOTOS = 12;
+    function photosOf(n) { return (n && n.photos && n.photos.length) ? n.photos : (n && n.photo ? [n.photo] : []); }
     function renderNotes() {
       Object.keys(noteMarkers).forEach(function (k) { noteMarkers[k].remove(); }); noteMarkers = {};
       notes.forEach(function (n) {
         var el = document.createElement('div'), isLabel = n.kind === 'label';
         if (isLabel) { el.className = 'notelabel'; el.textContent = n.title || 'Label'; }
-        else { el.className = 'notewrap'; var h = document.createElement('span'); h.className = 'notepin' + (n.photo ? ' photo' : ''); el.appendChild(h); el.title = n.title || ''; }
+        else { el.className = 'notewrap'; var h = document.createElement('span'); h.className = 'notepin' + (photosOf(n).length ? ' photo' : ''); el.appendChild(h); el.title = n.title || ''; }
         el.addEventListener('click', function (ev) { ev.stopPropagation(); markerClicked = true; openNote(n); });
         var mk = new maplibregl.Marker({ element: el, draggable: canSave, anchor: isLabel ? 'center' : 'bottom' }).setLngLat([n.lng, n.lat]).addTo(map);
         if (canSave) mk.on('dragend', function () { var ll = mk.getLngLat(); n.lng = ll.lng; n.lat = ll.lat; persistNotes('Moved.'); });
@@ -1906,10 +2334,29 @@
       var d = document.createElement('div');
       if (n.title) { var b = document.createElement('b'); b.textContent = n.title; d.appendChild(b); }
       if (n.text) { var t = document.createElement('div'); t.style.cssText = 'white-space:pre-wrap;font-size:12.5px;color:#cfd9e8;margin-top:4px;line-height:1.45'; t.textContent = n.text; d.appendChild(t); }
-      if (n.photo) {
-        var a = document.createElement('a'); a.href = siteBase + n.photo; a.target = '_blank'; a.rel = 'noopener';
-        var im = document.createElement('img'); im.src = siteBase + n.photo; im.loading = 'lazy'; im.alt = n.title || 'Photo';
-        im.style.cssText = 'width:100%;border-radius:6px;margin-top:6px;display:block'; a.appendChild(im); d.appendChild(a);
+      var ph = photosOf(n);
+      if (ph.length) {
+        var g = document.createElement('div'); g.className = 'notegal';
+        var la = document.createElement('a'); la.target = '_blank'; la.rel = 'noopener'; la.title = 'Click to enlarge'; la.style.cursor = 'zoom-in';
+        la.addEventListener('click', function (ev) { ev.preventDefault(); openLightbox(ph.map(function (pth) { return siteBase + pth; }), cur, n.title || ''); });
+        var mi = document.createElement('img'); mi.className = 'main'; mi.alt = n.title || 'Photo'; la.appendChild(mi); g.appendChild(la);
+        var cur = 0, thumbs = [], cnt = null;
+        function showPhoto(i) {
+          cur = (i + ph.length) % ph.length; mi.src = siteBase + ph[cur]; la.href = siteBase + ph[cur];
+          if (cnt) cnt.textContent = (cur + 1) + ' of ' + ph.length;
+          thumbs.forEach(function (t, k) { t.className = k === cur ? 'on' : ''; });
+        }
+        if (ph.length > 1) {
+          [['prev', '\u2039', -1], ['next', '\u203A', 1]].forEach(function (c) {
+            var bt = document.createElement('button'); bt.type = 'button'; bt.className = 'nav ' + c[0]; bt.textContent = c[1]; bt.setAttribute('aria-label', c[0] === 'prev' ? 'Previous photo' : 'Next photo');
+            bt.addEventListener('click', function (ev) { ev.preventDefault(); ev.stopPropagation(); showPhoto(cur + c[2]); }); g.appendChild(bt);
+          });
+          cnt = document.createElement('div'); cnt.className = 'cnt'; g.appendChild(cnt);
+          var strip = document.createElement('div'); strip.className = 'notestrip';
+          ph.forEach(function (pth, k) { var t = document.createElement('img'); t.src = siteBase + pth; t.loading = 'lazy'; t.alt = 'Photo ' + (k + 1); t.addEventListener('click', function () { showPhoto(k); }); thumbs.push(t); strip.appendChild(t); });
+          d.appendChild(g); d.appendChild(strip);
+        } else { d.appendChild(g); }
+        showPhoto(0);
       }
       var acts = document.createElement('div'); acts.className = 'noteacts';
       if (n.view && views.some(function (v) { return v.name === n.view; })) {
@@ -1930,35 +2377,67 @@
       kind.value = n && n.kind === 'label' ? 'label' : 'pin'; field('Type', kind);
       var title = document.createElement('input'); title.type = 'text'; title.maxLength = 120; title.value = n ? (n.title || '') : ''; field('Title', title);
       var text = document.createElement('textarea'); text.rows = 3; text.maxLength = 2000; text.value = n ? (n.text || '') : ''; field('Note', text);
-      var photo = document.createElement('input'); photo.type = 'file'; photo.accept = 'image/*'; field(n && n.photo ? 'Replace the photo' : 'Photo (optional)', photo);
-      var rm = null;
-      if (n && n.photo) { var rl = document.createElement('label'); rm = document.createElement('input'); rm.type = 'checkbox'; rl.appendChild(rm); rl.appendChild(document.createTextNode(' Remove the current photo')); d.appendChild(rl); }
+      var items = photosOf(n).map(function (pth) { return { path: pth, src: siteBase + pth }; });     // saved photos first, then the ones just chosen
+      var photo = document.createElement('input'); photo.type = 'file'; photo.accept = 'image/*'; photo.multiple = true;
+      field('Photos (optional, up to ' + MAX_NOTE_PHOTOS + ')', photo);
+      var strip = document.createElement('div'); strip.className = 'thumbs'; d.appendChild(strip);
+      var hint = document.createElement('div'); hint.className = 'thumbhint'; d.appendChild(hint);
+      function drawThumbs() {
+        strip.innerHTML = '';
+        items.forEach(function (it, i) {
+          var w = document.createElement('div'); w.className = 'thumb';
+          var im = document.createElement('img'); im.src = it.src; im.alt = 'Photo ' + (i + 1); w.appendChild(im);
+          var x = document.createElement('button'); x.type = 'button'; x.className = 'rm'; x.textContent = '\u00D7'; x.title = 'Remove this photo';
+          x.addEventListener('click', function () { items.splice(i, 1); drawThumbs(); }); w.appendChild(x);
+          if (i > 0) {
+            var mv = document.createElement('button'); mv.type = 'button'; mv.className = 'mv'; mv.textContent = '\u25C2'; mv.title = 'Move this photo earlier';
+            mv.addEventListener('click', function () { var t = items[i - 1]; items[i - 1] = items[i]; items[i] = t; drawThumbs(); }); w.appendChild(mv);
+          } else if (items.length > 1) { var f1 = document.createElement('span'); f1.className = 'first'; f1.textContent = '1st'; w.appendChild(f1); }
+          strip.appendChild(w);
+        });
+        hint.textContent = items.length > 1 ? 'The first photo is shown first. Use the arrow to move one earlier.' : '';
+      }
+      photo.addEventListener('change', function () {
+        var over = false;
+        Array.prototype.forEach.call(photo.files || [], function (f) {
+          if (items.length >= MAX_NOTE_PHOTOS) { over = true; return; }
+          items.push({ file: f, src: (window.URL && URL.createObjectURL) ? URL.createObjectURL(f) : '' });
+        });
+        try { photo.value = ''; } catch (e) {}                 // so the same file, or more files, can be picked again
+        msg.textContent = over ? 'A note holds up to ' + MAX_NOTE_PHOTOS + ' photos.' : '';
+        drawThumbs();
+      });
       var link = document.createElement('input'); link.type = 'text'; link.placeholder = 'https://'; link.value = n ? (n.link || '') : ''; field('Link (optional)', link);
       var vsel = document.createElement('select'); var none = document.createElement('option'); none.value = ''; none.textContent = 'None'; vsel.appendChild(none);
       views.forEach(function (v) { var x = document.createElement('option'); x.value = v.name; x.textContent = v.name; vsel.appendChild(x); });
       vsel.value = n && n.view ? n.view : ''; field('Link a saved view (optional)', vsel);
       var msg = document.createElement('div'); msg.className = 'msg'; d.appendChild(msg);
+      drawThumbs();
       var btns = document.createElement('div'); btns.className = 'btns'; d.appendChild(btns);
       function mkBtn(label, cls, fn) { var b = document.createElement('button'); b.type = 'button'; b.textContent = label; if (cls) b.className = cls; b.addEventListener('click', fn); btns.appendChild(b); return b; }
       var saveBtn = mkBtn('Save', 'go', function () {
         var t = title.value.trim(), tx = text.value.trim();
         if (kind.value === 'label' && !t) { msg.textContent = 'A label needs a title.'; return; }
-        if (!t && !tx && !photo.files[0] && !(n && n.photo && !(rm && rm.checked))) { msg.textContent = 'Add a title, a note or a photo.'; return; }
+        if (!t && !tx && !items.length) { msg.textContent = 'Add a title, a note or a photo.'; return; }
         saveBtn.disabled = true;
-        function done(photoPath) {
+        function done() {
+          var paths = items.map(function (it) { return it.path; }).filter(Boolean).slice(0, MAX_NOTE_PHOTOS);
           var rec = { id: n ? n.id : 'n' + Date.now().toString(36), kind: kind.value, title: t, text: tx, lng: n ? n.lng : ll.lng, lat: n ? n.lat : ll.lat };
-          if (photoPath) rec.photo = photoPath;
+          if (paths.length) { rec.photos = paths; rec.photo = paths[0]; }
           if (webLink(link.value.trim())) rec.link = link.value.trim();
           if (vsel.value) rec.view = vsel.value;
           if (n) notes[notes.indexOf(n)] = rec; else notes.push(rec);
           renderNotes(); if (popup) popup.remove(); persistNotes(n ? 'Updated.' : 'Added.');
         }
-        var f = photo.files[0];
-        if (!f) { done(n && n.photo && !(rm && rm.checked) ? n.photo : null); return; }
-        msg.textContent = 'Uploading the photo ...';
-        fetch('/upload_photo?site=' + encodeURIComponent(M.site), { method: 'POST', headers: { 'Content-Type': f.type || 'image/jpeg' }, body: f })
-          .then(function (r) { if (!r.ok) throw new Error('up'); return r.json(); }).then(function (j) { done(j.file); })
-          .catch(function () { saveBtn.disabled = false; msg.textContent = 'Could not upload that photo. Try a JPEG or PNG.'; });
+        var todo = items.filter(function (it) { return it.file && !it.path; });
+        function upload(k) {                                     // one at a time, so a slow connection shows progress
+          if (k >= todo.length) return Promise.resolve();
+          msg.textContent = 'Uploading photo ' + (k + 1) + ' of ' + todo.length + ' ...';
+          var f = todo[k].file;
+          return fetch('/upload_photo?site=' + encodeURIComponent(M.site), { method: 'POST', headers: { 'Content-Type': f.type || 'image/jpeg' }, body: f })
+            .then(function (r) { if (!r.ok) throw new Error('up'); return r.json(); }).then(function (j) { todo[k].path = j.file; return upload(k + 1); });
+        }
+        upload(0).then(done).catch(function () { saveBtn.disabled = false; msg.textContent = 'Could not upload one of the photos. Try JPEG or PNG files, and press Save again.'; });
       });
       mkBtn('Cancel', '', function () { if (popup) popup.remove(); });
       if (n) mkBtn('Delete', '', function () {
@@ -2056,7 +2535,7 @@
       if (cmpActive && cmp && cmp.getLayer('hillshade')) cmp.setPaintProperty('hillshade', 'hillshade-exaggeration', v);
     });
     $('stops').addEventListener('change', function () {
-      markers.forEach(function (m) { m.getElement().style.display = $('stops').checked ? '' : 'none'; });
+      stopMode();
       if (!$('stops').checked && popup) popup.remove();
     });
     $('dim').addEventListener('change', function () {

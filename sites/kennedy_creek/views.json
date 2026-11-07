@@ -100,6 +100,28 @@
    "start": false
   },
   {
+   "name": "Trail Camera Location #1",
+   "center": [
+    -123.091354,
+    47.092288
+   ],
+   "zoom": 19.6,
+   "pitch": 69.0,
+   "bearing": -47.0,
+   "start": false
+  },
+  {
+   "name": "Trail Camera Location #2",
+   "center": [
+    -123.090359,
+    47.092931
+   ],
+   "zoom": 20.33,
+   "pitch": 60.0,
+   "bearing": -49.0,
+   "start": false
+  },
+  {
    "name": "KCNA Overview",
    "center": [
     -123.092966,

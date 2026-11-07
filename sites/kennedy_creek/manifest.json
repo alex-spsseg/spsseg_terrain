@@ -1,22 +1,23 @@
 {
  "site": "kennedy_creek",
- "title": "Kennedy Creek meadow",
- "description": "Terrain from the drone ground points, 1.5 ft cells.",
+ "title": "Kennedy Creek Natural Area Terrain Tour",
+ "description": "Imagery from 10/16/26",
  "bounds4326": [
-  -123.10045331725424,
-  47.08902269805475,
-  -123.08311327727516,
-  47.10001378189019
+  -123.13040681752771,
+  47.080339587009384,
+  -123.07504500219697,
+  47.10622362557591
  ],
  "minzoom": 12,
  "maxzoom": 17,
  "tile_size": 256,
  "encoding": "terrarium",
- "elev_min_m": -22.373764038085938,
- "elev_max_m": 54.6036262512207,
+ "elev_min_m": -1.2313944101333618,
+ "elev_max_m": 218.42410278320312,
  "relief": false,
  "elevation_mode": "absolute",
- "elev_base_m": -3.262099560850733,
+ "elev_base_m": 2.3622047244094486,
+ "gps_shift_m": 21.183,
  "exaggeration": 1.25,
  "footprint": "footprint.geojson",
  "tour": {
@@ -37,27 +38,27 @@
    },
    {
     "file": "cloud_02.bin",
-    "count": 995912
+    "count": 999962
    }
   ],
-  "count": 14995912,
+  "count": 14999962,
   "stride": 12,
   "has_rgb": true,
   "has_class": true,
   "origin": [
-   -123.0917832972647,
-   47.09451823997247
+   -123.10272590986234,
+   47.09328160629265
   ],
   "box": [
-   -629.3004150390625,
-   647.7518310546875,
-   -591.1752319335938,
-   601.2186279296875,
-   -23.44209098815918,
-   80.71467590332031
+   199.99342346191406,
+   1479.788818359375,
+   -453.5527648925781,
+   746.7005004882812,
+   -29.088438034057617,
+   75.06832885742188
   ],
   "h_step": 0.25,
-  "h_p98": 34.5,
+  "h_p98": 34.2,
   "ground_removed": true,
   "source": "KCST_20261016_point_cloud.copc.laz"
  },
@@ -66,26 +67,93 @@
   "minzoom": 11,
   "maxzoom": 19,
   "bounds": [
-   -123.10045331725424,
-   47.08902269805475,
-   -123.08311327727516,
-   47.10001378189019
+   -123.13040681752771,
+   47.080339587009384,
+   -123.07504500219697,
+   47.10622362557591
   ],
   "label": "Ortho (10/14/2026)",
-  "count": 876,
-  "mb": 10.1,
+  "count": 2358,
+  "mb": 10.4,
   "source": "https://tiles.arcgis.com/tiles/buuvDFFARQiOEbVZ/arcgis/rest/services/KCST_20261016_ortho/MapServer",
   "tile_size": 256
  },
- "rem": null,
+ "rem": {
+  "tiles": "rem/{z}/{x}/{y}.png",
+  "zoom": 17,
+  "count": 67,
+  "source": "KCNA_REM_2024lidar_GenerateREM.tif",
+  "color": "rem_color/{z}/{x}/{y}.png",
+  "minzoom": 12,
+  "bounds": [
+   -123.11763772682814,
+   47.08090779392542,
+   -123.0784243217531,
+   47.10349877881265
+  ],
+  "classes": [
+   "#283285",
+   "#41569e",
+   "#567bb8",
+   "#6aa2d3",
+   "#6fe8f5",
+   "#66dbbe",
+   "#5cc286",
+   "#52a857",
+   "#5b8f47",
+   "#779e56",
+   "#bfd188",
+   "#fbf9b6",
+   "#e5d88b",
+   "#cfb365",
+   "#ba8b44",
+   "#a46429",
+   "#aa6e3a",
+   "#a8734d",
+   "#a57860",
+   "#9c8386"
+  ],
+  "breaks": [
+   1.0,
+   2.0,
+   3.0,
+   4.0,
+   5.0,
+   6.0,
+   7.0,
+   8.0,
+   9.0,
+   10.0,
+   11.0,
+   12.0,
+   13.0,
+   14.0,
+   15.0,
+   16.0,
+   17.0,
+   18.0,
+   19.0,
+   20.0
+  ],
+  "exclude": [
+   [
+    20.01,
+    2000.0
+   ]
+  ],
+  "opacity": 0.5,
+  "resampling": "nearest",
+  "unit": "ft",
+  "zero_hidden": true
+ },
  "basemap": {
   "type": "xyz_tile",
   "url": "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
   "attribution": "Imagery: Google"
  },
  "source": {
-  "file": "kcna_groundexport.tif",
-  "cell_size": 1.5,
+  "file": "KCNA_DTM_2024lidar.tif",
+  "cell_size": 3.0,
   "units": "ft"
  }
 }

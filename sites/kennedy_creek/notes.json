@@ -1,0 +1,26 @@
+{
+ "notes": [
+  {
+   "id": "nmw5kwc2s",
+   "kind": "pin",
+   "title": "Trail Camera Location #1",
+   "text": "",
+   "lng": -123.0912347137928,
+   "lat": 47.092121353848654
+  },
+  {
+   "id": "nmw5mk56c",
+   "kind": "pin",
+   "title": "Trail Camera #2",
+   "text": "",
+   "lng": -123.09036299586296,
+   "lat": 47.092930312580705,
+   "photos": [
+    "notes/pf12da5301264.jpg",
+    "notes/p523def8b57d5.jpg",
+    "notes/p84db1603db24.jpg"
+   ],
+   "photo": "notes/pf12da5301264.jpg"
+  }
+ ]
+}
