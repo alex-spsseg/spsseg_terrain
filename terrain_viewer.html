@@ -24,7 +24,9 @@
   #panel .head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
   #panel h1 { font-size: 16px; margin: 0 0 2px; color: #fff; }
   #panel .sub { font-size: 12px; color: #9fb2cc; margin-bottom: 4px; }
-  #toggle { width: auto !important; margin: 0 !important; padding: 2px 9px !important; }
+  #toggle, #helpbtn { width: auto !important; margin: 0 !important; padding: 2px 9px !important; }
+  .headbtns { display: flex; gap: 6px; flex: none; }
+  #helpbtn { font-weight: 700; min-width: 28px; }
   #panel label { display: block; font-size: 12px; color: #9fb2cc; margin: 10px 0 3px; }
   #panel select, #panel button, #panel a.btn {
     display: block; width: 100%; background: #132447; color: #fff; border: 1px solid #1b3f95; border-radius: 6px; padding: 7px 8px;
@@ -76,6 +78,14 @@
   #shadecard input[type=range] { width: 100%; margin: 12px 0 0; accent-color: #019fc4; }
   #shadecard .shticks { display: flex; justify-content: space-between; font-size: 10px; color: #7f93b0; margin-top: 1px; }
   #shadecard #shadesun { margin-top: 8px; font-size: 12px; }
+  #shaderes { margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(27,63,149,0.7); }
+  #shaderes .shrtitle { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: #7f93b0; margin-bottom: 4px; }
+  #shaderes .shbig { font-size: 24px; font-weight: 700; color: #ffd23f; line-height: 1.1; }
+  #shaderes .shbig small { font-size: 12px; font-weight: 400; color: #cfd9e8; margin-left: 6px; }
+  #shaderes .shbar { height: 8px; border-radius: 4px; background: #132447; overflow: hidden; margin: 6px 0 8px; }
+  #shaderes .shbar i { display: block; height: 8px; background: #ffd23f; }
+  #shaderes .shrow { font-size: 13px; color: #fff; }
+  #shaderes .shrow b { color: #ffd23f; }
   #shadecard .check { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 13px; }
   #infocard b { color: #fff; }
   #infocard a { color: #5cc8dc; }
@@ -110,7 +120,7 @@
     #panel > #switcher a, #panel > #switcher .on { padding: 5px 12px; font-size: 12.5px; }
     body.panelopen #mapbar, body.panelopen #cards { display: none !important; }                 /* never sits on top of the open panel */
     #panel.collapsed .sub { display: none; }
-    #toggle { padding: 8px 14px !important; }
+    #toggle, #helpbtn { padding: 8px 14px !important; }
     #panel { max-height: calc(100% - 24px - env(safe-area-inset-bottom, 0px)); }
   }
   #cloudleg { margin-top: 8px; }
@@ -149,10 +159,18 @@
   .hintchip .hbtns .skip { background: none; border: 0; color: #9fb2cc; text-decoration: underline; padding: 4px 2px; }
   .hintchip .hstep { margin-left: auto; font-size: 11px; color: #9fb2cc; }
   .hintchip .arrow { position: absolute; width: 11px; height: 11px; background: #0e1b33; border: 1px solid #ffd23f; transform: rotate(45deg); display: none; }
+  .hintchip.side .arrow { display: block; left: -7px; border-top: 0; border-right: 0; }
   .hintchip.above .arrow { display: block; bottom: -7px; border-top: 0; border-left: 0; }
   .hintchip.below .arrow { display: block; top: -7px; border-bottom: 0; border-right: 0; }
   .hintglow { outline: 3px solid rgba(255,210,63,0.95) !important; outline-offset: 2px; animation: hintpulse 1.4s ease-in-out infinite; }
   @keyframes hintpulse { 0%, 100% { outline-color: rgba(255,210,63,0.95); } 50% { outline-color: rgba(255,210,63,0.25); } }
+  #looks { margin-top: 10px; }
+  #looks .looklabel { display: block; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: #7f93b0; margin-bottom: 5px; }
+  #lookchips { display: flex; flex-wrap: wrap; gap: 5px; }
+  #panel #lookchips button { width: auto; margin: 0; padding: 4px 11px; border-radius: 14px; font-size: 12px; background: #132447; border: 1px solid #1b3f95; color: #e8eef7; }
+  #panel #lookchips button.on { background: #1b3f95; border-color: #019fc4; color: #fff; }
+  #panel .opbtn { width: auto; margin: 0 0 0 auto; padding: 0 7px; border-radius: 10px; border: 1px solid #1b3f95; background: #132447; color: #9fb2cc; font-size: 11px; line-height: 18px; cursor: pointer; flex: none; }
+  #panel .opbtn.on { color: #fff; border-color: #019fc4; }
   .notewrap { width: 26px; height: 26px; cursor: pointer; }
   .notepin { display: block; width: 20px; height: 20px; margin: 3px; border-radius: 50% 50% 50% 0; background: #ffb347; border: 2px solid #fff;
     transform: rotate(-45deg); box-shadow: 0 1px 5px rgba(0,0,0,.65); }
@@ -280,6 +298,8 @@
   /* no hover label when the same thing is already on screen: a label beside the stop, or its own card */
   body.stoplabels .stop:hover .stoptip, body.stoplabels .stop:focus-visible .stoptip,
   .stop.hasPopup:hover .stoptip, .stop.hasPopup:focus-visible .stoptip { display: none; }
+  #markcv { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 843; pointer-events: none; }
+  #shadecv { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 841; pointer-events: none; }
   #stopscv { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 840; pointer-events: none; }
   #stops3d { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 845; pointer-events: none; overflow: hidden; }
   #stops3d .stop { position: absolute; left: -8px; top: -8px; pointer-events: auto; will-change: transform; }
@@ -325,8 +345,8 @@
   <canvas id="profcv"></canvas>
   <div id="profread"></div>
 </div>
-<svg id="hit" style="display:none" aria-hidden="true"><line id="hitline" stroke="#0e1b33" stroke-width="5" stroke-linecap="round"/><line id="hitline2" stroke="#ffd23f" stroke-width="2.5" stroke-linecap="round"/><circle id="hitdot" r="7" fill="#ffd23f" stroke="#0e1b33" stroke-width="2.5"/></svg>
-<canvas id="stopscv" style="display:none"></canvas><div id="stops3d" style="display:none"></div>
+<canvas id="markcv" style="display:none"></canvas>
+<canvas id="stopscv" style="display:none"></canvas><canvas id="shadecv" style="display:none"></canvas><div id="stops3d" style="display:none"></div>
 <div id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
   <div id="lbtop"><div id="lbtitle"></div><div id="lbcnt"></div>
     <div id="lbtools"><button id="lbzo" type="button" aria-label="Zoom out" title="Zoom out">&minus;</button><button id="lbzi" type="button" aria-label="Zoom in" title="Zoom in">+</button><button id="lbfit" type="button" title="Fit the photo to the window">Fit</button><a id="lbopen" target="_blank" rel="noopener" title="Open the photo in its own tab">Open</a><button id="lbx" type="button" aria-label="Close" title="Close">&times;</button></div></div>
@@ -341,10 +361,11 @@
 <div id="panel">
   <div class="head">
     <div><h1 id="title">Terrain Viewer</h1><div class="sub" id="sub"></div></div>
-    <button id="toggle" type="button" title="Show or hide controls">&#9776;</button>
+    <div class="headbtns"><button id="helpbtn" type="button" title="Show the tips again" aria-label="Show the tips">?</button><button id="toggle" type="button" title="Show or hide controls">&#9776;</button></div>
   </div>
   <div class="body">
     <div class="quick"><button id="reset" type="button">Reset view</button><button id="orbit" type="button">Orbit</button></div>
+    <div id="looks" style="display:none"><span class="looklabel">Quick looks</span><div id="lookchips"></div></div>
 
     <details class="sec" id="ovwrap" open>
       <summary id="ovhead">Layers</summary>
@@ -358,11 +379,13 @@
         </div>
       </div>
       <div class="grp" id="grpdata" style="display:none">Data</div>
-      <label class="check" id="remrow" style="display:none"><input type="checkbox" id="remon"> <span>Height above channel</span><button type="button" class="ibtn" id="reminfo" aria-label="What is this?" title="What is this?">i</button></label>
+      <label class="check" id="remrow" style="display:none"><input type="checkbox" id="remon"> <span>Height above channel</span><button type="button" class="ibtn" id="reminfo" aria-label="What is this?" title="What is this?">i</button><button type="button" class="opbtn" id="remopbtn" title="Show the opacity slider" style="display:none">Opacity</button></label>
       <div class="dimtxt" id="remhint" style="display:none;margin:4px 0 0 26px">A map of how far each spot sits above the river channel, called a relative elevation model (REM). Low values are close to the water.</div>
       <div id="remctl" style="display:none">
-        <div class="rangehead"><label for="remop">Opacity</label><span id="remopv">65%</span></div>
-        <input id="remop" class="ovop" type="range" min="0" max="1" step="0.05" value="0.65">
+        <div id="remopwrap" style="display:none">
+          <div class="rangehead"><label for="remop">Opacity</label><span id="remopv">65%</span></div>
+          <input id="remop" class="ovop" type="range" min="0" max="1" step="0.05" value="0.65">
+        </div>
         <div id="legrem"><div id="remleg"></div>
           <div class="legrow" id="remlegl"><span></span><span></span><span></span></div><div class="dimtxt" id="remnote" style="margin-top:4px"></div></div>
       </div>
@@ -452,13 +475,12 @@
       <label for="detail">Imagery detail</label>
       <select id="detail"><option value="1">Sharp (more tiles, slower)</option><option value="2">Fast (a quarter of the tiles)</option></select>
       <label class="check"><input type="checkbox" id="dim" checked> Dim outside the mapped area</label>
-      <button id="tipsagain" type="button">Show the tips again</button>
       <button id="savedef" type="button" style="display:none">Save this look as the site default</button>
       <div id="defmsg"></div>
       <details class="about"><summary>About these numbers</summary>
         <div class="dimtxt" id="note" style="margin-top:6px"></div>
         <div class="dimtxt" style="margin-top:6px;line-height:1.45">Click or tap a tree to read its height: the tallest point of the point cloud within 10 ft of the click. It is not one measured tree, because a taller neighbor’s branch can raise it, and thin treetops can read low.
-          Under More: canopy cover is the share of the ground within 30 ft that has anything taller than 6.5 ft above it. Shade is the share of the sunny day that trees block the sun at that spot. Open the Shade tool to turn them on and pick the date.</div></details>
+          In the Shade tool: canopy cover is the share of the ground within 30 ft that has anything taller than 6.5 ft above it. Shade is the share of the sunny day that trees block the sun at that spot. Pick a date, then click a spot.</div></details>
     </details>
   </div>
 </div>
@@ -473,12 +495,13 @@
     <button type="button" class="shi" id="shadei" aria-label="About shade" title="About shade">i</button>
     <button type="button" class="infox" id="shadex" aria-label="Close">&times;</button>
     <div class="shtitle"><b>Shade</b><span id="shadelab">Jul 15</span></div>
-    <div id="shadeinfo" class="dimtxt" style="display:none">Shade is the share of the sunny day that trees block the sun at the spot you click. It uses the point cloud, so it counts trees and not hills. While this card is open, a clicked spot shows canopy cover and shade under More.</div>
+    <div id="shadeinfo" class="dimtxt" style="display:none">Shade is the share of the sunny day that trees block the sun at the spot you click. It uses the point cloud, so it counts trees and not hills. The result for your last click is at the bottom of this card.</div>
     <div id="shadechips"><button type="button" data-day="172">Jun 21</button><button type="button" data-day="196">Jul 15</button><button type="button" data-day="227">Aug 15</button><button type="button" data-day="265">Sep 22</button><button type="button" data-day="355">Dec 21</button></div>
     <input type="range" id="shadeday" min="1" max="365" step="1" value="196" aria-label="Day of the year">
     <div class="shticks"><span>Jan</span><span>Apr</span><span>Jul</span><span>Oct</span><span>Dec</span></div>
     <div id="shadesun" class="dimtxt"></div>
     <label class="check"><input type="checkbox" id="shadew"> Count midday sun more</label>
+    <div id="shaderes"><div class="shrtitle">At the spot you clicked</div><div id="shaderesbody" class="dimtxt">Click a spot on the map to see its shade.</div></div>
   </div>
   <div id="infocard" style="display:none"></div>
   <div id="toolcard" style="display:none"><div id="toolout"></div><div id="toolclear">Clear measurement</div></div>
@@ -728,6 +751,33 @@
       var x = document.createElement('button'); x.type = 'button'; x.className = 'infox'; x.textContent = '\u00D7'; x.setAttribute('aria-label', 'Close');
       x.addEventListener('click', hideInfo); c.appendChild(x); c.appendChild(node); c.style.display = 'block';
     }
+    // The card for a clicked spot re-reads its shade when the date or the sun weighting changes, so it never shows an old date's answer.
+    var shadeSpot = null, shadeTimer = null;
+    function shadeCardOpen() { return $('shadecard').style.display === 'block'; }
+    function updateShadeResult(now) {                                  // the last spot you clicked, worked out for the date set in the card
+      clearTimeout(shadeTimer);
+      function run() {
+        var box = $('shaderesbody'); if (!box || !shadeCardOpen()) { shadeViz.on = false; return; }
+        if (!(cloud.data && cloud.data.length && cloud.dec)) { box.textContent = 'Shade needs the point cloud.'; shadeViz.on = false; return; }
+        if (!shadeSpot) { box.textContent = 'Click a spot on the map to see its shade.'; shadeViz.on = false; return; }
+        var sp = shadeSpot;
+        setTimeout(function () {                                       // the first one reads the whole cloud, so let the card draw first
+          try {
+            var g = canopyGrid(), xy = localXY(sp.lng, sp.lat), cov = coverAt(g, xy.e, xy.n), sh = shadeAt(g, xy.e, xy.n, sp.groundM, cloud.meta.origin[1]);
+            if (cov == null || sh == null || sp !== shadeSpot) { if (sp === shadeSpot) box.textContent = 'There is no point cloud at this spot.'; return; }
+            box.innerHTML = '';
+            var big = document.createElement('div'); big.className = 'shbig'; big.textContent = pctText(sh);
+            var sm = document.createElement('small'); sm.textContent = 'of the sunny day in shade on ' + SHADE_DAY.label.replace('\u00A0', ' ') + (SHADE_WEIGHTED ? ', sun weighted' : ''); big.appendChild(sm); box.appendChild(big);
+            var bar = document.createElement('div'); bar.className = 'shbar'; var fill = document.createElement('i'); fill.style.width = Math.round(sh * 100) + '%'; bar.appendChild(fill); box.appendChild(bar);
+            var row = document.createElement('div'); row.className = 'shrow'; row.appendChild(document.createTextNode('Canopy cover ')); var cb = document.createElement('b'); cb.textContent = pctText(cov); row.appendChild(cb);
+            var tail = document.createElement('span'); tail.style.color = '#9fb2cc'; tail.textContent = ' of the ground around it'; row.appendChild(tail); box.appendChild(row);
+            var mc = maplibregl.MercatorCoordinate.fromLngLat({ lng: sp.lng, lat: sp.lat }, 0);
+            shadeViz.spot = { mc: mc, mpu: mc.meterInMercatorCoordinateUnits(), groundM: sp.groundM }; shadeViz.rays = shadeRays(g, xy.e, xy.n, sp.groundM, cloud.meta.origin[1]); shadeViz.on = true; map.triggerRepaint();
+          } catch (err) { box.textContent = 'Could not work out the shade here.'; }
+        }, 20);
+      }
+      if (now) run(); else shadeTimer = setTimeout(run, 60);
+    }
     function hideInfo() { var c = $('infocard'); c.style.display = 'none'; c.textContent = ''; hideHit(); }
     function sheetBottom() {                       // where the phone sheet sits: just above the bar of buttons
       var mb = $('mapbar'), r = mb ? mb.getBoundingClientRect() : null;
@@ -773,6 +823,7 @@
         }
         addExtras(d, e.lngLat.lng, e.lngLat.lat, typeof m === 'number' ? m : null);
         showInfo(d);
+        if (typeof m === 'number') setClickMark(e.lngLat.lng, e.lngLat.lat, m, 1);
       });
     });
 
@@ -797,6 +848,7 @@
       var row = document.createElement('label'); row.className = 'check';
       var cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = !!on;
       row.appendChild(cb); row.appendChild(document.createTextNode(' ' + label));
+      var opbtn = null, opened = false;
       cb.addEventListener('change', function () {
         ids.forEach(function (id) { if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', cb.checked ? 'visible' : 'none'); });
       });
@@ -807,9 +859,15 @@
         sl.value = opacity; sl.title = 'Opacity';
         sl.addEventListener('input', function () { onOpacity(parseFloat(sl.value)); });
         wrap.appendChild(sl);
+        opbtn = document.createElement('button'); opbtn.type = 'button'; opbtn.className = 'opbtn'; opbtn.textContent = 'Opacity'; opbtn.title = 'Show the opacity slider';
+        opbtn.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); opened = !opened; syncSl(); });
+        row.appendChild(opbtn);
       }
       var rows = $('ovrows'); rows.insertBefore(wrap, rows.firstChild);
-      function syncSl() { if (sl) sl.style.display = cb.checked ? '' : 'none'; }      // the opacity slider shows only while the layer is on
+      function syncSl() {                                    // the slider shows only while the layer is on and you have asked for it
+        if (sl) sl.style.display = (cb.checked && opened) ? '' : 'none';
+        if (opbtn) { opbtn.style.display = cb.checked ? '' : 'none'; opbtn.classList.toggle('on', opened); }
+      }
       cb.addEventListener('change', syncSl); syncSl();
       return { wrap: wrap, cb: cb, slider: sl, sync: syncSl };
     }
@@ -1157,7 +1215,7 @@
     function have_n(list) { var n = list.filter(function (sp) { return sp.alt != null; }).length; return n + ' of ' + list.length + ' stops have a GPS height.'; }
     function addStopRef() {               // an empty layer that only records the camera matrix each frame, so stops can be placed in 3D
       map.addLayer({ id: 'stopref', type: 'custom', renderingMode: '3d', onAdd: function () {}, render: function (gl, matrix) {
-        if (!stop3d.on) return;
+        if (!stop3d.on && !shadeViz.on && !clickMark.on) return;
         var tr = map.transform, elev = (cloudComp && tr && isFinite(tr.elevation)) ? tr.elevation : 0, cc = map.getCenter();
         var mpu = maplibregl.MercatorCoordinate.fromLngLat({ lng: cc.lng, lat: cc.lat }, 0).meterInMercatorCoordinateUnits();
         stop3d.mm = mat4mul(Array.prototype.slice.call(matrix), [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, mpu * exag, 0, 0, 0, -elev * mpu, 1]);
@@ -1404,6 +1462,43 @@
       st.addEventListener('pointerup', up); st.addEventListener('pointercancel', function (e) { delete lb.ptrs[e.pointerId]; });
     })();
 
+    // ---- quick looks: one tap sets the data layers; the imagery you chose stays ----
+    var LOOKS = [
+      { id: 'photos', label: 'Photos', has: function () { return $('ovrows').children.length > 0; }, want: { rem: false, cloud: false, flood: false }, imagery: true },
+      { id: 'trees', label: 'Trees', has: function () { return shown($('cloudrow')); }, want: { rem: false, cloud: true, flood: false } },
+      { id: 'height', label: 'Height above channel', has: function () { return shown($('remrow')); }, want: { rem: true, cloud: false, flood: false } },
+      { id: 'water', label: 'Flood depth', has: function () { return !!$('floodwrap') && $('floodwrap').style.display !== 'none'; }, want: { rem: false, cloud: false, flood: true } }
+    ];
+    function lookCtl(k) { return { rem: $('remon'), cloud: $('cloudon'), flood: $('flood') }[k]; }
+    function lookHas(k) { return k === 'rem' ? shown($('remrow')) : k === 'cloud' ? shown($('cloudrow')) : (!!$('floodwrap') && $('floodwrap').style.display !== 'none'); }
+    function setLayerChecked(k, val) { var c = lookCtl(k); if (!c || !lookHas(k) || c.checked === val) return; c.checked = val; c.dispatchEvent(new Event('change', { bubbles: true })); }
+    function applyLook(l) {
+      Object.keys(l.want).forEach(function (k) { setLayerChecked(k, l.want[k]); });
+      if (l.imagery) {                                              // Photos needs a picture: turn the top one on if every imagery layer is off
+        var boxes = $('ovrows').querySelectorAll('input[type=checkbox]'), any = false;
+        Array.prototype.forEach.call(boxes, function (b) { if (b.checked) any = true; });
+        if (!any && boxes.length) { boxes[0].checked = true; boxes[0].dispatchEvent(new Event('change', { bubbles: true })); }
+      }
+      refreshLooks();
+    }
+    function lookActive(l) {
+      return Object.keys(l.want).every(function (k) { var c = lookCtl(k); return !lookHas(k) || (!!c && c.checked === l.want[k]); });
+    }
+    var looksShown = '';
+    function refreshLooks() {
+      $('remopbtn').style.display = $('remon').checked && shown($('remrow')) ? '' : 'none';
+      var avail = LOOKS.filter(function (l) { return l.has(); }), key = avail.map(function (l) { return l.id; }).join(',');
+      $('looks').style.display = avail.length >= 2 ? '' : 'none';
+      if (key !== looksShown) {
+        looksShown = key; var box = $('lookchips'); box.innerHTML = '';
+        avail.forEach(function (l) { var b = document.createElement('button'); b.type = 'button'; b.textContent = l.label; b.setAttribute('data-look', l.id); b.addEventListener('click', function () { applyLook(l); }); box.appendChild(b); });
+      }
+      Array.prototype.forEach.call($('lookchips').children, function (b) { var l = LOOKS.filter(function (x) { return x.id === b.getAttribute('data-look'); })[0]; b.className = (l && lookActive(l)) ? 'on' : ''; });
+    }
+    $('panel').addEventListener('change', refreshLooks);
+    new MutationObserver(refreshLooks).observe($('ovwrap'), { subtree: true, attributes: true, attributeFilter: ['style', 'class'], childList: true });
+    refreshLooks();
+
     // ---- first visit tips ----
     // A small bubble beside the real control, one at a time, with the control outlined. Using the control, or pressing Got it, retires that tip
     // for good. Each tip appears only if its control is on screen, so a site without stops never hears about stops.
@@ -1419,12 +1514,13 @@
       var phone = onPhone();
       return [
         { id: 'around', title: 'Getting around', find: null,
-          text: phone ? 'Drag to move. Two fingers tilt and turn the view. Tap the ground or a tree to read its elevation and height.'
-                      : 'Drag to move, right drag to tilt and turn. Click the ground or a tree to read its elevation and height.' },
-        { id: 'cross', title: 'Cross section', find: function () { return $('toolx'); }, text: 'Pick two points to see the ground between them, with its slope and height.' },
-        { id: 'shade', title: 'Shade', find: function () { return $('toolshade'); }, text: 'Pick a date, then click a spot to see how much shade the trees cast on it.' },
+          text: phone ? 'Drag to move, two fingers to tilt. Tap the ground or a tree to read it.' : 'Drag to move, right drag to tilt. Click the ground or a tree to read it.' },
+        { id: 'looks', title: 'Quick looks', side: true, find: function () { return $('looks'); }, text: 'One tap changes what you see.' },
+        { id: 'height', title: 'Height above channel', side: true, find: function () { return shown($('remrow')) ? $('remrow') : null; }, text: 'Blue is near the water, brown is high above it.' },
+        { id: 'cross', title: 'Cross section', find: function () { return $('toolx'); }, text: 'Pick two points to see the ground between them.' },
+        { id: 'shade', title: 'Shade', find: function () { return $('toolshade'); }, text: 'Pick a date, then a spot to see tree shade.' },
         { id: 'stops', title: '360 stops', find: function () { return firstStopEl() || ($('switcher').style.display !== 'none' ? $('switcher') : null); },
-          text: 'The dots are where the 360 photos were taken. Tap one to open it in the tour.' }
+          text: 'Tap a dot to open that photo in the tour.' }
       ];
     }
     function firstStopEl() {
@@ -1439,12 +1535,16 @@
     function placeTip() {
       var el = tips.el, d = tips.list[tips.i]; if (!el || !d) return;
       var vw = window.innerWidth, vh = window.innerHeight, w = Math.min(250, vw - 16), left, top, t = d.find ? d.find() : null;
-      el.style.width = w + 'px'; el.classList.remove('above', 'below');
+      el.style.width = w + 'px'; el.classList.remove('above', 'below', 'side');
       if (d.find && !seen(t)) { el.style.display = 'none'; return; }        // its control is out of sight for now (the panel is open, say)
       el.style.display = '';
       var h = el.offsetHeight;
       if (!d.find) { left = (vw - w) / 2; top = Math.max(8, vh * 0.3); }
-      else {
+      else if (d.side && !onPhone()) {                                   // a control in the side panel: the bubble sits beside it
+        var rs = t.getBoundingClientRect(), pr = $('panel').getBoundingClientRect();
+        left = Math.min(vw - w - 8, pr.right + 14); top = Math.max(8, Math.min(vh - h - 8, rs.top + rs.height / 2 - h / 2));
+        el.classList.add('side'); el.querySelector('.arrow').style.top = Math.max(10, Math.min(h - 22, rs.top + rs.height / 2 - top - 6)) + 'px';
+      } else {
         var r = t.getBoundingClientRect(), cx = r.left + r.width / 2, above = (r.top + r.height / 2) > vh / 2;
         left = Math.max(8, Math.min(vw - w - 8, cx - w / 2)); top = above ? r.top - h - 14 : r.bottom + 14; top = Math.max(8, Math.min(vh - h - 8, top));
         el.classList.add(above ? 'above' : 'below'); el.querySelector('.arrow').style.left = Math.max(10, Math.min(w - 22, cx - left - 6)) + 'px';
@@ -1465,7 +1565,7 @@
       el.querySelector('.go').addEventListener('click', function () { tipMark(d.id); nextTip(); });
       el.querySelector('.skip').addEventListener('click', function () { tips.list.forEach(function (x) { tipMark(x.id); }); hideTip(); });
       document.body.appendChild(el); tips.el = el;
-      if (t) { tips.target = t; t.classList.add('hintglow'); tips.onUse = function () { tipMark(d.id); setTimeout(nextTip, 150); }; t.addEventListener('click', tips.onUse); }
+      if (t) { try { if (d.side) t.scrollIntoView({ block: 'nearest' }); } catch (e) {} tips.target = t; t.classList.add('hintglow'); tips.onUse = function () { tipMark(d.id); setTimeout(nextTip, 150); }; t.addEventListener('click', tips.onUse); }
       placeTip();
     }
     function nextTip() { tips.i++; showTip(); }
@@ -1477,7 +1577,7 @@
     }
     window.addEventListener('resize', placeTip);
     $('toggle').addEventListener('click', function () { setTimeout(placeTip, 60); });
-    $('tipsagain').addEventListener('click', function () {
+    $('helpbtn').addEventListener('click', function () {                  // the ? replays the tips, all of them
       try { localStorage.removeItem('terrainTips'); } catch (e) {}
       if (onPhone() && !$('panel').classList.contains('collapsed')) $('toggle').click();      // fold the panel away so the tips have room
       setTimeout(function () { startTips(true); }, 350);
@@ -2083,8 +2183,9 @@
     $('toolshade').addEventListener('click', function () {
       var c = $('shadecard'), open = c.style.display !== 'block'; c.style.display = open ? 'block' : 'none'; $('toolshade').classList.toggle('on', open);
       shadeShown = true;
+      if (open) updateShadeResult(true); else { shadeViz.on = false; drawShadeViz(); }
     });
-    $('shadex').addEventListener('click', function () { $('shadecard').style.display = 'none'; $('toolshade').classList.remove('on'); });
+    $('shadex').addEventListener('click', function () { $('shadecard').style.display = 'none'; $('toolshade').classList.remove('on'); shadeViz.on = false; drawShadeViz(); });
     new MutationObserver(function () { $('toolcard').style.display = $('toolout').textContent.trim() ? 'block' : 'none'; }).observe($('toolout'), { childList: true, subtree: true, characterData: true });
     $('toolclear').addEventListener('click', function () { clearMeas(); if (tool) $('toolout').textContent = 'Click the first point.'; });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && tool) setTool(tool); });
@@ -2197,12 +2298,56 @@
       var h = Math.floor(hours), m = Math.round((hours - h) * 60); if (m === 60) { h++; m = 0; }
       return 'Sun above 10\u00B0 for ' + h + ' h ' + m + ' min. Noon sun ' + Math.round(noon) + '\u00B0 high.';
     }
+    // The geometry behind the result: the same sun rays shadeAt() tests, kept so they can be drawn. A ray stops where the canopy blocks it.
+    var shadeViz = { on: false, spot: null, rays: [] };
+    function shadeRays(g, e, n, z0, lat) {
+      var rad = Math.PI / 180, dec = 23.44 * Math.sin(2 * Math.PI * (284 + SHADE_DAY.day) / 365) * rad, phi = lat * rad, out = [];
+      for (var H = -100; H <= 100; H += 3) {
+        var h = H * rad, sinEl = Math.sin(phi) * Math.sin(dec) + Math.cos(phi) * Math.cos(dec) * Math.cos(h), el = Math.asin(sinEl); if (el < 10 * rad) continue;
+        var az = Math.atan2(Math.sin(h), Math.cos(h) * Math.sin(phi) - Math.tan(dec) * Math.cos(phi)) + Math.PI;
+        var dx = Math.sin(az), dy = Math.cos(az), t = Math.tan(el), hitD = null;
+        for (var d = 1; d <= 150; d += 1) {
+          var zr = z0 + 1 + d * t; if (zr > g.zmax) break;
+          var k = cellAt(g, e + dx * d, n + dy * d); if (k < 0) break;
+          if (g.top[k] > zr) { hitD = d; break; }
+        }
+        out.push({ dx: dx, dy: dy, t: t, el: el, hitD: hitD });
+      }
+      return out;
+    }
+    function drawShadeViz() {
+      var cv = $('shadecv');
+      if (!shadeViz.on || !stop3d.mm || !shadeViz.spot || !shadeCardOpen()) { if (cv.style.display !== 'none') cv.style.display = 'none'; return; }
+      var host = map.getCanvas(), W = host.clientWidth, H = host.clientHeight, dpr = window.devicePixelRatio || 1, mm = stop3d.mm;
+      cv.style.display = 'block';
+      if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+      var g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+      var sp = shadeViz.spot;
+      function P(de, dn, up) {
+        var x = sp.mc.x + de * sp.mpu, y = sp.mc.y - dn * sp.mpu, z = sp.groundM + up, w = mm[3] * x + mm[7] * y + mm[11] * z + mm[15]; if (w <= 0) return null;
+        return [((mm[0] * x + mm[4] * y + mm[8] * z + mm[12]) / w * 0.5 + 0.5) * W, (0.5 - (mm[1] * x + mm[5] * y + mm[9] * z + mm[13]) / w * 0.5) * H];
+      }
+      var R = Math.max(25, Math.min(150, 40 * Math.pow(2, 19 - map.getZoom())));          // how far a ray is drawn: about the size of the picture
+      var ring = [], k, a;                                                                // the circle canopy cover is counted in
+      for (k = 0; k <= 48; k++) { a = k / 48 * 2 * Math.PI; ring.push(P(Math.cos(a) * COVER_R, Math.sin(a) * COVER_R, 0)); }
+      g.lineWidth = 1.5; g.strokeStyle = 'rgba(92,200,220,0.95)'; g.setLineDash([5, 4]); g.beginPath(); var started = false;
+      ring.forEach(function (q) { if (!q) { started = false; return; } if (!started) { g.moveTo(q[0], q[1]); started = true; } else g.lineTo(q[0], q[1]); }); g.stroke(); g.setLineDash([]);
+      var o = P(0, 0, 1); if (!o) return;
+      g.lineWidth = 1.6;
+      shadeViz.rays.forEach(function (r) {
+        var run = r.hitD != null ? Math.min(r.hitD, R * Math.cos(r.el)) : R * Math.cos(r.el), q = P(r.dx * run, r.dy * run, 1 + run * r.t); if (!q) return;
+        g.strokeStyle = r.hitD != null ? 'rgba(255,107,107,0.85)' : 'rgba(255,210,63,0.9)'; g.beginPath(); g.moveTo(o[0], o[1]); g.lineTo(q[0], q[1]); g.stroke();
+        if (r.hitD != null && r.hitD <= R * Math.cos(r.el)) { g.fillStyle = 'rgba(255,107,107,0.95)'; g.beginPath(); g.arc(q[0], q[1], 2.2, 0, 6.2832); g.fill(); }
+      });
+    }
+    map.on('render', drawShadeViz);
     function updateShade() {
       var day = parseInt($('shadeday').value, 10) || 196, lab = dayLabel(day);
       SHADE_DAY = { label: lab.replace(' ', '\u00A0'), day: day };
       $('shadelab').textContent = lab; $('shadesun').textContent = sunFacts(day);
       Array.prototype.forEach.call($('shadechips').children, function (b) { b.classList.toggle('on', parseInt(b.getAttribute('data-day'), 10) === day); });
       $('toolshade').title = 'Shade date: ' + lab;
+      updateShadeResult();
     }
     $('shadeday').addEventListener('input', updateShade); $('shadeday').addEventListener('change', updateShade);
     Array.prototype.forEach.call($('shadechips').children, function (b) {
@@ -2212,7 +2357,7 @@
       var i = $('shadeinfo'), open = i.style.display === 'none'; i.style.display = open ? 'block' : 'none'; $('shadei').classList.toggle('on', open);
     });
     updateShade();
-    $('shadew').addEventListener('change', function () { SHADE_WEIGHTED = $('shadew').checked; });
+    $('shadew').addEventListener('change', function () { SHADE_WEIGHTED = $('shadew').checked; updateShadeResult(); });
     function pctText(v) { return Math.round(v * 100) + '%'; }
     function addExtras(d, lng, lat, groundM, tree) {
       var box = document.createElement('div'); box.style.cssText = 'margin-top:4px;font-size:12px;color:#9fb2cc;line-height:1.5'; d.appendChild(box);
@@ -2226,32 +2371,11 @@
       var more = document.createElement('details'); more.style.marginTop = '4px';
       var sum = document.createElement('summary'); sum.textContent = 'More'; more.appendChild(sum);
       var slopeRow = document.createElement('div'); slopeRow.textContent = 'Slope ...'; more.appendChild(slopeRow);
-      // Canopy cover and shade appear here once the Shade tool has been opened, and are worked out when More is opened
-      var canRow = null, shRow = null, canDone = false, shadeOn = $('shadecard').style.display === 'block';
-      if (shadeShown && cloud.data && cloud.data.length && cloud.dec && groundM != null) {
-        canRow = document.createElement('div'); canRow.textContent = 'Canopy cover ...'; more.appendChild(canRow);
-        shRow = document.createElement('div'); more.appendChild(shRow);
-      }
-      function fillCanopy() {
-        if (canDone || !canRow) return; canDone = true;
-        setTimeout(function () {                       // let the card draw first; the first call reads the whole cloud
-          try {
-            var g = canopyGrid(), xy = localXY(lng, lat), cov = coverAt(g, xy.e, xy.n), sh = shadeAt(g, xy.e, xy.n, groundM, cloud.meta.origin[1]);
-            if (cov == null || sh == null) { canRow.remove(); shRow.remove(); return; }
-            function put(el, label, val, tail) {
-              el.textContent = label + ' ';
-              var b = document.createElement(shadeOn ? 'b' : 'span'); b.textContent = val; if (shadeOn) { b.style.color = '#ffd23f'; b.style.fontSize = '14px'; } el.appendChild(b);
-              if (tail) el.appendChild(document.createTextNode(tail));
-              if (shadeOn) el.style.cssText = 'color:#fff;font-weight:600;margin-top:2px';
-            }
-            put(canRow, 'Canopy cover', pctText(cov), '');
-            put(shRow, 'Shade', pctText(sh), ' on ' + SHADE_DAY.label + (SHADE_WEIGHTED ? ', sun weighted' : ''));
-          } catch (err) { canRow.remove(); shRow.remove(); }
-        }, 30);
-      }
-      more.open = moreOpen || (shadeOn && !!canRow);
-      more.addEventListener('toggle', function () { moreOpen = more.open; if (more.open) fillCanopy(); });
-      if (more.open) fillCanopy();
+      // The spot is handed to the Shade card, which shows its canopy cover and shade next to the date controls
+      shadeSpot = (cloud.data && cloud.data.length && cloud.dec && groundM != null) ? { lng: lng, lat: lat, groundM: groundM } : null;
+      updateShadeResult(true);
+      more.open = moreOpen;
+      more.addEventListener('toggle', function () { moreOpen = more.open; });
       var dLat = 2 / 111320, dLng = 2 / (111320 * Math.cos(lat * Math.PI / 180));
       Promise.all([elevationAt(lng + dLng, lat), elevationAt(lng - dLng, lat), elevationAt(lng, lat + dLat), elevationAt(lng, lat - dLat)]).then(function (v) {
         if (v.some(function (x) { return typeof x !== 'number'; })) { slopeRow.remove(); return; }
@@ -2275,21 +2399,30 @@
       box.appendChild(more);
     }
 
-    // The clicked point: a dot at the treetop and a line down to the ground, drawn on top of the map each frame
-    var hitPt = null;
-    function hideHit() { hitPt = null; $('hit').style.display = 'none'; }
+    // The clicked point: a yellow dot, and a line down to the ground, drawn on top of the map each frame. A tree click puts the dot at the
+    // treetop; a click on the ground puts it a meter up, which is where the shade rays start.
+    var clickMark = { on: false, mc: null, mpu: 0, groundM: 0, upM: 1 };
+    function setClickMark(lng, lat, groundM, upM) {
+      var mc = maplibregl.MercatorCoordinate.fromLngLat({ lng: lng, lat: lat }, 0);
+      clickMark = { on: true, mc: mc, mpu: mc.meterInMercatorCoordinateUnits(), groundM: groundM, upM: upM };
+      map.triggerRepaint();
+    }
+    function hideHit() { clickMark.on = false; var cv = $('markcv'); if (cv && cv.style.display !== 'none') cv.style.display = 'none'; }
     function drawHit() {
-      if (!hitPt || !cloud.mm) return;
-      var cv = map.getCanvas(), mm = cloud.mm, W = cv.clientWidth, H = cv.clientHeight;
-      function proj(x, y, z) {
-        var w = mm[3] * x + mm[7] * y + mm[11] * z + mm[15]; if (w <= 0) return null;
+      var cv = $('markcv');
+      if (!clickMark.on || !stop3d.mm) { if (cv.style.display !== 'none') cv.style.display = 'none'; return; }
+      var host = map.getCanvas(), W = host.clientWidth, H = host.clientHeight, dpr = window.devicePixelRatio || 1, mm = stop3d.mm, c = clickMark;
+      function P(up) {
+        var x = c.mc.x, y = c.mc.y, z = c.groundM + up, w = mm[3] * x + mm[7] * y + mm[11] * z + mm[15]; if (w <= 0) return null;
         return [((mm[0] * x + mm[4] * y + mm[8] * z + mm[12]) / w * 0.5 + 0.5) * W, (0.5 - (mm[1] * x + mm[5] * y + mm[9] * z + mm[13]) / w * 0.5) * H];
       }
-      var a = proj(hitPt.x, hitPt.y, hitPt.z), b = proj(hitPt.x, hitPt.y, hitPt.z - hitPt.hag);
-      if (!a || !b) { $('hit').style.display = 'none'; return; }
-      ['hitline', 'hitline2'].forEach(function (id) { var l = $(id); l.setAttribute('x1', a[0]); l.setAttribute('y1', a[1]); l.setAttribute('x2', b[0]); l.setAttribute('y2', b[1]); });
-      $('hitdot').setAttribute('cx', a[0]); $('hitdot').setAttribute('cy', a[1]);
-      $('hit').style.display = 'block';
+      var a = P(c.upM), b = P(0); if (!a || !b) { cv.style.display = 'none'; return; }
+      cv.style.display = 'block';
+      if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+      var g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+      g.lineCap = 'round'; g.strokeStyle = '#0e1b33'; g.lineWidth = 4; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke();
+      g.strokeStyle = '#ffffff'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke();
+      g.fillStyle = '#ffd23f'; g.strokeStyle = '#0e1b33'; g.lineWidth = 2; g.beginPath(); g.arc(a[0], a[1], 5.5, 0, 6.2832); g.fill(); g.stroke();
     }
     map.on('render', drawHit);
     function signed(v) { return (v < 0 ? '\u2212' : '') + fmt1(Math.abs(v)); }
@@ -2304,7 +2437,7 @@
       d.appendChild(sm);
       addExtras(d, ll.lng, ll.lat, t.z - hagM, true);
       showInfo(d);
-      hitPt = { x: t.x, y: t.y, z: t.z, hag: hagM }; drawHit();
+      setClickMark(ll.lng, ll.lat, t.z - hagM, hagM);
     }
 
     // ---- point cloud: one WebGL layer drawn in the map's own 3D scene ----
@@ -2655,6 +2788,8 @@
       $('remctl').style.display = on ? 'block' : 'none'; $('legrem').style.display = on ? 'block' : 'none';
       raiseRem();
     });
+    $('remopbtn').addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); var w = $('remopwrap'); var on = w.style.display === 'none'; w.style.display = on ? 'block' : 'none'; $('remopbtn').classList.toggle('on', on); });
+    $('remon').addEventListener('change', function () { $('remopbtn').style.display = $('remon').checked ? '' : 'none'; });
     $('reminfo').addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); var h = $('remhint'); h.style.display = h.style.display === 'none' ? 'block' : 'none'; });
     $('remop').addEventListener('input', function () { $('remopv').textContent = Math.round(parseFloat($('remop').value) * 100) + '%'; if (map.getLayer('remlayer')) map.setPaintProperty('remlayer', 'raster-opacity', parseFloat($('remop').value)); });
 
