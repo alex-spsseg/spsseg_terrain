@@ -6,6 +6,8 @@
 <title>Terrain Viewer</title>
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="https://alex-spsseg.github.io/spsseg_tours/shared/spsseg_nav.js"></script>
+<script>window.SpssegNav || document.write('<script src="spsseg_nav.js"><\/script>');</script>
 <style>
   * { box-sizing: border-box; }
   html, body { height: 100%; margin: 0; font-family: -apple-system, Segoe UI, Roboto, sans-serif; background: #0e1b33; }
@@ -135,7 +137,7 @@
     /* the title takes at most two lines, and Tour / Terrain / Flow moves up under it, so the bottom keeps two slim rows instead of three */
     #panel h1 { font-size: 15px; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     #panel > #switcher { width: fit-content; margin: 8px 0 0; padding: 3px; }
-    #panel > #switcher a, #panel > #switcher .on { padding: 5px 12px; font-size: 12.5px; }
+    #panel > #switcher a, #panel > #switcher span { padding: 5px 12px; font-size: 12.5px; }
     body.panelopen #mapbar, body.panelopen #cards { display: none !important; }                 /* never sits on top of the open panel */
     #panel.collapsed .sub { display: none; }
     #toggle, #helpbtn { padding: 8px 14px !important; }
@@ -158,19 +160,13 @@
   .legblock:first-of-type { margin-top: 8px; }
   .legt { font-size: 12px; color: #e8eef7; margin-bottom: 4px; }
   .legblock .legrow { display: flex; justify-content: space-between; font-size: 11px; color: #9fb2cc; margin-top: 2px; }
-  #switcher { display: flex; align-items: center; background: rgba(14,27,51,0.94); border: 1px solid #1b3f95; border-radius: 22px; padding: 4px; order: -1; }
-  #switcher a, #switcher .on { padding: 7px 14px; border-radius: 16px; font-size: 13px; text-decoration: none; color: #e8eef7; }
-  #switcher a:hover { background: #132447; }
-  #switcher .on { background: #019fc4; color: #fff; font-weight: 600; }
-  @media (max-width: 700px) { #switcher { order: 0; justify-content: center; } #switcher a, #switcher .on { padding: 6px 12px; font-size: 12px; } }
+  #switcher { order: -1; }
+  @media (max-width: 700px) { #switcher { order: 0; justify-content: center; } }
   #hint { display: flex; gap: 8px; align-items: flex-start; background: #132447; border: 1px solid #1b3f95; border-radius: 8px; padding: 8px 10px; margin-top: 10px; font-size: 12px; color: #cfd9e8; line-height: 1.4; }
   #panel #hint button { width: auto; margin: 0; padding: 0 4px; border: 0; background: none; color: #9fb2cc; font-size: 18px; line-height: 1; }
   #panel .ibtn { width: 18px; height: 18px; min-width: 18px; margin: 0 0 0 6px; padding: 0; border-radius: 50%; border: 1px solid #5cc8dc; background: none; color: #5cc8dc;
     font: italic 700 11px Georgia, serif; line-height: 16px; cursor: pointer; flex: none; }
   #panel .ibtn:hover { background: #5cc8dc; color: #0e1b33; }
-  .hintchip { position: fixed; z-index: 4000; background: #0e1b33; border: 1px solid #ffd23f; border-radius: 12px; padding: 15px 17px 13px; color: #fff; font-size: 16px; line-height: 1.4;
-    box-shadow: 0 6px 22px rgba(0,0,0,0.55); }
-  .hintchip b { display: block; margin-bottom: 3px; font-size: 17.5px; }
   .hintart { position: relative; margin-top: 11px; background: #0a1428; border: 1px solid #1b3f95; border-radius: 8px; padding: 9px 9px 7px; }
   .hintart .ex { position: absolute; right: 9px; top: 6px; font-size: 12.5px; color: #9fb2cc; }
   .hintart svg { display: block; width: 100%; height: auto; }
@@ -186,17 +182,6 @@
   .hintart .bar i { display: block; width: 62%; height: 9px; background: #ffd23f; }
   .hintart .cc { font-size: 15px; color: #fff; }
   .hintart .cc b { color: #ffd23f; }
-  .hintchip .hbtns { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
-  .hintchip .hbtns button { background: #132447; border: 1px solid #1b3f95; color: #fff; border-radius: 18px; padding: 8px 20px; font-size: 15px; cursor: pointer; font-family: inherit; }
-  .hintchip .hbtns .go { background: #019fc4; border-color: #019fc4; }
-  .hintchip .hbtns .skip { background: none; border: 0; color: #9fb2cc; text-decoration: underline; padding: 6px 2px; }
-  .hintchip .hstep { margin-left: auto; font-size: 13px; color: #9fb2cc; }
-  .hintchip .arrow { position: absolute; width: 13px; height: 13px; background: #0e1b33; border: 1px solid #ffd23f; transform: rotate(45deg); display: none; }
-  .hintchip.side .arrow { display: block; left: -7px; border-top: 0; border-right: 0; }
-  .hintchip.above .arrow { display: block; bottom: -7px; border-top: 0; border-left: 0; }
-  .hintchip.below .arrow { display: block; top: -7px; border-bottom: 0; border-right: 0; }
-  .hintglow { outline: 3px solid rgba(255,210,63,0.95) !important; outline-offset: 2px; animation: hintpulse 1.4s ease-in-out infinite; }
-  @keyframes hintpulse { 0%, 100% { outline-color: rgba(255,210,63,0.95); } 50% { outline-color: rgba(255,210,63,0.25); } }
   #looks { margin-top: 10px; }
   #looks .looklabel { display: block; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: #7f93b0; margin-bottom: 5px; }
   #lookchips { display: flex; flex-wrap: wrap; gap: 5px; }
@@ -515,7 +500,7 @@
 <div id="mapbar">
   <div id="viewbar" style="display:none"><button id="viewprev" type="button" title="Previous view">&#9664;</button><span id="viewlabel"></span><button id="viewnext" type="button" title="Next view">&#9654;</button></div>
   <div id="toolbar"><button id="toolx" type="button" title="Click two points to draw a cross section: the ground profile, the height and slope between the points, and options for the channel level and canopy">Cross section</button><button id="toolshade" type="button" style="display:none" title="Choose the date for shade, then click a spot to read its shade and canopy cover">Shade</button><button id="toolflood" type="button" style="display:none" title="Depth and velocity from the flow model: pick a scenario and what to show">Flow Model</button><button id="tooln" type="button" style="display:none" title="Add a note, label or photo to the map">Add note</button></div>
-  <div id="switcher" style="display:none" role="navigation" aria-label="Other viewers for this place"><a id="swtour" href="#" style="display:none">Tour</a><span class="on">Terrain</span><a id="swflow" href="#" style="display:none">Flow</a></div>
+  <div id="switcher" style="display:none"></div>
 </div>
 <div id="cards">
   <div id="shadecard" style="display:none">
@@ -1661,14 +1646,7 @@
     // ---- first visit tips ----
     // A small bubble beside the real control, one at a time, with the control outlined. Using the control, or pressing Got it, retires that tip
     // for good. Each tip appears only if its control is on screen, so a site without stops never hears about stops.
-    var tips = { list: [], i: 0, el: null, target: null, onUse: null };
-    function tipsDone() { try { return JSON.parse(localStorage.getItem('terrainTips') || '{}'); } catch (e) { return {}; } }
-    function tipMark(id) { var d = tipsDone(); d[id] = 1; try { localStorage.setItem('terrainTips', JSON.stringify(d)); } catch (e) {} }
-    function tipUsed(id) {                                       // you did the thing the tip was about
-      tipMark(id);
-      if (tips.el && tips.list[tips.i] && tips.list[tips.i].id === id) nextTip();
-    }
-    function seen(el) { if (!el) return false; var r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0 && getComputedStyle(el).visibility !== 'hidden'; }
+    // ---- first visit tips: the engine and chip look are shared (spsseg_nav.js), the tips themselves are this viewer's ----
     // Small pictures of what the Cross section and Shade tools give you, drawn with made up numbers and marked Example. Left out on a short screen.
     function artRoom() { return window.innerHeight >= 700; }
     function artCross() {
@@ -1689,84 +1667,61 @@
         '<div class="big">62%<small>of the sunny day in shade</small></div><div class="bar"><i></i></div><div class="cc">Canopy cover <b>48%</b> of the ground around it</div>';
       return d;
     }
+    function artFlow() {
+      var d = document.createElement('div'); d.className = 'hintart';
+      d.innerHTML = '<span class="ex">Example</span>' +
+        '<div style="display:flex;border:1px solid #1b3f95;border-radius:16px;overflow:hidden;margin:16px 0 8px;font-size:13.5px"><span style="flex:1;text-align:center;padding:4px 0;background:#1b3f95;color:#fff;font-weight:600">Depth</span><span style="flex:1;text-align:center;padding:4px 0;color:#e8eef7">Velocity</span></div>' +
+        '<div style="border:1px solid #1b3f95;border-radius:6px;padding:4px 9px;font-size:13px;color:#e8eef7;background:#132447;margin-bottom:9px">Q2 (Existing Conditions)</div>' +
+        '<div style="height:9px;border-radius:5px;background:linear-gradient(to right,#78e1ff,#2896fa,#0a46c8,#0a146e)"></div>' +
+        '<div style="display:flex;justify-content:space-between;font-size:12px;color:#9fb2cc;margin-top:3px"><span>0 ft</span><span>11.7 ft</span></div>';
+      return d;
+    }
     function tipDefs() {
       var phone = onPhone();
       return [
         { id: 'around', title: 'Getting around', find: null,
-          text: phone ? 'Drag to move, two fingers to tilt. Tap the ground or a tree to read it.' : 'Drag to move, right drag to tilt. Click the ground or a tree to read it.' },
-        { id: 'looks', title: 'Quick looks', side: true, find: function () { return $('looks'); }, text: 'One tap changes what you see.' },
-        { id: 'height', title: 'Height above channel', side: true, find: function () { return shown($('remrow')) ? $('remrow') : null; }, text: 'Blue is near the water, brown is high above it.' },
-        { id: 'views', title: 'Saved views', find: function () { return $('viewbar'); }, text: 'The arrows step through camera views saved for this site.' },
-        { id: 'flood', title: 'Flow Model', find: function () { return shown($('toolflood')) ? $('toolflood') : null; }, text: 'Pick a scenario, and switch between depth and velocity.' },
-        { id: 'cross', title: 'Cross section', art: artCross, find: function () { return $('toolx'); }, text: 'Pick two points to see the ground between them.' },
-        { id: 'shade', title: 'Shade', art: artShade, find: function () { return $('toolshade'); }, text: 'Pick a date, then a spot to see tree shade.' },
+          text: phone ? 'Drag to move and use two fingers to tilt. Tap the ground to read its elevation, or tap a tree in the point cloud to get its height.'
+                      : 'Drag to move and right drag to tilt. Click the ground to read its elevation, or click a tree in the point cloud to get its height.' },
+        { id: 'looks', title: 'Quick looks', side: true, find: function () { return $('looks'); },
+          text: 'One tap switches the whole scene to a ready made look, such as photos, trees or height above channel.' },
+        { id: 'layers', title: 'Layers', side: true, find: function () { return $('ovhead'); },
+          text: 'Turn imagery, overlays, data and markers on and off. Several can be on together.' },
+        { id: 'height', title: 'Height above channel', side: true, find: function () { return shown($('remrow')) ? $('remrow') : null; },
+          text: 'Shows how far each spot sits above the river channel. Blue is close to the water, and brown is high above it.' },
+        { id: 'cloud', title: 'Point cloud', side: true, find: function () { return shown($('cloudrow')) ? $('cloudrow') : null; },
+          text: 'Click any tree in the point cloud to see how tall it is, along with the ground elevation beneath it.' },
+        { id: 'appearance', title: 'Appearance', side: true, find: function () { return $('mapsec').querySelector('summary'); },
+          text: 'Change the background imagery, exaggerate the height of the terrain, and adjust the relief shading and how the point cloud is colored.' },
+        { id: 'settings', title: 'Settings', side: true, find: function () { return $('setsec').querySelector('summary'); },
+          text: 'Choose sharper imagery or faster loading, and dim everything outside the mapped area.' },
+        { id: 'views', title: 'Saved views', find: function () { return $('viewbar'); },
+          text: 'Use the arrows to step through the camera views saved for this site.' },
+        { id: 'tools', title: 'Tools', find: function () { return $('toolbar'); },
+          text: 'These tools can all be on at the same time. Each one opens its own card, so you can read the shade, a cross section and the flow model together.' },
+        { id: 'flood', title: 'Flow Model', art: artFlow, find: function () { return shown($('toolflood')) ? $('toolflood') : null; },
+          text: 'Pick a scenario to show the modeled water on the terrain, then switch between depth and velocity. It stays on while you use the other tools.' },
+        { id: 'cross', title: 'Cross section', art: artCross, find: function () { return $('toolx'); },
+          text: 'Click two points to see a profile of the ground between them, with its length and slope.' },
+        { id: 'shade', title: 'Shade', art: artShade, find: function () { return $('toolshade'); },
+          text: 'Pick a date, then click a spot to see how much of the day trees keep it in shade.' },
         { id: 'stops', title: '360 stops', find: function () { return firstStopEl() || ($('switcher').style.display !== 'none' ? $('switcher') : null); },
-          text: 'Tap a dot to open that photo in the tour.' }
+          text: 'Tap a dot to open that 360 photo in the tour.' }
       ];
     }
     function firstStopEl() {
       for (var k = 0; k < stopPts.length; k++) { var e = stop3d.on ? stopPts[k].el3 : stopPts[k].mk.getElement(); if (seen(e)) return e; }
       return null;
     }
-    function hideTip() {
-      if (tips.el) { tips.el.remove(); tips.el = null; }
-      if (tips.target) { tips.target.classList.remove('hintglow'); if (tips.onUse) tips.target.removeEventListener('click', tips.onUse); }
-      tips.target = null; tips.onUse = null;
-    }
-    function placeTip() {
-      var el = tips.el, d = tips.list[tips.i]; if (!el || !d) return;
-      var vw = window.innerWidth, vh = window.innerHeight, w = Math.min(340, vw - 16), left, top, t = d.find ? d.find() : null;
-      el.style.width = w + 'px'; el.classList.remove('above', 'below', 'side');
-      if (d.find && !seen(t)) { el.style.display = 'none'; return; }        // its control is out of sight for now (the panel is open, say)
-      el.style.display = '';
-      var h = el.offsetHeight;
-      if (!d.find) { left = (vw - w) / 2; top = Math.max(8, vh * 0.3); }
-      else if (d.side && !onPhone()) {                                   // a control in the side panel: the bubble sits beside it
-        var rs = t.getBoundingClientRect(), pr = $('panel').getBoundingClientRect();
-        left = Math.min(vw - w - 8, pr.right + 14); top = Math.max(8, Math.min(vh - h - 8, rs.top + rs.height / 2 - h / 2));
-        el.classList.add('side'); el.querySelector('.arrow').style.top = Math.max(10, Math.min(h - 22, rs.top + rs.height / 2 - top - 6)) + 'px';
-      } else {
-        var r = t.getBoundingClientRect(), cx = r.left + r.width / 2, above = (r.top + r.height / 2) > vh / 2;
-        left = Math.max(8, Math.min(vw - w - 8, cx - w / 2)); top = above ? r.top - h - 14 : r.bottom + 14; top = Math.max(8, Math.min(vh - h - 8, top));
-        el.classList.add(above ? 'above' : 'below'); el.querySelector('.arrow').style.left = Math.max(10, Math.min(w - 22, cx - left - 6)) + 'px';
-      }
-      el.style.left = left + 'px'; el.style.top = top + 'px';
-    }
-    function showTip() {
-      hideTip();
-      while (tips.i < tips.list.length) {                                    // skip any whose control is not on screen
-        var d0 = tips.list[tips.i]; if (!d0.find || seen(d0.find())) break; tips.i++;
-      }
-      if (tips.i >= tips.list.length) return;
-      var d = tips.list[tips.i], t = d.find ? d.find() : null, last = tips.i === tips.list.length - 1;
-      var el = document.createElement('div'); el.className = 'hintchip'; el.setAttribute('role', 'dialog');
-      el.innerHTML = '<b></b><span></span><div class="hbtns"><button type="button" class="go"></button><button type="button" class="skip">Skip tips</button><span class="hstep"></span></div><i class="arrow"></i>';
-      el.querySelector('b').textContent = d.title; el.querySelector('span').textContent = d.text;
-      if (d.art && artRoom()) el.insertBefore(d.art(), el.querySelector('.hbtns'));
-      el.querySelector('.go').textContent = last ? 'Done' : 'Got it'; el.querySelector('.hstep').textContent = (tips.i + 1) + ' of ' + tips.list.length;
-      el.querySelector('.go').addEventListener('click', function () { tipMark(d.id); nextTip(); });
-      el.querySelector('.skip').addEventListener('click', function () { tips.list.forEach(function (x) { tipMark(x.id); }); hideTip(); });
-      document.body.appendChild(el); tips.el = el;
-      if (t) { try { if (d.side) t.scrollIntoView({ block: 'nearest' }); } catch (e) {} tips.target = t; t.classList.add('hintglow'); tips.onUse = function () { tipMark(d.id); setTimeout(nextTip, 150); }; t.addEventListener('click', tips.onUse); }
-      placeTip();
-    }
-    function nextTip() { tips.i++; showTip(); }
-    function startTips(force) {
-      var done = force ? {} : tipsDone();
-      tips.list = tipDefs().filter(function (x) { return !done[x.id]; }); tips.i = 0;
-      if (!tips.list.length) return;
-      showTip();
-    }
-    window.addEventListener('resize', placeTip);
-    $('toggle').addEventListener('click', function () { setTimeout(placeTip, 60); });
-    $('helpbtn').addEventListener('click', function () {                  // the ? replays the tips, all of them
-      try { localStorage.removeItem('terrainTips'); } catch (e) {}
-      if (onPhone() && !$('panel').classList.contains('collapsed')) $('toggle').click();      // fold the panel away so the tips have room
-      setTimeout(function () { startTips(true); }, 350);
-    });
+    function seen(el) { if (!el) return false; var r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0 && getComputedStyle(el).visibility !== 'hidden'; }
+    var navTips = window.SpssegNav ? SpssegNav.tips({
+      key: 'terrainTips', defs: tipDefs, panel: $('panel'), onPhone: onPhone, artRoom: artRoom, help: $('helpbtn'), toggle: $('toggle'),
+      beforeHelp: function () { if (onPhone() && !$('panel').classList.contains('collapsed')) $('toggle').click(); }
+    }) : null;
+    function tipUsed(id) { if (navTips) navTips.used(id); }
+    if (!navTips) $('helpbtn').style.display = 'none';
     // the first time, once the map has settled and nothing else is open (on a phone the open panel covers the controls)
     map.once('idle', function () {
-      setTimeout(function () { if (!(onPhone() && document.body.classList.contains('panelopen')) && !document.body.classList.contains('popupopen')) startTips(false); }, 1600);
+      setTimeout(function () { if (navTips && !(onPhone() && document.body.classList.contains('panelopen')) && !document.body.classList.contains('popupopen')) navTips.start(false); }, 1600);
     });
 
     // ---- compare two dated layers: a second map sits underneath and shows through where the first is clipped ----
@@ -2082,11 +2037,9 @@
       return u.toString();
     }
     function showSwitcher() {
-      var t = $('swtour'), f = $('swflow');
-      t.style.display = linkTour ? '' : 'none'; f.style.display = linkFlow ? '' : 'none';
-      if (linkTour) t.href = linkTour;
-      if (linkFlow) { f.href = flowFromHere(); f.onmouseenter = function () { f.href = flowFromHere(); }; f.onclick = function (e) { e.preventDefault(); location.href = flowFromHere(); }; }
-      $('switcher').style.display = (linkTour || linkFlow) ? 'flex' : 'none';
+      if (!window.SpssegNav) return;
+      SpssegNav.renderPill($('switcher'), { current: 'terrain', links: { tour: linkTour, flow: linkFlow }, hrefFor: { flow: flowFromHere }, hideEmpty: true });
+      if ($('switcher').style.display === '') $('switcher').style.display = 'flex';
     }
     function setLinks(tour) {
       placeSwitcher();
