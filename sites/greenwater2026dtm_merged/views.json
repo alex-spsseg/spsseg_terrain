@@ -1,0 +1,15 @@
+{
+ "views": [
+  {
+   "name": "Start",
+   "center": [
+    -121.597447,
+    47.127024
+   ],
+   "zoom": 16.55,
+   "pitch": 76.0,
+   "bearing": -47.0,
+   "start": true
+  }
+ ]
+}

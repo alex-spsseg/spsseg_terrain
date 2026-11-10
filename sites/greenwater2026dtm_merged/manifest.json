@@ -1,0 +1,154 @@
+{
+ "site": "greenwater2026dtm_merged",
+ "title": "Greenwater RM4.0 Terrain Model Viewer",
+ "description": "",
+ "bounds4326": [
+  -121.61268242206404,
+  47.11108597677893,
+  -121.53988927493624,
+  47.13643313353277
+ ],
+ "dem_bounds4326": [
+  -121.6178284693772,
+  47.10757449575183,
+  -121.53475079035525,
+  47.13994125431657
+ ],
+ "minzoom": 12,
+ "maxzoom": 17,
+ "tile_size": 256,
+ "encoding": "terrarium",
+ "elev_min_m": -6.145944118499756,
+ "elev_max_m": 390.66265869140625,
+ "relief": false,
+ "elevation_mode": "absolute",
+ "elev_base_m": 566.9437562507937,
+ "gps_shift_m": 20.083,
+ "stops_clamp": true,
+ "exaggeration": 1.1,
+ "footprint": "footprint.geojson",
+ "tour": {
+  "base": "https://alex-spsseg.github.io/wria10_Greenwater/",
+  "id": "20261002"
+ },
+ "flow": {
+  "base": "https://alex-spsseg.github.io/spsseg_flow/",
+  "site": "greenwater_test"
+ },
+ "pointcloud": {
+  "format": 2,
+  "chunks": [
+   {
+    "file": "cloud_00.bin",
+    "count": 7000000
+   },
+   {
+    "file": "cloud_01.bin",
+    "count": 7000000
+   },
+   {
+    "file": "cloud_02.bin",
+    "count": 995257
+   }
+  ],
+  "count": 14995257,
+  "stride": 12,
+  "has_rgb": false,
+  "has_class": true,
+  "origin": [
+   -121.57628584850013,
+   47.12375955515585
+  ],
+  "box": [
+   -2408.26025390625,
+   -452.104736328125,
+   -1040.79052734375,
+   1345.9290771484375,
+   -5.333393096923828,
+   187.16647338867188
+  ],
+  "h_step": 0.25,
+  "h_p98": 39.2,
+  "ground_removed": true,
+  "source": "Greenwater_RM4p0_2026lidar_nonground.laz"
+ },
+ "ortho": null,
+ "rem": {
+  "tiles": "rem/{z}/{x}/{y}.png",
+  "zoom": 17,
+  "count": 61,
+  "source": "GreenwaterGenerateREM_2026lidar.tif",
+  "color": "rem_color/{z}/{x}/{y}.png",
+  "minzoom": 12,
+  "bounds": [
+   -121.64071119074957,
+   47.10256871639447,
+   -121.57488162336534,
+   47.157039183330106
+  ],
+  "classes": [
+   "#283285",
+   "#41569e",
+   "#567bb8",
+   "#6aa2d3",
+   "#6fe8f5",
+   "#66dbbe",
+   "#5cc286",
+   "#52a857",
+   "#5b8f47",
+   "#779e56",
+   "#bfd188",
+   "#fbf9b6",
+   "#e5d88b",
+   "#cfb365",
+   "#ba8b44",
+   "#a46429",
+   "#aa6e3a",
+   "#a8734d",
+   "#a57860",
+   "#9c8386"
+  ],
+  "breaks": [
+   1.0,
+   2.0,
+   3.0,
+   4.0,
+   5.0,
+   6.0,
+   7.0,
+   8.0,
+   9.0,
+   10.0,
+   11.0,
+   12.0,
+   13.0,
+   14.0,
+   15.0,
+   16.0,
+   17.0,
+   18.0,
+   19.0,
+   20.0
+  ],
+  "exclude": [
+   [
+    20.01,
+    2000.0
+   ]
+  ],
+  "opacity": 0.5,
+  "resampling": "nearest",
+  "unit": "ft",
+  "zero_hidden": false
+ },
+ "basemap": {
+  "type": "xyz_tile",
+  "url": "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+  "attribution": "Imagery: Google"
+ },
+ "source": {
+  "file": "greenwater2026dtm_merged.tif",
+  "cell_size": 3.0,
+  "units": "ft"
+ }
+}

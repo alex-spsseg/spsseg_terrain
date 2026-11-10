@@ -62,8 +62,26 @@
   #toolbar button.on { background: #1b3f95; border-color: #019fc4; }
   #cards { position: absolute; z-index: 1000; top: 62px; left: 344px; width: 320px; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
   #cards > * { pointer-events: auto; }
-  #toolcard, #infocard, #shadecard { background: rgba(14,27,51,0.95); border: 1px solid #1b3f95; border-radius: 10px; padding: 8px 12px; color: #e8eef7; font-size: 13px; }
-  #infocard, #shadecard { position: relative; padding-right: 30px; }
+  #toolcard, #infocard, #shadecard, #floodcard { background: rgba(14,27,51,0.95); border: 1px solid #1b3f95; border-radius: 10px; padding: 8px 12px; color: #e8eef7; font-size: 13px; }
+  #infocard, #shadecard, #floodcard { position: relative; padding-right: 30px; }
+  #floodcard b { color: #fff; }
+  #floodcard .shtitle { display: flex; align-items: baseline; gap: 10px; }
+  #floodcard #floodscn { color: #5cc8dc; font-weight: 700; font-size: 14px; }
+  #floodcard .seg { display: flex; border: 1px solid #1b3f95; border-radius: 18px; overflow: hidden; margin: 8px 0 8px; }
+  #floodcard .seg button { flex: 1; background: #132447; color: #e8eef7; border: 0; padding: 7px 10px; font-size: 14px; cursor: pointer; font-family: inherit; }
+  #floodcard .seg button.on { background: #1b3f95; color: #fff; font-weight: 700; }
+  #floodcard select { width: 100%; background: #132447; color: #fff; border: 1px solid #1b3f95; border-radius: 8px; padding: 7px 8px; font-size: 13px; font-family: inherit; }
+  #floodcard .legblock { margin-top: 10px; }
+  #floodcard input[type=range] { width: 100%; margin: 4px 0 0; accent-color: #019fc4; }
+  #floodcard .rangehead { display: flex; justify-content: space-between; font-size: 12px; color: #cfd9e8; margin-top: 8px; }
+  #floodres { margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(27,63,149,0.7); }
+  #floodres .shrtitle { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: #7f93b0; margin-bottom: 5px; }
+  #floodres .frtiles { display: flex; gap: 22px; }
+  #floodres .frtiles b { display: block; font-size: 24px; line-height: 1.1; color: #fff; font-weight: 700; }
+  #floodres .frtiles .on b { color: #ffd23f; }
+  #floodres .frtiles span { font-size: 12px; color: #9fb2cc; }
+  #floodnote { margin-top: 8px; font-size: 12px; line-height: 1.4; color: #ffd23f; }
+  #toolbar button.on { background: #019fc4; border-color: #019fc4; color: #fff; }
   #shadecard b { color: #fff; }
   #shadecard .shtitle { display: flex; align-items: baseline; gap: 10px; }
   #shadecard #shadelab { color: #ffd23f; font-weight: 700; font-size: 14px; }
@@ -90,7 +108,7 @@
   #infocard b { color: #fff; }
   #infocard a { color: #5cc8dc; }
   #infocard summary { cursor: pointer; color: #5cc8dc; font-size: 12px; }
-  #infocard .infox, #shadecard .infox { position: absolute; top: 2px; right: 8px; background: none; border: 0; color: #9fb2cc; font-size: 20px; cursor: pointer; padding: 2px 4px; line-height: 1; }
+  #infocard .infox, #shadecard .infox, #floodcard .infox { position: absolute; top: 2px; right: 8px; background: none; border: 0; color: #9fb2cc; font-size: 20px; cursor: pointer; padding: 2px 4px; line-height: 1; }
   #toolcard #toolout { margin-top: 0; }
   #hit { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 850; pointer-events: none; overflow: visible; }
   #mapbar { position: absolute; z-index: 1000; top: 12px; left: 344px; display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start; max-width: calc(100vw - 440px); }
@@ -355,7 +373,7 @@
 <div id="map"></div>
 <div id="profile" style="display:none">
   <div id="profhead"><span id="proftitle">Cross section</span>
-    <span class="acts"><button class="pbtn" id="profrem" type="button" style="display:none" title="Draw the channel level, from the REM">Channel level</button><button class="pbtn" id="profcan" type="button" style="display:none" title="Draw the point cloud surface above the ground">Canopy</button><button class="pbtn" id="profref" type="button">Clear reference</button><button class="pbtn" id="profcsv" type="button">Save CSV</button><button class="pbtn" id="profclose" type="button">&times;</button></span></div>
+    <span class="acts"><button class="pbtn" id="profflood" type="button" style="display:none" title="Draw the flow model\u2019s water along the line">Flow</button><button class="pbtn" id="profrem" type="button" style="display:none" title="Draw the channel level, from the REM">Channel level</button><button class="pbtn" id="profcan" type="button" style="display:none" title="Draw the point cloud surface above the ground">Canopy</button><button class="pbtn" id="profref" type="button">Clear reference</button><button class="pbtn" id="profcsv" type="button">Save CSV</button><button class="pbtn" id="profclose" type="button">&times;</button></span></div>
   <div id="profsum"></div>
   <canvas id="profcv"></canvas>
   <div id="profread"></div>
@@ -405,6 +423,7 @@
           <div class="legrow" id="remlegl"><span></span><span></span><span></span></div><div class="dimtxt" id="remnote" style="margin-top:4px"></div></div>
       </div>
       <label class="check" id="cloudrow" style="display:none"><input type="checkbox" id="cloudon" checked> <span>Point cloud <span id="cloudcount" style="display:none"></span></span></label>
+      <label class="check" id="floodrow" style="display:none"><input type="checkbox" id="flood" checked> <span>Flow Model</span></label>
       <div class="grp" id="grpmark">Markers</div>
       <label class="check" id="stoprow"><input type="checkbox" id="stops" checked> 360 stops</label>
       <details id="stopopts" style="display:none;margin-left:26px">
@@ -413,15 +432,6 @@
         <label class="check" id="stop3drow" style="display:none"><input type="checkbox" id="stop3d"> <span title="Put each 360 stop where its photo was taken, using its GPS height">Float stops at camera height</span></label>
       </details>
       <label class="check" id="notesrow" style="display:none"><input type="checkbox" id="noteson" checked> <span>Notes <span id="notescount" class="dimtxt"></span></span></label>
-    </details>
-
-    <details class="sec" id="floodwrap" style="display:none">
-      <summary id="floodhead">Flood depth</summary>
-      <label class="check"><input type="checkbox" id="flood" checked> Show flood depth</label>
-      <select id="floodsel" aria-label="Flood scenario"></select>
-      <div class="rangehead"><label for="floodop">Depth opacity</label><span id="floodopv">80%</span></div>
-      <input id="floodop" type="range" min="0" max="1" step="0.05" value="0.8">
-      <div class="legblock" id="legflood" style="display:none"><div id="floodbar"></div><div id="floodleg"><span>0 ft</span><span id="floodmax"></span></div></div>
     </details>
 
     <details class="sec" id="mapsec">
@@ -469,6 +479,8 @@
     <details class="sec" id="authortools" style="display:none">
       <summary>Author tools</summary>
       <div class="dimtxt" style="margin-top:6px">For lining things up while you build the site. Visitors do not see these.</div>
+      <button id="setstart" type="button" style="margin-top:8px" title="Move and tilt the map the way you want visitors to first see it, then press this">Open the site at this view</button>
+      <div class="dimtxt" id="startmsg"></div>
       <div class="subhead first">360 stops</div>
       <div id="stop3dwrap" style="display:none">
         <div class="dimtxt" id="stop3dnote"></div>
@@ -502,7 +514,7 @@
 <div id="busy">Loading map tiles ...</div>
 <div id="mapbar">
   <div id="viewbar" style="display:none"><button id="viewprev" type="button" title="Previous view">&#9664;</button><span id="viewlabel"></span><button id="viewnext" type="button" title="Next view">&#9654;</button></div>
-  <div id="toolbar"><button id="toolx" type="button" title="Click two points to draw a cross section: the ground profile, the height and slope between the points, and options for the channel level and canopy">Cross section</button><button id="toolshade" type="button" style="display:none" title="Choose the date for shade, then click a spot and open More to read canopy cover and shade">Shade</button><button id="tooln" type="button" style="display:none" title="Add a note, label or photo to the map">Add note</button></div>
+  <div id="toolbar"><button id="toolx" type="button" title="Click two points to draw a cross section: the ground profile, the height and slope between the points, and options for the channel level and canopy">Cross section</button><button id="toolshade" type="button" style="display:none" title="Choose the date for shade, then click a spot to read its shade and canopy cover">Shade</button><button id="toolflood" type="button" style="display:none" title="Depth and velocity from the flow model: pick a scenario and what to show">Flow Model</button><button id="tooln" type="button" style="display:none" title="Add a note, label or photo to the map">Add note</button></div>
   <div id="switcher" style="display:none" role="navigation" aria-label="Other viewers for this place"><a id="swtour" href="#" style="display:none">Tour</a><span class="on">Terrain</span><a id="swflow" href="#" style="display:none">Flow</a></div>
 </div>
 <div id="cards">
@@ -517,6 +529,17 @@
     <div id="shadesun" class="dimtxt"></div>
     <label class="check"><input type="checkbox" id="shadew"> Count midday sun more</label>
     <div id="shaderes"><div class="shrtitle">At the spot you clicked</div><div id="shaderesbody" class="dimtxt">Click a spot on the map to see its shade.</div></div>
+  </div>
+  <div id="floodcard" style="display:none">
+    <button type="button" class="infox" id="floodx" aria-label="Close">&times;</button>
+    <div class="shtitle"><b>Flow Model</b><span id="floodscn">Depth</span></div>
+    <div id="floodmoderow" style="display:none"><div class="seg" id="floodseg" role="group" aria-label="What to show"><button type="button" data-m="depth" class="on">Depth</button><button type="button" data-m="velocity">Velocity</button></div></div>
+    <select id="floodsel" aria-label="Flow model scenario"></select>
+    <div class="legblock" id="legflood"><div class="legt" id="floodlegt">Depth</div><div id="floodbar"></div><div id="floodleg"><span id="floodmin">0 ft</span><span id="floodmax"></span></div></div>
+    <div class="rangehead"><label for="floodop">Opacity</label><span id="floodopv">80%</span></div>
+    <input id="floodop" type="range" min="0" max="1" step="0.05" value="0.8">
+    <div id="floodres"><div class="shrtitle">At the spot you clicked</div><div id="floodresbody" class="dimtxt">Click a spot on the map to read it.</div></div>
+    <div id="floodnote" style="display:none"></div>
   </div>
   <div id="infocard" style="display:none"></div>
   <div id="toolcard" style="display:none"><div id="toolout"></div><div id="toolclear">Clear measurement</div></div>
@@ -666,6 +689,11 @@
       setImagery(choices[0].id);
       map.setTerrain({ source: 'dem', exaggeration: exag });
       fit(0);
+      var wantZ = parseFloat(qs.get('z'));
+      if (!wantStop && !isNaN(wantLat) && !isNaN(wantLng)) {                       // sent here from the flow viewer: open where it was looking
+        userMoved = true;
+        map.jumpTo({ center: [wantLng, wantLat], zoom: isNaN(wantZ) ? 16.5 : Math.max(10, Math.min(20, wantZ)), pitch: 60, bearing: startBearing });
+      }
       status('');
       loadFootprint();
       addSiteOrtho();
@@ -828,17 +856,10 @@
             sm.textContent = 'Outside the mapped terrain, so this height is filled in.'; d.appendChild(sm);
           }
         }
-        var fd = floodDepthAt(e.lngLat.lng, e.lngLat.lat);
-        if (fd !== undefined) {
-          d.appendChild(document.createElement('br'));
-          var opt = $('floodsel').options[$('floodsel').selectedIndex], lab = opt ? opt.textContent : 'this scenario';
-          var fsp = document.createElement('span'); fsp.style.color = '#5cc8dc';
-          fsp.textContent = isNaN(fd) ? 'Dry in ' + lab : 'Flood depth ' + (Math.round(fd * 10) / 10) + ' ft in ' + lab;
-          d.appendChild(fsp);
-        }
         addExtras(d, e.lngLat.lng, e.lngLat.lat, typeof m === 'number' ? m : null);
         showInfo(d);
         if (typeof m === 'number') setClickMark(e.lngLat.lng, e.lngLat.lat, m, 1);
+        floodSpot = { lng: e.lngLat.lng, lat: e.lngLat.lat }; updateFloodResult();
       });
     });
 
@@ -974,63 +995,121 @@
     }
 
     // ---- flood depth from a published flow viewer site ----
-    var flowM = null, flowBase = '', floodState = null, floodToken = 0, floodUrl = null;
+    var flowM = null, flowBase = '', floodState = null, floodToken = 0;
     function floodRGBA(d, dmax) {
       var s = Math.sqrt(Math.min(Math.max(d / dmax, 0), 1));
       var k1 = Math.min(s / 0.5, 1), k2 = Math.max(Math.min((s - 0.5) / 0.5, 1), 0);
       if (s < 0.5) return [150 - 120 * k1, 225 - 105 * k1, 240 - 20 * k1, 150 + 60 * k1];
       return [30 - 20 * k2, 120 - 80 * k2, 220 - 70 * k2, 210 + 40 * k2];
     }
-    function decodeDepth(id) {
+    // The flow viewer keeps, for each scenario, depth_<id>.png (depth in the red and green channels) and flow_<id>.png (speed in the blue
+    // channel), both scaled up to the manifest's maxDepth and maxSpeed. Depth always loads; the speed picture loads only when it is asked for.
+    var floodMode = 'depth', floodAvail = false;
+    var FLOOD_VEL_STOPS = [[0, [40, 60, 255, 230]], [0.2, [0, 180, 255, 230]], [0.4, [0, 215, 130, 230]], [0.6, [225, 235, 40, 230]], [0.8, [255, 150, 20, 230]], [1, [215, 20, 20, 235]]];
+    function rampAt(stops, t, out) {
+      t = Math.max(0, Math.min(1, t));
+      for (var k = 1; k < stops.length; k++) {
+        if (t <= stops[k][0]) { var a = stops[k - 1], b = stops[k], f = (t - a[0]) / (b[0] - a[0]); for (var c = 0; c < 4; c++) out[c] = a[1][c] + (b[1][c] - a[1][c]) * f; return out; }
+      }
+      var last = stops[stops.length - 1][1]; for (var c2 = 0; c2 < 4; c2++) out[c2] = last[c2]; return out;
+    }
+    function flowUnit(k, dflt) { return (flowM && flowM.units && flowM.units[k]) || dflt; }
+    function loadImageData(file) {
       return new Promise(function (resolve, reject) {
         var img = new Image(); img.crossOrigin = 'anonymous';
         img.onload = function () {
           try {
-            var w = img.naturalWidth, h = img.naturalHeight;
-            var c = document.createElement('canvas'); c.width = w; c.height = h;
-            var g = c.getContext('2d', { willReadFrequently: true });
-            g.drawImage(img, 0, 0);
-            var src = g.getImageData(0, 0, w, h).data;
-            var dmax = flowM.maxDepth || 10;
-            var depth = new Float32Array(w * h);
-            var out = g.createImageData(w, h), o = out.data;
-            for (var i = 0, p = 0; i < depth.length; i++, p += 4) {
-              if (src[p + 3] === 0) { depth[i] = NaN; continue; }
-              var d = ((src[p] << 8) | src[p + 1]) / 65535 * dmax;
-              depth[i] = d;
-              if (d < 0.02) continue;
-              var q = floodRGBA(d, dmax);
-              o[p] = q[0]; o[p + 1] = q[1]; o[p + 2] = q[2]; o[p + 3] = q[3];
-            }
-            g.putImageData(out, 0, 0);
-            c.toBlob(function (blob) { resolve({ url: URL.createObjectURL(blob), depth: depth, w: w, h: h }); }, 'image/png');
+            var w = img.naturalWidth, h = img.naturalHeight, c = document.createElement('canvas'); c.width = w; c.height = h;
+            var g = c.getContext('2d', { willReadFrequently: true }); g.drawImage(img, 0, 0);
+            resolve({ w: w, h: h, data: g.getImageData(0, 0, w, h).data });
           } catch (e) { reject(e); }
         };
-        img.onerror = function () { reject(new Error('depth image')); };
-        img.src = flowBase + 'depth_' + encodeURIComponent(id) + '.png';
+        img.onerror = function () { reject(new Error(file)); };
+        img.src = flowBase + file;
       });
     }
-    function showFlood(id) {
-      var token = ++floodToken;
-      status('Loading flood depth...');
-      decodeDepth(id).then(function (r) {
-        if (token !== floodToken) { URL.revokeObjectURL(r.url); return; }
-        status('');
-        floodState = r;
-        var bb = flowM.bounds4326, w = bb[0][1], s = bb[0][0], e = bb[1][1], n = bb[1][0];
-        var coords = [[w, n], [e, n], [e, s], [w, s]];
-        var old = floodUrl; floodUrl = r.url;
-        var src = map.getSource('flood');
-        if (src) { src.updateImage({ url: r.url, coordinates: coords }); }
-        else {
-          map.addSource('flood', { type: 'image', url: r.url, coordinates: coords });
-          map.addLayer({ id: 'flood', type: 'raster', source: 'flood',
-            layout: { visibility: $('flood').checked ? 'visible' : 'none' },
-            paint: { 'raster-opacity': parseFloat($('floodop').value), 'raster-fade-duration': 0 } }, 'hillshade');
-          if (!lowestOverlay) lowestOverlay = 'flood';
+    function loadDepthEntry(id) {
+      return loadImageData('depth_' + encodeURIComponent(id) + '.png').then(function (im) {
+        var dmax = flowM.maxDepth || 10, depth = new Float32Array(im.w * im.h), src = im.data;
+        for (var i = 0, p = 0; i < depth.length; i++, p += 4) depth[i] = src[p + 3] === 0 ? NaN : ((src[p] << 8) | src[p + 1]) / 65535 * dmax;
+        return { id: id, w: im.w, h: im.h, depth: depth, speed: null, speedP: null, urls: {} };
+      });
+    }
+    function ensureSpeed(entry) {
+      if (entry.speed) return Promise.resolve(entry);
+      if (entry.speedP) return entry.speedP;
+      entry.speedP = loadImageData('flow_' + encodeURIComponent(entry.id) + '.png').then(function (im) {
+        if (im.w !== entry.w || im.h !== entry.h) throw new Error('size');
+        var ms = flowM.maxSpeed || 0, sp = new Float32Array(im.w * im.h), src = im.data;
+        for (var i = 0, p = 0; i < sp.length; i++, p += 4) sp[i] = (src[p + 3] === 0 || entry.depth[i] !== entry.depth[i]) ? NaN : src[p + 2] / 255 * ms;
+        entry.speed = sp; return entry;
+      }).catch(function (e) { entry.speedP = null; throw e; });
+      return entry.speedP;
+    }
+    // The flood is drawn as ordinary map tiles, made on demand from the depth and speed numbers already in memory. (One big picture
+    // draped over 3D terrain was drawn only part of the way; tiles are what the map's terrain drawing is built for.)
+    var floodRender = null, floodGen = 0, floodProto = false, floodBlank = null;
+    function renderFloodTile(r, z, x, y) {
+      var e = r.entry, b3 = flowM.bounds3857, O = 20037508.342789244, size = 2 * O / Math.pow(2, z), minx = -O + x * size, maxy = O - y * size;
+      var out = new Uint8ClampedArray(256 * 256 * 4), any = false, vel = r.mode === 'velocity', dmax = flowM.maxDepth || 10, vmax = flowM.maxSpeed || 1, q = [0, 0, 0, 0];
+      var sx = b3[2] - b3[0], sy = b3[3] - b3[1], minD = vel ? 0.05 : 0.02;
+      for (var j = 0; j < 256; j++) {
+        var py = Math.floor((b3[3] - (maxy - (j + 0.5) / 256 * size)) / sy * e.h); if (py < 0 || py >= e.h) continue;
+        for (var i = 0; i < 256; i++) {
+          var pxl = Math.floor((minx + (i + 0.5) / 256 * size - b3[0]) / sx * e.w); if (pxl < 0 || pxl >= e.w) continue;
+          var k = py * e.w + pxl, d = e.depth[k]; if (!(d >= minD)) continue;
+          if (vel) { var v = e.speed[k]; if (v !== v) continue; rampAt(FLOOD_VEL_STOPS, v / vmax, q); } else q = floodRGBA(d, dmax);
+          var o = (j * 256 + i) * 4; out[o] = q[0]; out[o + 1] = q[1]; out[o + 2] = q[2]; out[o + 3] = q[3]; any = true;
         }
-        if (old) setTimeout(function () { URL.revokeObjectURL(old); }, 4000);
-      }).catch(function () { status(''); note('Could not load the depth for that scenario.'); });
+      }
+      return any ? out : null;
+    }
+    function encodeFloodTile(px) {
+      return new Promise(function (resolve, reject) {
+        var c = document.createElement('canvas'); c.width = 256; c.height = 256;
+        var g = c.getContext('2d'), id = g.createImageData(256, 256); id.data.set(px); g.putImageData(id, 0, 0);
+        c.toBlob(function (blob) { if (!blob) { reject(new Error('tile')); return; } blob.arrayBuffer().then(function (ab) { resolve({ data: ab }); }, reject); }, 'image/png');
+      });
+    }
+    function floodTileLoad(params) {
+      var m = /^flood:\/\/(\d+)\/(\d+)\/(\d+)\/(\d+)/.exec(params.url), r = floodRender, px = (m && r && +m[1] === r.gen) ? renderFloodTile(r, +m[2], +m[3], +m[4]) : null;
+      if (px) return encodeFloodTile(px);
+      return floodBlank || (floodBlank = encodeFloodTile(new Uint8ClampedArray(256 * 256 * 4)));
+    }
+    function rebuildFloodLayer(entry) {
+      if (!floodProto && typeof maplibregl.addProtocol === 'function') { maplibregl.addProtocol('flood', floodTileLoad); floodProto = true; }
+      floodRender = { entry: entry, mode: floodMode, gen: ++floodGen };
+      var bb = flowM.bounds4326;
+      if (map.getLayer('flood')) map.removeLayer('flood');
+      if (map.getSource('flood')) map.removeSource('flood');
+      map.addSource('flood', { type: 'raster', tiles: ['flood://' + floodRender.gen + '/{z}/{x}/{y}'], tileSize: 256, minzoom: 8, maxzoom: 18, bounds: [bb[0][1], bb[0][0], bb[1][1], bb[1][0]] });
+      map.addLayer({ id: 'flood', type: 'raster', source: 'flood',
+        layout: { visibility: $('flood').checked ? 'visible' : 'none' },
+        paint: { 'raster-opacity': parseFloat($('floodop').value), 'raster-fade-duration': 0 } }, 'hillshade');
+      if (!lowestOverlay) lowestOverlay = 'flood';
+    }
+    function updateFloodLegend() {
+      var vel = floodMode === 'velocity', md = flowM.maxDepth || 10, ms = flowM.maxSpeed || 0;
+      var stops = [0, 0.1, 0.25, 0.5, 0.75, 1].map(function (t) {
+        var c = vel ? rampAt(FLOOD_VEL_STOPS, t, [0, 0, 0, 0]) : floodRGBA(t * t * md, md);
+        return 'rgba(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ',' + (c[3] / 255).toFixed(2) + ') ' + Math.round(t * 100) + '%';
+      });
+      $('floodbar').style.background = 'linear-gradient(90deg,' + stops.join(',') + '), #0e1b33';
+      $('floodlegt').textContent = vel ? 'Velocity' : 'Depth';
+      $('floodmin').textContent = '0 ' + (vel ? flowUnit('velocity', 'ft/s') : flowUnit('length', 'ft'));
+      $('floodmax').textContent = (Math.round((vel ? ms : md) * 10) / 10) + ' ' + (vel ? flowUnit('velocity', 'ft/s') : flowUnit('length', 'ft'));
+    }
+    function showFlood(id) {
+      var token = ++floodToken, prev = floodState;
+      status('Loading the flow model ' + floodMode + '...');
+      var meta = (flowM.discharges || []).filter(function (d) { return d.id === id; })[0] || {};
+      if (floodMode === 'velocity' && meta.flow === false) { floodMode = 'depth'; setFloodSeg(); updateFloodLegend(); note('That scenario has no velocity, so depth is shown.'); }
+      var have = (prev && prev.id === id) ? Promise.resolve(prev) : loadDepthEntry(id);
+      have.then(function (entry) { return floodMode === 'velocity' ? ensureSpeed(entry) : entry; })
+        .then(function (entry) {
+          if (token !== floodToken) return;
+          status(''); floodState = entry; rebuildFloodLayer(entry); updateFloodNote(entry); updateFloodResult(); refreshProfFlood();
+        }).catch(function () { status(''); note('Could not load the flow model ' + floodMode + ' for that scenario.'); });
     }
     function lonLatTo3857(lng, lat) {
       var R = 20037508.342789244;
@@ -1044,6 +1123,14 @@
       if (px < 0 || py < 0 || px >= floodState.w || py >= floodState.h) return undefined;
       return floodState.depth[py * floodState.w + px];
     }
+    // undefined = not loaded or no flood layer here, NaN = no data, number = speed in the model's units
+    function floodSpeedAt(lng, lat) {
+      if (!floodState || !floodState.speed || !flowM || !$('flood').checked) return undefined;
+      var b3 = flowM.bounds3857, p = lonLatTo3857(lng, lat);
+      var px = Math.floor((p[0] - b3[0]) / (b3[2] - b3[0]) * floodState.w), py = Math.floor((b3[3] - p[1]) / (b3[3] - b3[1]) * floodState.h);
+      if (px < 0 || py < 0 || px >= floodState.w || py >= floodState.h) return undefined;
+      return floodState.speed[py * floodState.w + px];
+    }
     function loadFlow(f) {
       flowBase = f.base.replace(/\/*$/, '/') + 'sites/' + encodeURIComponent(f.site) + '/';
       fetch(flowBase + 'manifest.json', { cache: 'no-store' })
@@ -1053,22 +1140,76 @@
           var list = (fm.discharges || []).filter(function (d) { return d && d.id; });
           if (!list.length) throw new Error('empty');
           list.forEach(function (d) { var o = document.createElement('option'); o.value = d.id; o.textContent = d.label || d.name || d.id; $('floodsel').appendChild(o); });
-          var pick = list.filter(function (d) { return /q100/i.test(d.id) && /(ec|existing)/i.test(d.id); })[0] || list[0];
+          function isQ(d, q) { return new RegExp('(^|[^0-9a-z])' + q + '([^0-9]|$)', 'i').test(d.id); }
+          var pick = list.filter(function (d) { return isQ(d, 'q2') && /(ec|existing)/i.test(d.id); })[0] || list.filter(function (d) { return isQ(d, 'q2'); })[0] || list[0];      // the 2 year flow, existing conditions, to start
           $('floodsel').value = pick.id;
-          var stops = [0, 0.1, 0.25, 0.5, 0.75, 1].map(function (t) {
-            var c = floodRGBA(t * t * (fm.maxDepth || 10), fm.maxDepth || 10);
-            return 'rgba(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ',' + (c[3] / 255).toFixed(2) + ') ' + Math.round(t * 100) + '%';
-          });
-          $('floodbar').style.background = 'linear-gradient(90deg,' + stops.join(',') + '), #0e1b33';
-          $('floodmax').textContent = (Math.round((fm.maxDepth || 0) * 10) / 10) + ' ft';
-          $('floodwrap').style.display = 'block'; $('legflood').style.display = $('flood').checked ? 'block' : 'none';
+          floodMode = 'depth'; setFloodSeg();
+          $('floodmoderow').style.display = (fm.maxSpeed > 0 && list.some(function (d) { return d.flow !== false; })) ? '' : 'none';      // velocity only when the model has it
+          floodAvail = true; $('floodrow').style.display = ''; $('toolflood').style.display = ''; syncGroups(); refreshLooks();
+          updateFloodLegend();
+          $('legflood').style.display = $('flood').checked ? 'block' : 'none';
+          if (!onPhone()) openFloodCard(true);                           // the controls and the legend are there from the start, except on a phone
           showFlood(pick.id);
         })
-        .catch(function () { note('Could not load the flood depth from the flow viewer site.'); });
+        .catch(function () { note('Could not load the flow model from the flow viewer site.'); });
     }
     $('floodsel').addEventListener('change', function () { showFlood($('floodsel').value); });
+    var floodSpot = null;
+    function updateFloodResult() {                                  // depth and velocity where you last clicked, for the scenario in the card
+      var box = $('floodresbody'); if (!box || $('floodcard').style.display !== 'block') return;
+      box.className = 'dimtxt'; box.innerHTML = '';
+      function say(t) { box.textContent = t; }
+      if (!floodSpot) { say('Click a spot on the map to read it.'); return; }
+      if (!$('flood').checked) { say('Turn the flow model on to read it.'); return; }
+      if (!floodState) { say('Loading the flow model ...'); return; }
+      var fd = floodDepthAt(floodSpot.lng, floodSpot.lat);
+      if (fd === undefined) { say('This spot is outside the flow model.'); return; }
+      if (!(fd >= 0.02)) { say('Dry here in this scenario.'); return; }
+      box.className = '';
+      var uL = flowUnit('length', 'ft'), uV = flowUnit('velocity', 'ft/s'), v = floodSpeedAt(floodSpot.lng, floodSpot.lat), wrap = document.createElement('div'); wrap.className = 'frtiles';
+      function tile(label, val, unit, on) {
+        var t = document.createElement('div'); if (on) t.className = 'on';
+        var b = document.createElement('b'); b.textContent = val; var sp = document.createElement('span'); sp.textContent = label + ' (' + unit + ')'; t.appendChild(b); t.appendChild(sp); wrap.appendChild(t);
+      }
+      tile('Depth', String(Math.round(fd * 10) / 10), uL, floodMode === 'depth');
+      if (flowM && flowM.maxSpeed > 0) {
+        if (typeof v === 'number' && v === v) tile('Velocity', String(Math.round(v * 10) / 10), uV, floodMode === 'velocity');
+        else if (v === undefined) { tile('Velocity', '...', uV, floodMode === 'velocity'); ensureSpeed(floodState).then(updateFloodResult).catch(function () {}); }
+      }
+      box.appendChild(wrap);
+    }
+    function setFloodSeg() {
+      Array.prototype.forEach.call($('floodseg').children, function (b) { b.classList.toggle('on', b.getAttribute('data-m') === floodMode); });
+      $('floodscn').textContent = floodMode === 'velocity' ? 'Velocity' : 'Depth';
+      updateFloodResult(); refreshProfFlood();
+    }
+    Array.prototype.forEach.call($('floodseg').children, function (b) {
+      b.addEventListener('click', function () { floodMode = b.getAttribute('data-m'); setFloodSeg(); updateFloodLegend(); showFlood($('floodsel').value); });
+    });
+    function openFloodCard(open) { $('floodcard').style.display = open ? 'block' : 'none'; $('toolflood').classList.toggle('on', open); if (open) updateFloodResult(); }
+    $('toolflood').addEventListener('click', function () {
+      var open = $('floodcard').style.display !== 'block';
+      if (open && !$('flood').checked) { $('flood').checked = true; $('flood').dispatchEvent(new Event('change', { bubbles: true })); }
+      openFloodCard(open);
+    });
+    $('floodx').addEventListener('click', function () { openFloodCard(false); });
+    // How much of the flooded area lies outside the terrain this site has. Past the terrain tiles nothing can be drawn.
+    function updateFloodNote(entry) {
+      var note = $('floodnote'), R = 20037508.342789244, b3 = flowM.bounds3857, w = entry.w, h = entry.h, wet = 0, out = 0, x, y;
+      var lngs = new Float32Array(w), lats = new Float32Array(h);
+      for (x = 0; x < w; x++) lngs[x] = (b3[0] + (x + 0.5) / w * (b3[2] - b3[0])) / R * 180;
+      for (y = 0; y < h; y++) { var Y = b3[3] - (y + 0.5) / h * (b3[3] - b3[1]); lats[y] = (2 * Math.atan(Math.exp(Y / 6378137)) - Math.PI / 2) * 180 / Math.PI; }
+      for (y = 0; y < h; y++) {
+        var latIn = lats[y] >= demB[1] && lats[y] <= demB[3], row = y * w;
+        for (x = 0; x < w; x++) { var d = entry.depth[row + x]; if (!(d >= 0.02)) continue; wet++; if (!latIn || lngs[x] < demB[0] || lngs[x] > demB[2]) out++; }
+      }
+      entry.outside = wet ? out / wet : 0;
+      if (entry.outside > 0.03) { note.style.display = 'block'; note.textContent = Math.round(entry.outside * 100) + '% of the modeled water lies beyond this site\u2019s terrain, so it is not drawn here. Rebuild the site with a DTM that covers the whole model to see all of it.'; }
+      else { note.style.display = 'none'; note.textContent = ''; }
+    }
     $('flood').addEventListener('change', function () {
-      $('legflood').style.display = $('flood').checked ? 'block' : 'none';
+      $('legflood').style.display = $('flood').checked ? 'block' : 'none'; updateFloodResult(); refreshProfFlood();
+      if ($('toolflood').style.display !== 'none') openFloodCard($('flood').checked);
       if (map.getLayer('flood')) map.setLayoutProperty('flood', 'visibility', $('flood').checked ? 'visible' : 'none');
     });
     $('floodop').addEventListener('input', function () {
@@ -1215,6 +1356,7 @@
       return stopPts.length <= 40;
     }
     function wantGps() {
+      if (M.stops_clamp) return false;                          // the builder was told the GPS heights are poor, so the stops start on the ground
       var pref = storedPref('terrainStop3d'); if (pref !== null) return pref === '1';
       return (siteStops && typeof siteStops.gps === 'boolean') ? siteStops.gps : true;
     }
@@ -1386,9 +1528,11 @@
           : '';
         stopMode(); return;
       }
+      if (M.stops_clamp && !canSave) { stop3d.note = ''; stopMode(); return; }      // visitors get no way to lift them off the ground
+      if (M.stops_clamp) stop3d.note = 'This site keeps its stops on the ground, because their GPS heights are not trusted. Turn on Float here to look at them at their GPS height.';
       $('stop3drow').style.display = 'flex';
       $('stop3d').checked = wantGps();
-      if ($('stop3d').checked) prepStop3d().then(stopMode);
+      if ($('stop3d').checked) prepStop3d().then(stopMode); else stopMode();
     }
     $('stop3d').addEventListener('change', function () {
       try { localStorage.setItem('terrainStop3d', $('stop3d').checked ? '1' : '0'); } catch (e) {}
@@ -1482,10 +1626,10 @@
       { id: 'photos', label: 'Photos', has: function () { return $('ovrows').children.length > 0; }, want: { rem: false, cloud: false, flood: false }, imagery: true },
       { id: 'trees', label: 'Trees', has: function () { return shown($('cloudrow')); }, want: { rem: false, cloud: true, flood: false } },
       { id: 'height', label: 'Height above channel', has: function () { return shown($('remrow')); }, want: { rem: true, cloud: false, flood: false } },
-      { id: 'water', label: 'Flood depth', has: function () { return !!$('floodwrap') && $('floodwrap').style.display !== 'none'; }, want: { rem: false, cloud: false, flood: true } }
+      { id: 'water', label: 'Flow Model', has: function () { return floodAvail; }, want: { rem: false, cloud: false, flood: true } }
     ];
     function lookCtl(k) { return { rem: $('remon'), cloud: $('cloudon'), flood: $('flood') }[k]; }
-    function lookHas(k) { return k === 'rem' ? shown($('remrow')) : k === 'cloud' ? shown($('cloudrow')) : (!!$('floodwrap') && $('floodwrap').style.display !== 'none'); }
+    function lookHas(k) { return k === 'rem' ? shown($('remrow')) : k === 'cloud' ? shown($('cloudrow')) : floodAvail; }
     function setLayerChecked(k, val) { var c = lookCtl(k); if (!c || !lookHas(k) || c.checked === val) return; c.checked = val; c.dispatchEvent(new Event('change', { bubbles: true })); }
     function applyLook(l) {
       Object.keys(l.want).forEach(function (k) { setLayerChecked(k, l.want[k]); });
@@ -1553,6 +1697,7 @@
         { id: 'looks', title: 'Quick looks', side: true, find: function () { return $('looks'); }, text: 'One tap changes what you see.' },
         { id: 'height', title: 'Height above channel', side: true, find: function () { return shown($('remrow')) ? $('remrow') : null; }, text: 'Blue is near the water, brown is high above it.' },
         { id: 'views', title: 'Saved views', find: function () { return $('viewbar'); }, text: 'The arrows step through camera views saved for this site.' },
+        { id: 'flood', title: 'Flow Model', find: function () { return shown($('toolflood')) ? $('toolflood') : null; }, text: 'Pick a scenario, and switch between depth and velocity.' },
         { id: 'cross', title: 'Cross section', art: artCross, find: function () { return $('toolx'); }, text: 'Pick two points to see the ground between them.' },
         { id: 'shade', title: 'Shade', art: artShade, find: function () { return $('toolshade'); }, text: 'Pick a date, then a spot to see tree shade.' },
         { id: 'stops', title: '360 stops', find: function () { return firstStopEl() || ($('switcher').style.display !== 'none' ? $('switcher') : null); },
@@ -1844,6 +1989,17 @@
         .then(function (r) { if (!r.ok) throw new Error('save'); $('viewmsg').textContent = msg + ' Publish to share it.'; })
         .catch(function () { $('viewmsg').textContent = 'Could not save. Open this page from the Terrain Viewer Builder window (Open viewer) to save views.'; });
     }
+    // One press makes the camera as it is now the view the site opens on (and the one Reset view returns to).
+    $('setstart').addEventListener('click', function () {
+      var c = map.getCenter(), cur = views.filter(function (x) { return x.start; })[0];
+      var v = { name: cur ? cur.name : 'Start', center: [Math.round(c.lng * 1e6) / 1e6, Math.round(c.lat * 1e6) / 1e6], zoom: Math.round(map.getZoom() * 100) / 100, pitch: Math.round(map.getPitch()), bearing: Math.round(map.getBearing()), start: true };
+      views.forEach(function (x) { x.start = false; });
+      if (cur) views[views.indexOf(cur)] = v; else views.unshift(v);
+      startView = v; fillViewSelect(); $('startmsg').textContent = 'Saving ...';
+      fetch('/save_views?site=' + encodeURIComponent(M.site), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ views: views }) })
+        .then(function (r) { if (!r.ok) throw new Error('save'); $('startmsg').textContent = 'Saved. The site now opens here. Publish to share it.'; })
+        .catch(function () { $('startmsg').textContent = 'Could not save. Open this page with Open viewer in the Terrain Viewer Builder window.'; });
+    });
     function barLabel(i) {
       var lab = $('viewlabel'); lab.textContent = '';
       if (i == null) { lab.appendChild(document.createTextNode(views.length + ' views')); return; }
@@ -2067,12 +2223,37 @@
       else parts.push((sm.dh > 0 ? '\u2191 ' : '\u2193 ') + fx(Math.abs(sm.dh)) + ' ft (' + fx(sm.run > 0 ? Math.abs(sm.dh) / sm.run * 100 : 0) + '%)');
       if ((sm.hi - sm.lo) - Math.abs(sm.dh) > 0.5) parts.push('relief ' + fx(sm.hi - sm.lo) + ' ft');
       if (sm.above) parts.push('up to ' + fx(sm.above.mx) + ' ft above the channel');
+      var fls = floodLine(profData); if (fls && fls.any) parts.push('water up to ' + fx(fls.maxD) + ' ft deep' + (fls.maxV != null ? ', fastest ' + fx(fls.maxV) + ' ' + flowUnit('velocity', 'ft/s') : ''));
       el.textContent = parts.join(' \u00B7 ');
     }
     function phoneLayout() {                                     // on a phone the cards stack above the graph
       var phone = !!(window.matchMedia && window.matchMedia('(max-width: 700px)').matches), pr = $('profile');
       $('cards').style.bottom = (phone && pr.style.display === 'block') ? ((parseFloat(getComputedStyle(pr).bottom) || 112) + pr.offsetHeight + 8) + 'px' : '';
     }
+    // The flood model along the line: for each sample the depth (in feet) and the speed, read from the numbers behind the flood layer.
+    var profFlood = true;
+    function floodLine(pd) {
+      if (!pd || !profFlood || !floodAvail || !floodState || !flowM || !$('flood').checked) return null;
+      var n = pd.ll.length, out = { d: [], v: [], surf: [], st: [], maxD: 0, maxV: null, maxSurf: -1e9, any: false };
+      var b3 = flowM.bounds3857, kf = /^m/i.test(flowUnit('length', 'ft')) ? M_TO_FT : 1, w = floodState.w, h = floodState.h, hasV = !!floodState.speed;
+      for (var i = 0; i < n; i++) {
+        var pt = lonLatTo3857(pd.ll[i][0], pd.ll[i][1]), px = Math.floor((pt[0] - b3[0]) / (b3[2] - b3[0]) * w), py = Math.floor((b3[3] - pt[1]) / (b3[3] - b3[1]) * h);
+        out.d.push(null); out.v.push(null); out.surf.push(null); out.st.push('out');
+        if (px < 0 || py < 0 || px >= w || py >= h) continue;
+        var k = py * w + px, dv = floodState.depth[k]; if (dv !== dv) continue;
+        if (!(dv >= 0.05)) { out.st[i] = 'dry'; continue; }
+        out.st[i] = 'wet'; out.d[i] = dv * kf;
+        if (hasV) { var sv = floodState.speed[k]; out.v[i] = (sv === sv) ? sv : null; if (sv === sv && (out.maxV === null || sv > out.maxV)) out.maxV = sv; }
+        if (pd.e[i] != null) { out.surf[i] = pd.e[i] + out.d[i]; out.any = true; if (out.surf[i] > out.maxSurf) out.maxSurf = out.surf[i]; if (out.d[i] > out.maxD) out.maxD = out.d[i]; }
+      }
+      return out;
+    }
+    function floodBtn() { var show = floodAvail && $('flood').checked; $('profflood').style.display = show ? '' : 'none'; $('profflood').classList.toggle('on', profFlood); }
+    function floodProfSpeed() {                                       // the speed picture loads once, then the graph is drawn again
+      if (profData && floodState && flowM && flowM.maxSpeed > 0 && !floodState.speed) ensureSpeed(floodState).then(function () { if (profData) { drawProfile(null); updateSum(); } }).catch(function () {});
+    }
+    function refreshProfFlood() { if (profData) { floodBtn(); floodProfSpeed(); drawProfile(null); updateSum(); } }
+    $('profflood').addEventListener('click', function () { profFlood = !profFlood; refreshProfFlood(); });
     function remLabel() { $('profrem').classList.toggle('on', profRem); }
     // The point cloud surface along the line: the highest canopy in each 2 m cell, kept only where it is above the ground.
     function canopySeries() {
@@ -2097,6 +2278,7 @@
       if (showRem) { var rf = profData.rl.filter(function (v) { return v != null; }); lo = Math.min(lo, Math.min.apply(null, rf)); hi = Math.max(hi, Math.max.apply(null, rf)); }
       var showCan = profCan && profData.c && profData.c.some(function (v) { return v != null; });
       if (showCan) hi = Math.max(hi, Math.max.apply(null, profData.c.filter(function (v) { return v != null; })));
+      var fl = floodLine(profData); if (fl && fl.any) hi = Math.max(hi, fl.maxSurf);
       var padv = Math.max((hi - lo) * 0.08, 0.5); lo -= padv; hi += padv;
       var dmax = profData.d[profData.d.length - 1];
       var X = function (d) { return PAD.l + d / dmax * (w - PAD.l - PAD.r); };
@@ -2131,6 +2313,28 @@
       });
       g.strokeStyle = '#019fc4'; g.lineWidth = 2; g.stroke();
       g.lineTo(lastX, h - PAD.b); g.lineTo(PAD.l, h - PAD.b); g.closePath(); g.fillStyle = 'rgba(1,159,196,0.18)'; g.fill();
+      if (fl && fl.any) {                                               // the water: blue between the ground and its surface, or colored by speed
+        var vel = floodMode === 'velocity' && !!floodState.speed, np = profData.d.length, spc = dmax / Math.max(1, np - 1), q = [0, 0, 0, 0], vmx = flowM.maxSpeed || 1, wruns = [], wc = [];
+        fl.surf.forEach(function (sv, i) { if (sv == null) { if (wc.length) wruns.push(wc); wc = []; } else wc.push(i); }); if (wc.length) wruns.push(wc);
+        wruns.forEach(function (run) {
+          if (vel) {
+            run.forEach(function (i) {
+              var x0 = X(Math.max(0, profData.d[i] - spc / 2)), x1 = X(Math.min(dmax, profData.d[i] + spc / 2)), yt = Y(fl.surf[i]), yb = Y(profData.e[i]), sv2 = fl.v[i];
+              if (typeof sv2 === 'number') { rampAt(FLOOD_VEL_STOPS, sv2 / vmx, q); g.fillStyle = 'rgba(' + Math.round(q[0]) + ',' + Math.round(q[1]) + ',' + Math.round(q[2]) + ',0.88)'; } else g.fillStyle = 'rgba(120,170,255,0.4)';
+              g.fillRect(x0, yt, Math.max(1, x1 - x0 + 0.5), Math.max(1.5, yb - yt));
+            });
+          } else {
+            g.beginPath(); g.moveTo(X(profData.d[run[0]]), Y(profData.e[run[0]]));
+            run.forEach(function (i) { g.lineTo(X(profData.d[i]), Y(fl.surf[i])); });
+            run.slice().reverse().forEach(function (i) { g.lineTo(X(profData.d[i]), Y(profData.e[i])); });
+            g.closePath(); g.fillStyle = 'rgba(40,150,250,0.5)'; g.fill();
+          }
+          g.beginPath(); run.forEach(function (i, k2) { var x = X(profData.d[i]), y = Y(fl.surf[i]); if (k2 === 0) g.moveTo(x, y); else g.lineTo(x, y); });
+          g.strokeStyle = '#bfe8ff'; g.lineWidth = 1.5; g.stroke();
+        });
+        var opt = $('floodsel').options[$('floodsel').selectedIndex];
+        g.fillStyle = '#7fd3ff'; g.textAlign = 'left'; g.fillText((opt ? opt.textContent : 'Flow Model') + ' \u00B7 ' + (vel ? 'velocity' : 'depth'), PAD.l + 6, PAD.t + 12);
+      }
       if (showRem) {                                                    // the channel level, and the band of height above it
         var runs = [], cur = [];
         profData.rl.forEach(function (v, i) { if (v == null) { if (cur.length) runs.push(cur); cur = []; } else cur.push(i); }); if (cur.length) runs.push(cur);
@@ -2163,6 +2367,8 @@
       if (v == null) { $('profread').textContent = 'No terrain data here.'; return; }
       var parts = ['Distance ' + fx(profData.d[i]) + ' ft', 'Ground ' + fx(v) + ' ft' + (relative ? ' above the low point' : '')];
       if (profRem && profData.r && profData.r[i] != null) parts.push(fx(profData.r[i]) + ' ft above channel');
+      var fl2 = floodLine(profData);
+      if (fl2) { if (fl2.st[i] === 'wet') parts.push('Water ' + fx(fl2.d[i]) + ' ft deep' + (fl2.v[i] != null ? ', ' + fx(fl2.v[i]) + ' ' + flowUnit('velocity', 'ft/s') : '')); else if (fl2.st[i] === 'dry') parts.push('Dry'); }
       if (profCan && profData.c && profData.c[i] != null) parts.push('Canopy ' + fx(profData.c[i]) + ' ft (' + fx(profData.c[i] - v) + ' ft tall)');
       if (refFt != null) { var dv = v - refFt; parts.push(fx(Math.abs(dv)) + ' ft ' + (dv >= 0 ? 'above' : 'below') + ' reference'); }
       $('profread').textContent = parts.join(' \u00B7 ');
@@ -2173,7 +2379,7 @@
       $('proftitle').textContent = 'Cross section (feet)' + (relative ? ', height above the site\u2019s low point' : '');
       $('profref').style.display = 'none';
       $('profcan').style.display = (cloud.data && cloud.data.length) ? '' : 'none';
-      $('profrem').style.display = M.rem ? '' : 'none'; remLabel();
+      $('profrem').style.display = M.rem ? '' : 'none'; remLabel(); floodBtn(); floodProfSpeed();
       if (M.rem && profRem) { var pd0 = profData; remSeries(pd0).then(function () { if (pd0 === profData) drawProfile(null); }); }
       if (profCan) canopySeries();
       canLabel(); drawProfile(null); phoneLayout();
@@ -2208,8 +2414,9 @@
     $('profcsv').addEventListener('click', function () {
       if (!profData) return;
       canopySeries();
-      var rows = ['distance_ft,ground_ft' + (profData.c ? ',canopy_top_ft' : '') + (profData.r ? ',above_channel_ft' : '') + ',longitude,latitude'];
-      profData.d.forEach(function (d, i) { rows.push([d.toFixed(2), profData.e[i] == null ? '' : profData.e[i].toFixed(2)].concat(profData.c ? [profData.c[i] == null ? '' : profData.c[i].toFixed(2)] : [], profData.r ? [profData.r[i] == null ? '' : profData.r[i].toFixed(2)] : [], [profData.ll[i][0].toFixed(7), profData.ll[i][1].toFixed(7)]).join(',')); });
+      var flc = floodLine(profData);
+      var rows = ['distance_ft,ground_ft' + (profData.c ? ',canopy_top_ft' : '') + (profData.r ? ',above_channel_ft' : '') + (flc ? ',flow_depth_ft,flow_velocity_' + flowUnit('velocity', 'ft/s').replace('/', '_per_') : '') + ',longitude,latitude'];
+      profData.d.forEach(function (d, i) { rows.push([d.toFixed(2), profData.e[i] == null ? '' : profData.e[i].toFixed(2)].concat(profData.c ? [profData.c[i] == null ? '' : profData.c[i].toFixed(2)] : [], profData.r ? [profData.r[i] == null ? '' : profData.r[i].toFixed(2)] : [], flc ? [flc.d[i] == null ? (flc.st[i] === 'dry' ? '0' : '') : flc.d[i].toFixed(2), flc.v[i] == null ? '' : flc.v[i].toFixed(2)] : [], [profData.ll[i][0].toFixed(7), profData.ll[i][1].toFixed(7)]).join(',')); });
       var blob = new Blob([rows.join('\n')], { type: 'text/csv' }), a = document.createElement('a');
       a.href = URL.createObjectURL(blob); a.download = M.site + '_cross_section.csv'; document.body.appendChild(a); a.click();
       setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
@@ -2475,6 +2682,7 @@
       addExtras(d, ll.lng, ll.lat, t.z - hagM, true);
       showInfo(d);
       setClickMark(ll.lng, ll.lat, t.z - hagM, hagM);
+      floodSpot = { lng: ll.lng, lat: ll.lat }; updateFloodResult();
     }
 
     // ---- point cloud: one WebGL layer drawn in the map's own 3D scene ----
@@ -2562,7 +2770,7 @@
       if (pcm.has_rgb) { var o1 = document.createElement('option'); o1.value = 0; o1.textContent = 'Photo colors'; sel.appendChild(o1); }
       if (pcm.has_class) { var o2 = document.createElement('option'); o2.value = 1; o2.textContent = 'Classification'; sel.appendChild(o2); }
       var o3 = document.createElement('option'); o3.value = 2; o3.textContent = 'Height above ground'; sel.appendChild(o3);
-      cloud.mode = pcm.has_rgb ? 0 : (pcm.has_class ? 1 : 2); sel.value = String(cloud.mode);
+      cloud.mode = pcm.has_rgb ? 0 : 2; sel.value = String(cloud.mode);          // photo colors if the cloud has them, otherwise the height above ground ramp
       if (!pcm.has_class || pcm.ground_removed) { $('cloudgrow').style.display = 'none'; cloud.hide = false; }
       $('cloudwrap').style.display = 'block'; $('cloudrow').style.display = 'flex'; $('toolshade').style.display = '';
       $('cloudlegmax').textContent = Math.round(cloud.maxH / 0.3048) + ' ft or taller'; showLegend();
@@ -2835,7 +3043,7 @@
     function setDisp(el, want) { if (el.style.display !== want) el.style.display = want; }
     function syncGroups() {
       setDisp($('grpimg'), $('ovrows').children.length ? '' : 'none');
-      setDisp($('grpdata'), (shown($('remrow')) || shown($('cloudrow'))) ? '' : 'none');
+      setDisp($('grpdata'), (shown($('remrow')) || shown($('cloudrow')) || shown($('floodrow'))) ? '' : 'none');
       setDisp($('grpmark'), (shown($('stoprow')) || shown($('notesrow'))) ? '' : 'none');
     }
     new MutationObserver(syncGroups).observe(document.querySelector('#panel .body'), { subtree: true, childList: true, attributes: true, attributeFilter: ['style', 'class'] });
